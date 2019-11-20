@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{2df5e8b5-6257-4949-8dd2-25f116a7835f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{85599c55-be54-4ec8-b970-5751f28278a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\io">
+      <UniqueIdentifier>{031088f6-385e-4f6d-9498-8a9ca545c40c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\graphics">
+      <UniqueIdentifier>{efe57b94-1fd1-448b-b1f0-3a0f92177e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\os">
+      <UniqueIdentifier>{024be6ab-d25a-49d5-be46-1b22927ed5ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{b5166474-f692-48e8-9059-dfa30b1d30d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\platform">
+      <UniqueIdentifier>{c30a5414-f6a3-496a-9a4b-f83752d78527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\platform">
+      <UniqueIdentifier>{d642b875-0c23-467b-8813-dd6b342ec490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\platform\windows">
+      <UniqueIdentifier>{76a4e8ae-e9b9-4262-a62f-584f9d38d8c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\platform\windows">
+      <UniqueIdentifier>{94a7b80e-28a8-45aa-b958-2b711525effb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\core\core_defines.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\core\engine.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\core\primitive_defines.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\graphics\window_properties.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\graphics\window.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\graphics\graphics_context.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\graphics\graphics_defines.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\core\engine.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
