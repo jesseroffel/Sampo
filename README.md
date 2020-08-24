@@ -60,7 +60,6 @@ This list contains high level concepts that will be selected and worked on durin
 * Resource asset data reading
 * CI Framework / Unit Testing Framework
 
-- 
 
 
 
