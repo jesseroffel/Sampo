@@ -1,0 +1,25 @@
+name: CMake
+on: [push]
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # Currently test only on Windows as it is currently the only supported platform. Ubuntu currently would work.
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create Win64 build directory
+      run: cmake -E make_directory ${{runner.workspace}}/Win64Build
+
+    - name: Setup CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/Win64Build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build Release Win64
+      working-directory: ${{runner.workspace}}/Win64Build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
