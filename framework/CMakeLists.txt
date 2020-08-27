@@ -3,7 +3,7 @@
 # include and create #
 include_directories(${PROJECT_SOURCE_DIR}/framework/include)
 
-add_library(framework STATIC include/sampo.hpp include/sampo_pch.hpp include/sampo_pch.cpp include/foundation/core/application.hpp include/foundation/core/application.cpp include/foundation/core/core_definitions.hpp include/foundation/core/entry_point.hpp)
+add_library(framework STATIC "include/sampo.hpp" "include/sampo_pch.hpp" "include/sampo_pch.cpp" "include/foundation/core/application.hpp"  "include/foundation/core/application.cpp" "include/foundation/core/core_definitions.hpp" "include/foundation/core/entry_point.hpp" "include/foundation/core/layer.hpp" "include/foundation/core/layer.cpp")
 
 # Overrides globals #
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/framework/${outputdir})

@@ -8,6 +8,9 @@
 #endif
 
 
+#define UNUSED(...) (void)(__VA_ARGS__)
+
+
 // Wrapper around std smart pointers, inspired by Hazel. //
 #include <memory>
 namespace Sampo
