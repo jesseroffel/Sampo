@@ -11,6 +11,7 @@
 #include <sstream>
 #include <chrono>
 #include <random>
+#include <cmath>
 
 #include <array>
 #include <vector>

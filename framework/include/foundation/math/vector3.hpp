@@ -7,37 +7,77 @@ namespace Sampo
     public:
         float x, y;
     public:
-        Vector2(float x, float y) 
-        { 
-            this->x = x; this->y = y; 
+        // Constructors
+        Vector2(float value) 
+        {
+            this->x = value;
+            this->y = value;
         }
 
+        Vector2(float x, float y) 
+        { 
+            this->x = x; 
+            this->y = y; 
+        }
+        ~Vector2();
+
         // Operator Overloads //
-        Vector2 operator+ (float addition)          { return Vector2{ x + addition, y + addition }; }
-        Vector2 operator- (float addition)          { return Vector2{ x - addition, y - addition }; }
-        Vector2 operator* (float scalar)            { return Vector2{ x * scalar,   y * scalar   }; }
-        Vector2 operator/ (float scalar)            { return Vector2{ x / scalar,   y / scalar }; }
-        Vector2 operator+ (const Vector2& other)    { return Vector2{ x + other.x,  y + other.y  }; }
-        Vector2 operator- (const Vector2& other)    { return Vector2{ x - other.x,  y - other.y }; }
-        Vector2 operator* (const Vector2& other)    { return Vector2{ x * other.x,  y * other.y  }; }
-        Vector2 operator/ (const Vector2& other)    { return Vector2{ x / other.x,  y / other.y }; }
+        Vector2 operator+ (float addition)          { return { x + addition, y + addition }; }
+        Vector2 operator- (float addition)          { return { x - addition, y - addition }; }
+        Vector2 operator* (float scalar)            { return { x * scalar,   y * scalar }; }
+        Vector2 operator/ (float scalar)            { return { x / scalar,   y / scalar }; }
+        Vector2 operator+ (const Vector2& other)    { return { x + other.x,  y + other.y }; }
+        Vector2 operator- (const Vector2& other)    { return { x - other.x,  y - other.y }; }
+        Vector2 operator* (const Vector2& other)    { return { x * other.x,  y * other.y }; }
+        Vector2 operator/ (const Vector2& other)    { return { x / other.x,  y / other.y }; }
 
         void operator+= (float addition)            { x += addition; y += addition; }
 
         // Operations //
-        inline void Inverse() 
+        inline bool Zero() { return (x == 0 && y == 0); }
+
+
+        inline Vector2 Inverse() 
         {
-            x = -x; 
-            y = -y;
-        }
-        inline void Inverse(Vector2& out)
-        {
-            out.x = -out.x; 
-            out.y = -out.y;
+            return { -x, -y };
         }
 
-        inline Vector2 Inverse(const Vector2& v) { return Vector2{ -v.x, -v.y }; }
-        
+        inline float Magnitude()
+        {
+            float ax = std::fabs(x);
+            float ay = std::fabs(y);
+            return std::sqrt((ax * ax) + (ay * ay));
+        }
+
+
+        inline Vector2 Normalised()
+        {
+            if (Zero())
+            {
+                return Vector2{0};
+            }
+            auto mag = Magnitude();
+
+            return { (x / mag), (y / mag) };
+        }
+
+        inline void Normalise()
+        {
+            if (!Zero())
+            {
+                auto mag = Magnitude();
+
+                x = (x / mag);
+                y = (y / mag);
+            }
+        }
+
+        inline Vector2 DotProduct(const Vector2& other)
+        {
+            return { (x * other.x), (y * other.y) };
+        }
+
+
     };
     
     class Vector3
