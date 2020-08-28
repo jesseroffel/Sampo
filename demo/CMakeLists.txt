@@ -4,7 +4,7 @@
 include_directories(${PROJECT_SOURCE_DIR}/demo/src)
 include_directories(${PROJECT_SOURCE_DIR}/framework/include)
 
-add_executable(demo src/demo.cpp)
+add_executable(demo src/demo.cpp "src/mathtests.cpp" "src/mathtests.hpp")
 
 # Overrides globals #
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/demo/${outputdir})
