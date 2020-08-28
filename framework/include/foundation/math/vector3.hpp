@@ -19,17 +19,17 @@ namespace Sampo
             this->x = x; 
             this->y = y; 
         }
-        ~Vector2();
+        ~Vector2() = default;
 
         // Operator Overloads //
-        Vector2 operator+ (float addition)          { return { x + addition, y + addition }; }
-        Vector2 operator- (float addition)          { return { x - addition, y - addition }; }
-        Vector2 operator* (float scalar)            { return { x * scalar,   y * scalar }; }
-        Vector2 operator/ (float scalar)            { return { x / scalar,   y / scalar }; }
-        Vector2 operator+ (const Vector2& other)    { return { x + other.x,  y + other.y }; }
-        Vector2 operator- (const Vector2& other)    { return { x - other.x,  y - other.y }; }
-        Vector2 operator* (const Vector2& other)    { return { x * other.x,  y * other.y }; }
-        Vector2 operator/ (const Vector2& other)    { return { x / other.x,  y / other.y }; }
+        Vector2 operator+ (float addition)          { return { x + addition, y + addition   }; }
+        Vector2 operator- (float addition)          { return { x - addition, y - addition   }; }
+        Vector2 operator* (float scalar)            { return { x * scalar,   y * scalar     }; }
+        Vector2 operator/ (float scalar)            { return { x / scalar,   y / scalar     }; }
+        Vector2 operator+ (const Vector2& other)    { return { x + other.x,  y + other.y    }; }
+        Vector2 operator- (const Vector2& other)    { return { x - other.x,  y - other.y    }; }
+        Vector2 operator* (const Vector2& other)    { return { x * other.x,  y * other.y    }; }
+        Vector2 operator/ (const Vector2& other)    { return { x / other.x,  y / other.y    }; }
 
         void operator+= (float addition)            { x += addition; y += addition; }
 
