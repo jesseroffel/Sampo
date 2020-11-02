@@ -1,6 +1,5 @@
-#include <sampo.hpp>
-#include <iostream>
-#include "mathtests.hpp"
+#include <sampo/sampo.hpp>
+#include "demolayer.hpp"
 
 class Demo : public Sampo::Application
 {
@@ -9,7 +8,7 @@ public:
 	~Demo() = default;
 	virtual void Init() override
 	{
-		PushLayer(new mathtests());
+		PushLayer(new DemoLayer());
 	}
 };
 
