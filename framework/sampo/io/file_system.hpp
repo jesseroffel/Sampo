@@ -8,14 +8,19 @@ namespace Sampo
     {
     public:
         // Checks
-        static bool                                             FileExists(const std::string_view& pPathToCheck) noexcept;
+        static bool                                             FileExists(const std::string_view& path);
+        static bool                                             DirectoryExists(const std::string_view& path) noexcept;
         // Creation
+        static bool                                             CreateDirectory(const std::string_view& path) noexcept;
 
         // Navigation 
+        static bool                                             SetCurrentPath(const std::string_view& path);
         static const std::string&                               GetExectuablePath() noexcept;
     private:
 
         inline static std::string                               s_ExecutablePath;
+        inline static std::string                               s_CurrentPath;
         static void                                             CreateExectuablePath(std::string& ExecutionPath) noexcept;
     };
+
 }

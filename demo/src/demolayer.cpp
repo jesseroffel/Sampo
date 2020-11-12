@@ -5,15 +5,14 @@
 
 void DemoLayer::OnAttach()
 {
-    Sampo::TrackNew::Trace(true);
-    Sampo::TrackNew::Status();
+    const std::string exectuablepath{ Sampo::FileSystem::GetExectuablePath() };
 
-    const std::string exectuablepath{ "D:/SideProjects/Sampo" };
-    Sampo::TrackNew::Status();
     Sampo::FileSystem::FileExists(exectuablepath);
-    Sampo::TrackNew::Status();
-    std::string path{ Sampo::FileSystem::GetExectuablePath() };
-    Sampo::TrackNew::Status();
-    std::string executablePath = Sampo::FileSystem::GetExectuablePath();
-    Sampo::TrackNew::Status();
+    Sampo::FileSystem::FileExists("D:/SideProjects/Sampo/CMakeLists.txt");
+    Sampo::FileSystem::CreateDirectory("Hello");
+    Sampo::FileSystem::CreateDirectory("D:/SideProjects/Sampo/newfolder");
+    Sampo::FileSystem::SetCurrentPath("D:/SideProjects/Sampo/newfolder");
+    Sampo::FileSystem::CreateDirectory("anotherfolder");
+    Sampo::FileSystem::CreateDirectory("sampo/anotherfolder");
+
 }
