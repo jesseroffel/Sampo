@@ -1,18 +1,15 @@
-#include <sampo/sampo.hpp>
-#include "demolayer.hpp"
+#include "sampo.hpp"
+#include "networktest.hpp"
 
 class Demo : public Sampo::Application
 {
 public:
-	Demo() = default;	// Change to adding an object that will be looped through with Sampo
-	~Demo() = default;
-	virtual void Init() override
+	Demo()
 	{
-		PushLayer(new DemoLayer());
+		PushLayer(new NetworkTest());
 	}
+	~Demo() = default;
 };
-
-// Client application creation //
 
 Sampo::Application* Sampo::CreateApplication()
 {

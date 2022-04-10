@@ -1,5 +1,5 @@
 #pragma once
-#include <foundation/core/layer.hpp>
+#include "sampo/core/layer.hpp"
 
 class mathtests : public Sampo::Layer
 {

@@ -1,6 +1,8 @@
 #include "mathtests.hpp"
-#include <foundation/math/vector3.hpp>
-#include <foundation/math/vector3_io.hpp>
+
+#include "sampo/math/vector3.hpp"
+#include "sampo/math/vector3_io.hpp"
+
 #include <iostream>
 
 void mathtests::OnAttach()

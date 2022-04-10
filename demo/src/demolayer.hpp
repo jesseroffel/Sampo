@@ -1,5 +1,5 @@
 #pragma once
-#include <sampo/core/layer.hpp>
+#include "sampo/core/layer.hpp"
 
 class DemoLayer : public Sampo::Layer
 {

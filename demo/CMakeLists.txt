@@ -2,9 +2,10 @@
 
 # include and create #
 include_directories(${PROJECT_SOURCE_DIR}/demo/src)
-include_directories(${PROJECT_SOURCE_DIR}/framework)
+include_directories(${PROJECT_SOURCE_DIR}/framework/src)
+include_directories(${PROJECT_SOURCE_DIR}/framework/vendor/spdlog/include)
 
-add_executable(demo src/demo.cpp "src/demolayer.cpp" "src/demolayer.hpp")
+add_executable(demo src/demo.cpp "src/demolayer.hpp" "src/demolayer.cpp" "src/networktest.hpp" "src/networktest.cpp" "src/mathtests.hpp" "src/mathtests.cpp")
 
 # Overrides globals #
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/demo/${outputdir})
@@ -23,5 +24,5 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(demo PRIVATE /W3)
     add_compile_definitions(demo PRIVATE SAMPO_PLATFORM_WINDOWS)
 
-    include_directories(${PROJECT_SOURCE_DIR}/framework/include)
+    include_directories(${PROJECT_SOURCE_DIR}/framework/src/platform/windows)
 endif()
