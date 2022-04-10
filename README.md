@@ -2,11 +2,7 @@
 
 Personal project due to interest in Game Engine technologies, where I provide a simple to write decoupled API that can run multi-platform on selected targets which contains minimal but essential components to quickly start developing a new project and aid fast iterations. 
 
-This project is expected to contain a minimal feature set by the end of `2020` and largely complete by the end of the academic year `2021`. Delays are expected to happen for whatever reason.
-
 The framework design takes inspiration or ideas from exciting engines or frameworks such as the `Stingray`, `Unity`, `Unreal`, `Hazel` and `Osmium`.
-
-
 
 
 
