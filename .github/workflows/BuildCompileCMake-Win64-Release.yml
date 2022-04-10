@@ -5,11 +5,14 @@ env:
 
 jobs:
   build:
-    # Currently test only on Windows as it is currently the only supported platform. Ubuntu currently would work.
+    # Currently test only on Windows as it is currently the only supported platform.
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: git submodule update --init --recursive
 
     - name: Create Win64 build directory
       run: cmake -E make_directory ${{runner.workspace}}/Win64Build
