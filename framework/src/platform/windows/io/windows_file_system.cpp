@@ -84,7 +84,7 @@ namespace Sampo
 
     void FileSystem::CreateExectuablePath(std::string& ExecutionPath) noexcept
     {
-        ExecutionPath = fs::current_path().generic_u8string();
+        ExecutionPath = fs::current_path().generic_string();
         fs::current_path(ExecutionPath);
     }
 }

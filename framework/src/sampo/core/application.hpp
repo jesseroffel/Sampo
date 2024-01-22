@@ -12,8 +12,8 @@ namespace Sampo {
         virtual ~Application() = default;
 
         virtual void Init() {}
-        void Close();
         void Run();
+        void Close();
 
         void PushLayer(Layer* layer);
         void PopLayer(Layer* layer);

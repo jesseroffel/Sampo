@@ -1,12 +1,7 @@
 #pragma once
 // Core definitions file that mainly contains preprocessors and definitions that will be used throughout the project. // 
 #include "sampo/core/platforms.hpp"
-
-#ifdef SAMPO_PLATFORM_WINDOWS
-	#define WIN32_LEAN_AND_MEAN
-#else
-	#error Sampo currently only supports Windows.
-#endif // SAMPO_PLATFORM_WINDOWS
+#include "sampo/core/datatypes.hpp"
 
 #define UNUSED(...) (void)(__VA_ARGS__)
 
