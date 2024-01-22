@@ -14,7 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/demo/${outputdir})
 set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT "demo")
 
 # Compile settings # 
-target_compile_features(demo PUBLIC cxx_std_17)
+target_compile_features(demo PUBLIC cxx_std_20)
 target_link_libraries(demo PUBLIC framework)
 
 
