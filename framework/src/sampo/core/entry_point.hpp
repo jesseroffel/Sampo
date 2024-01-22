@@ -3,11 +3,6 @@
 #include "sampo/network/socket_api.hpp"
 #include "sampo/core/console_arguments.hpp"
 
-void* operator new(std::size_t sz) {
-	std::cout << "Allocating: " << sz << '\n';
-	return std::malloc(sz);
-}
-
 #ifdef SAMPO_PLATFORM_WINDOWS
 	extern Sampo::Application* Sampo::CreateApplication();
 
