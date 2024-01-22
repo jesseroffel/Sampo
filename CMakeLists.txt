@@ -18,3 +18,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${outputdir})
 add_subdirectory(framework)
 # Framewwork Demo #
 add_subdirectory(demo)
+
+# Test projects #
+add_subdirectory(tcp_chatclient)
+add_subdirectory(tcp_chatserver)
