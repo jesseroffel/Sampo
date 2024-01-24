@@ -8,7 +8,8 @@
 
 	int main(int argc, char* argv[])
 	{
-		Sampo::ConsoleArguments(argc, argv);
+		Sampo::ConsoleArguments::Create(argc, argv);
+		
 		// Init required systems
 		Sampo::Log::Init();
 
