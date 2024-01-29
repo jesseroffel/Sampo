@@ -5,7 +5,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
 endif()
 
 # SAMPO PROJECT SOLUTION #
-project(Sampo VERSION 0.0.2 DESCRIPTION "Sampo Game Framework" LANGUAGES CXX)
+project(Sampo VERSION 0.0.3 DESCRIPTION "Sampo Game Framework" LANGUAGES CXX)
 
 # Global variable sets #
 set(outputdir "${CMAKE_SYSTEM_NAME}-${CMAKE_VS_PLATFORM_NAME}")

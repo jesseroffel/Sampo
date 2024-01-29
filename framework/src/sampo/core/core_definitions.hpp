@@ -2,6 +2,7 @@
 // Core definitions file that mainly contains preprocessors and definitions that will be used throughout the project. // 
 #include "sampo/core/platforms.hpp"
 #include "sampo/core/datatypes.hpp"
+#include "sampo/core/assert.hpp"
 
 #define UNUSED(...) (void)(__VA_ARGS__)
 
