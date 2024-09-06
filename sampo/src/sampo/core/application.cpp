@@ -1,27 +1,42 @@
 #include "sampo_pch.hpp"
 #include "application.hpp"
 
-#include "entry_point.hpp"
+#ifdef SAMPO_PLATFORM_WINDOWS
+#include "platform/windows/game_win32.hpp"
+#endif // SAMPO_PLATFORM_WINDOWS
 
 namespace Sampo {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+    Application* Application::Create(StartParams& startParams)
 	{
         if (s_Instance)
         {
             SAMPO_CORE_CRITICAL("Sampo already initialized!");
-            return;
+            return nullptr;
         }
 
-		s_Instance = this;
+        if (startParams.m_IsGame)
+        {
+		    s_Instance = CreateApplication();
+            s_Instance->Init(startParams);
+        }
+
+        if (startParams.m_EnableNetworking)
+        {
+            //Sampo::Scope<Sampo::SocketAPI> SocketApi = Sampo::SocketAPI::Create();
+            //SocketApi->Init();
+        }
 
         SAMPO_CORE_TRACE("[Sampo initialized]");
+        return s_Instance;
 	}
 
-    void Application::Close()
+    Application* Application::CreateApplication()
     {
-		m_Running = false;
+#ifdef SAMPO_PLATFORM_WINDOWS
+        return new Win32Game();
+#endif // SAMPO_PLATFORM_WINDOWS
     }
 
     void Application::PushLayer(Layer* layer)

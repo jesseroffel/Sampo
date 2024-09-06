@@ -1,7 +1,9 @@
 #include "sampo_pch.hpp"
 #include "sampo/network/socket_api.hpp"
 
+#ifdef SAMPO_PLATFORM_WINDOWS
 #include "platform/windows/network/windows_socket_api.hpp"
+#endif // SAMPO_PLATFORM_WINDOWS
 
 namespace Sampo
 {

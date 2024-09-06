@@ -2,7 +2,9 @@
 #include "socket_address.hpp"
 #include "socket_api.hpp"
 
+#ifdef SAMPO_PLATFORM_WINDOWS
 #include "platform/windows/network/windows_socket_address_factory.hpp"
+#endif // SAMPO_PLATFORM_WINDOWS
 
 namespace Sampo
 {

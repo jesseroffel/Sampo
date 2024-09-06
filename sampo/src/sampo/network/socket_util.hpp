@@ -2,8 +2,9 @@
 #include "network_definitions.hpp"
 #include "socket_api.hpp"
 
-// TODO add platform check
+#ifdef SAMPO_PLATFORM_WINDOWS
 #include "platform/windows/network/windows_socket_util.hpp"
+#endif // SAMPO_PLATFORM_WINDOWS
 
 #include <vector>
 
