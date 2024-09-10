@@ -1,3 +1,4 @@
+#pragma once
 //* Common aliases for common datatypes
 #ifdef SAMPO_PLATFORM_WINDOWS
 using int8 = __int8;

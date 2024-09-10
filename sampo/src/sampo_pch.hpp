@@ -31,7 +31,6 @@
 
 // Sampo related
 #include "sampo/core/core_definitions.hpp"
-#include "sampo/core/log.hpp"
 
 // Platform specific includes //
 #ifdef SAMPO_PLATFORM_WINDOWS

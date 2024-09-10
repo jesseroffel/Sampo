@@ -1,5 +1,5 @@
 #include "sampo_pch.hpp"
-#include "sampo/core/log.hpp"
+#include "log.hpp"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -9,8 +9,11 @@ namespace Sampo {
     Ref<spdlog::logger> Log::s_CoreLogger;
     Ref<spdlog::logger> Log::s_ClientLogger;
 
-    void Log::Init()
+    void Log::Create()
     {
+        if (s_CoreLogger || s_ClientLogger)
+            return;
+
         std::vector<spdlog::sink_ptr> logSinks;
         logSinks.emplace_back(Sampo::CreateRef<spdlog::sinks::stdout_color_sink_mt>());
         logSinks.emplace_back(Sampo::CreateRef<spdlog::sinks::basic_file_sink_mt>("Sampo.log", true));

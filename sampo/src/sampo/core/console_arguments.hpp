@@ -9,8 +9,10 @@ namespace Sampo
 		~ConsoleArguments() = default;
 
 		static bool Create(int aArgc, char* aArgv[]);
+		static ConsoleArguments& GetInstance();
+		static void Shutdown();
 
-		static ConsoleArguments* GetInstance() { return s_myInstance; }
+		void Clear();
 
 		bool HasArgument(const std::string_view anArgumentKey) const;
 
@@ -33,6 +35,6 @@ namespace Sampo
 
 		std::unordered_map<std::string, std::string, StringHash, std::equal_to<>> myArguments;
 
-		static ConsoleArguments* s_myInstance;
+		static ConsoleArguments* s_Instance;
 	};
 }

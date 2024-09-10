@@ -1,62 +1,86 @@
 #include "sampo_pch.hpp"
 #include "application.hpp"
 
-#ifdef SAMPO_PLATFORM_WINDOWS
-#include "platform/windows/game_win32.hpp"
-#endif // SAMPO_PLATFORM_WINDOWS
+#include "console_arguments.hpp"
 
 namespace Sampo {
 	Application* Application::s_Instance = nullptr;
 
-    Application* Application::Create(StartParams& startParams)
+	Application* Application::Create(StartParams& aStartParams)
 	{
-        if (s_Instance)
-        {
-            SAMPO_CORE_CRITICAL("Sampo already initialized!");
-            return nullptr;
-        }
+		SAMPO_ASSERT_MSG(!s_Instance, "Sampo already initialized!");
 
-        if (startParams.m_IsGame)
-        {
-		    s_Instance = CreateApplication();
-            s_Instance->Init(startParams);
-        }
+		s_Instance = CreateApplication();
 
-        if (startParams.m_EnableNetworking)
-        {
-            //Sampo::Scope<Sampo::SocketAPI> SocketApi = Sampo::SocketAPI::Create();
-            //SocketApi->Init();
-        }
+		ConsoleArguments::Create(aStartParams.m_Argc, aStartParams.m_Argv);
 
-        SAMPO_CORE_TRACE("[Sampo initialized]");
-        return s_Instance;
+		Log::Create();
+
+		s_Instance->Init(aStartParams);
+		return s_Instance;
 	}
 
-    Application* Application::CreateApplication()
-    {
-#ifdef SAMPO_PLATFORM_WINDOWS
-        return new Win32Game();
-#endif // SAMPO_PLATFORM_WINDOWS
-    }
-
-    void Application::PushLayer(Layer* layer)
-    {
-        m_LayerStack.PushLayer(layer);
-        layer->OnAttach();
-    }
-
-    void Application::PopLayer(Layer* layer)
-    {
-        m_LayerStack.PushLayer(layer);
-        layer->OnDetach();
-    }
-
-    void Application::Run()
+	Application::~Application()
 	{
-        while (m_Running)
-        {
-            for (Layer* layer : m_LayerStack)
-                layer->OnUpdate(0);
-        }
+		SAMPO_ASSERT_MSG(!s_Instance, "Application was not Shutdown properly!");
+	}
+
+	Application& Application::GetInstance()
+	{
+		SAMPO_ASSERT_MSG(s_Instance, "Application instance has not been created!");
+		return *s_Instance;
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
+
+	void Application::PopLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnDetach();
+	}
+
+	void Application::Run()
+	{
+		while (m_Running)
+		{
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(0);
+
+			if (m_Platform)
+				m_Platform->Update();
+		}
+	}
+
+	void Application::Shutdown()
+	{
+		SAMPO_ASSERT_MSG(s_Instance, "Application instance already shut down!");
+ 
+		m_Platform->Shutdown();
+		delete m_Platform;
+		m_Platform = nullptr;
+
+		delete s_Instance;
+		s_Instance = nullptr;
+	}
+
+	Application* Application::CreateApplication()
+	{
+#ifdef SAMPO_PLATFORM_WINDOWS
+		return new Application();
+#endif // SAMPO_PLATFORM_WINDOWS
+	}
+
+	bool Application::Init(StartParams& aStartParams)
+	{
+		m_Platform = new Platform();
+
+		m_Platform->Init(aStartParams.m_ApplicationName);
+
+		SAMPO_CORE_TRACE("[Sampo initialized]");
+		return true;
 	}
 }

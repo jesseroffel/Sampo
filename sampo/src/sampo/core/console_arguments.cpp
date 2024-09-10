@@ -3,7 +3,7 @@
 
 namespace Sampo
 {
-	ConsoleArguments* ConsoleArguments::s_myInstance = nullptr;
+	ConsoleArguments* ConsoleArguments::s_Instance = nullptr;
 
 	ConsoleArguments::ConsoleArguments(int aArgc, char* aArgv[])
 	{
@@ -12,11 +12,32 @@ namespace Sampo
 
 	bool ConsoleArguments::Create(int aArgc, char* argv[])
 	{
-		if (s_myInstance)
+		if (s_Instance)
 			return false;
 
-		s_myInstance = new ConsoleArguments(aArgc, argv);
+		s_Instance = new ConsoleArguments(aArgc, argv);
 		return true;
+	}
+
+	ConsoleArguments& ConsoleArguments::GetInstance()
+	{
+		SAMPO_ASSERT_MSG(s_Instance, "ConsoleArguments instance does not exists!");
+		return *s_Instance;
+	}
+
+	void ConsoleArguments::Shutdown()
+	{
+		SAMPO_ASSERT_MSG(s_Instance, "ConsoleArguments instance does not exists!");
+
+		s_Instance->Clear();
+
+		delete s_Instance;
+		s_Instance = nullptr;
+	}
+
+	void ConsoleArguments::Clear()
+	{
+		myArguments.clear();
 	}
 
 	bool ConsoleArguments::HasArgument(const std::string_view anArgument) const

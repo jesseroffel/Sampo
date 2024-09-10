@@ -1,3 +1,4 @@
+#pragma once
 // Detect platform and set defines
 #ifdef _WIN32
     #ifndef SAMPO_PLATFORM_WINDOWS
