@@ -3,7 +3,6 @@
 # include and create #
 include_directories(${PROJECT_SOURCE_DIR}/demo/src)
 include_directories(${PROJECT_SOURCE_DIR}/sampo/src)
-include_directories(${PROJECT_SOURCE_DIR}/sampo/vendor/spdlog/include)
 
 add_executable(demo "src/main_win32.cpp")
 
@@ -23,7 +22,4 @@ target_link_libraries(demo PUBLIC sampo)
 if (MSVC)
 	target_compile_options(demo PUBLIC /MP)
 	target_compile_options(demo PRIVATE /W4)
-	add_compile_definitions(demo PRIVATE SAMPO_PLATFORM_WINDOWS)
-
-	include_directories(${PROJECT_SOURCE_DIR}/sampo/src/platform/windows)
 endif()

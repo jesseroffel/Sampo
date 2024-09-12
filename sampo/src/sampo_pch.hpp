@@ -2,12 +2,6 @@
 // Pre-compiled header for commonly used features from the STL library and Sampo framework // 
 #include "sampo/core/platforms.hpp"
 
-#ifdef SAMPO_PLATFORM_WINDOWS
-	#ifndef NOMINMAX
-		#define NOMINMAX
-	#endif // NOMINMAX
-#endif // SAMPO_PLATFORM_WINDOWS
-
 #include <algorithm>
 #include <functional>
 #include <iostream>
