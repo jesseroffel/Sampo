@@ -1,6 +1,7 @@
 #include "sampo_pch.hpp"
 #include "window_win32.hpp"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Sampo
@@ -24,6 +25,8 @@ namespace Sampo
 
 		m_GLFWWindow = glfwCreateWindow((int)m_Params.m_Width, m_Params.m_Height, m_Params.m_WindowName.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_GLFWWindow);
+		SAMPO_ASSERT_MSG(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize Glad!");
+
 		glfwSetWindowUserPointer(m_GLFWWindow, &m_Params);
 		SetVSync(true);
 	}

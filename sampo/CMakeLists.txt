@@ -13,28 +13,36 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/sampo/${outputdir})
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)
 
 # Compile settings #
-target_compile_features(sampo PRIVATE cxx_std_20)
+target_compile_features(sampo PUBLIC cxx_std_20)
 
 # Platform specifics #
 if (WIN32)
-	add_compile_definitions(sampo PRIVATE SAMPO_PLATFORM_WINDOWS)
-	include_directories(${PROJECT_SOURCE_DIR}/sampo/src/platform)
 
+	# Library source includes
+	target_include_directories(sampo PUBLIC ${PROJECT_SOURCE_DIR}/sampo/src/platform)
+
+	# Library includes
 	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/GLFW)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/glad)
 	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/spdlog)
 
 	target_sources(sampo PUBLIC 
 	"src/platform/windows/core/platform_win32.hpp" "src/platform/windows/core/platform_win32.cpp" "src/platform/windows/graphics/window_win32.hpp" "src/platform/windows/graphics/window_win32.cpp")
 	
-	target_link_libraries(sampo glfw)
-	target_link_libraries(sampo opengl32.lib)
-	target_link_libraries(sampo spdlog::spdlog)
+	# Link included libraries
+	target_link_libraries(sampo PUBLIC glfw)
+	target_link_libraries(sampo PUBLIC glad)
+	target_link_libraries(sampo PUBLIC opengl32.lib)
+	target_link_libraries(sampo PUBLIC spdlog::spdlog)
+
+	add_compile_definitions(sampo PUBLIC SAMPO_PLATFORM_WINDOWS)
+	add_compile_definitions(sampo PUBLIC GLFW_INCLUDE_NONE)
 endif()
 
 # Compiler version specifics #
 if (MSVC)
 	target_compile_options(sampo PUBLIC /MP)
-	target_compile_options(sampo PRIVATE /W4 /WX)
+	target_compile_options(sampo PUBLIC /W4 /WX)
 else()
-	target_compile_options(sampo PRIVATE -Wall -Wextra -pedantic -Werror)
+	target_compile_options(sampo PUBLIC -Wall -Wextra -pedantic -Werror)
 endif()
