@@ -9,7 +9,7 @@ namespace Sampo
 		Win32Platform();
 		~Win32Platform() = default;
 
-		void Init(const std::string& aWindowName);
+		bool Init(const std::string& aWindowName);
 		void Update();
 		void Shutdown();
 

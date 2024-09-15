@@ -2,6 +2,10 @@
 #include "application.hpp"
 
 #include "console_arguments.hpp"
+#include "sampo/events/application_event.hpp"
+
+#include "sampo/core/platform.hpp"
+#include "sampo/graphics/window.hpp"
 
 namespace Sampo {
 	Application* Application::s_Instance = nullptr;
@@ -22,7 +26,6 @@ namespace Sampo {
 
 	Application::~Application()
 	{
-		SAMPO_ASSERT_MSG(!s_Instance, "Application was not Shutdown properly!");
 	}
 
 	Application& Application::GetInstance()
@@ -41,6 +44,12 @@ namespace Sampo {
 	{
 		m_LayerStack.PushLayer(layer);
 		layer->OnDetach();
+	}
+
+	void Application::OnEvent(Event& anEvent)
+	{
+		if (anEvent.GetEventType() == EventType::WindowClose)
+			OnWindowClose();
 	}
 
 	void Application::Run()
@@ -77,10 +86,18 @@ namespace Sampo {
 	bool Application::Init(StartParams& aStartParams)
 	{
 		m_Platform = new Platform();
-
 		m_Platform->Init(aStartParams.m_ApplicationName);
+
+		Window* window = m_Platform->GetWindow();
+		
+		window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
 		SAMPO_CORE_TRACE("[Sampo initialized]");
 		return true;
+	}
+
+	void Application::OnWindowClose()
+	{
+		m_Running = false;
 	}
 }

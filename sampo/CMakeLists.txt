@@ -4,7 +4,7 @@
 include_directories(${PROJECT_SOURCE_DIR}/sampo/src)
 
 add_library(sampo STATIC 
-	"src/sampo.hpp" "src/sampo_pch.hpp" "src/sampo_pch.cpp" "src/sampo/core/console_arguments.hpp" "src/sampo/core/datatypes.hpp" "src/sampo/core/application.hpp" "src/sampo/core/application.cpp" "src/sampo/core/core_definitions.hpp" "src/sampo/core/layer.hpp" "src/sampo/core/layer.cpp" "src/sampo/core/log.hpp" "src/sampo/core/log.cpp" "src/sampo/core/platforms.hpp" "src/sampo/core/console_arguments.cpp" "src/sampo/core/assert.hpp" "src/sampo/core/platform.hpp" "src/sampo/graphics/window.hpp")
+	"src/sampo.hpp" "src/sampo_pch.hpp" "src/sampo_pch.cpp" "src/sampo/core/console_arguments.hpp" "src/sampo/core/datatypes.hpp" "src/sampo/core/application.hpp" "src/sampo/core/application.cpp" "src/sampo/core/core_definitions.hpp" "src/sampo/core/layer.hpp" "src/sampo/core/layer.cpp" "src/sampo/core/log.hpp" "src/sampo/core/log.cpp" "src/sampo/core/platforms.hpp" "src/sampo/core/console_arguments.cpp" "src/sampo/core/assert.hpp" "src/sampo/core/platform.hpp" "src/sampo/graphics/window.hpp" "src/sampo/events/event.hpp" "src/sampo/events/application_event.hpp" "src/sampo/events/key_event.hpp" "src/sampo/events/mouse_event.hpp")
 
 # Overrides globals #
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/sampo/${outputdir})

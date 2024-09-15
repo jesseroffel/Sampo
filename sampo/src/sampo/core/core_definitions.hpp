@@ -1,33 +1,35 @@
 #pragma once
-// Core definitions file that mainly contains preprocessors and definitions that will be used throughout the project. // 
-#include "sampo/core/platforms.hpp"
-#include "sampo/core/datatypes.hpp"
+// Detect platform and set defines
+#ifdef _WIN32
+#ifndef SAMPO_PLATFORM_WINDOWS
+#define SAMPO_PLATFORM_WINDOWS (1)
+#endif // SAMPO_PLATFORM_WINDOWS
 
-#ifdef SAMPO_ASSERT_ENABLED
-#include "sampo/core/assert.hpp"
-#endif // SAMPO_ASSERT_ENABLED
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif // NOMINMAX
 
-#define UNUSED(...) (void)(__VA_ARGS__)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif //WIN32_LEAN_AND_MEAN
 
-// Wrapper around std smart pointers, inspired by Hazel. //
-#include <memory>
-namespace Sampo
-{
-	template<typename T>
-	using Scope = std::unique_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Scope<T> CreateScope(Args&& ... args)
-	{
-		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
+#ifdef _WIN64
+#define SAMPO_PLATFORM_WIN64 (1)
+#else 
+#error "Window x86 (32bit) is not supported!"
+#endif // _WIN64
+#else
+#error "Specified platform not supported!"
+#endif // _WIN32
 
-	template<typename T>
-	using Ref = std::shared_ptr<T>;
-	template<typename T, typename ... Args>
-    constexpr Ref<T> CreateRef(Args&& ... args)
-    {
-        return std::make_shared<T>(std::forward<Args>(args)...);
-    }
-}
+#ifdef NDEBUG   // replace with CMAKE included argument
+#define SAMPO_ASSERT_ENABLED (0)
+#else
+#define SAMPO_ASSERT_ENABLED (1)
+#endif //NDEBUG
 
-#include "sampo/core/log.hpp"
+#if _MSC_VER
+#define SAMPO_COMPILER_VISUALSTUDIO (1)
+#else 
+#define SAMPO_COMPILER_VISUALSTUDIO (0)
+#endif //_MSC_VER

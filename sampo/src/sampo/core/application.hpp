@@ -5,6 +5,9 @@
 // Application Class, using the main entry point to start common systems, to be defined in the client application // 
 namespace Sampo 
 {
+	class Event;
+	class WindowCloseEvent;
+
 	struct StartParams
 	{
 		std::string m_ApplicationName;
@@ -25,6 +28,8 @@ namespace Sampo
 		void PushLayer(Layer* layer);
 		void PopLayer(Layer* layer);
 
+		void OnEvent(Event& anEvent);
+
 		void Run();
 		void Shutdown();
 
@@ -34,6 +39,8 @@ namespace Sampo
 		static Application* CreateApplication();
 
 		virtual bool Init(StartParams& aStartParams);
+
+		void OnWindowClose();
 
 		bool m_Running = true;
 		LayerStack m_LayerStack;
