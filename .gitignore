@@ -333,5 +333,3 @@ ASALocalRun/
 # Sampo related ignores
 # Premake5 executable for testing configurations
 premake5.exe
-
-[Ff]ramework/vendor/
