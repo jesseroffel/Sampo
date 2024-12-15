@@ -1,6 +1,7 @@
 #pragma once
 #include "event.hpp"
 
+#include <glm/glm.hpp>
 #include <sstream>
 
 namespace Sampo
@@ -8,22 +9,21 @@ namespace Sampo
 	class MouseMovedEvent : public Event
 	{
 	public:
-		MouseMovedEvent(float aPositionX, float aPositionY) : m_MouseX(aPositionX), m_MouseY(aPositionY) {}
+		MouseMovedEvent(const glm::vec2& aPosition) : m_MousePosition(aPosition) {}
 
-		float GetX() const { return m_MouseX; }
-		float GetY() const { return m_MouseY; }
+		const glm::vec2& GetMousePosition() const { return m_MousePosition; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseMoved Event: " << m_MouseX << ", " << m_MouseY;
+			ss << "MouseMoved Event: " << m_MousePosition.x << ", " << m_MousePosition.y;
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(MouseMoved)
-		EVENT_CLASS_CATEGORY(Mouse | Input)
+		EVENT_CLASS_CATEGORY(EventMouse | EventInput)
 	private:
-		float m_MouseX, m_MouseY;
+		glm::vec2 m_MousePosition;
 	};
 
 	class MouseScrolledEvent : public Event
@@ -42,7 +42,7 @@ namespace Sampo
 		}
 
 		EVENT_CLASS_TYPE(MouseScrolled)
-		EVENT_CLASS_CATEGORY(Mouse | Input)
+		EVENT_CLASS_CATEGORY(EventMouse | EventInput)
 	private:
 		float m_OffsetX, m_OffsetY;
 	};
@@ -52,7 +52,7 @@ namespace Sampo
 	public:
 		int GetMouseButton() const { return m_Button; }
 
-		EVENT_CLASS_CATEGORY(Mouse | Input)
+		EVENT_CLASS_CATEGORY(EventMouse | EventInput)
 	protected:
 		MouseButtonEvent(int aButton) : m_Button(aButton) {}
 		int m_Button;

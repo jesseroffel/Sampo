@@ -4,4 +4,4 @@
 	#include <Windows.h>
 #endif // SAMPO_PLATFORM_WINDOWS
 
-#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+#define BIND_EVENT_FN(x, obj) std::bind(&x, obj, std::placeholders::_1)

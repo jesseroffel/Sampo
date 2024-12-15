@@ -4,7 +4,7 @@
 include_directories(${PROJECT_SOURCE_DIR}/sampo/src)
 
 add_library(sampo STATIC 
-	"src/sampo.hpp" "src/sampo_pch.hpp" "src/sampo_pch.cpp" "src/sampo/core/console_arguments.hpp" "src/sampo/core/datatypes.hpp" "src/sampo/core/application.hpp" "src/sampo/core/application.cpp" "src/sampo/core/core_definitions.hpp" "src/sampo/core/layer.hpp" "src/sampo/core/layer.cpp" "src/sampo/core/log.hpp" "src/sampo/core/log.cpp" "src/sampo/core/console_arguments.cpp" "src/sampo/core/assert.hpp" "src/sampo/core/platform.hpp" "src/sampo/graphics/window.hpp" "src/sampo/events/event.hpp" "src/sampo/events/application_event.hpp" "src/sampo/events/key_event.hpp" "src/sampo/events/mouse_event.hpp")
+	"src/sampo.hpp" "src/sampo_pch.hpp" "src/sampo_pch.cpp" "src/sampo/core/console_arguments.hpp" "src/sampo/core/datatypes.hpp" "src/sampo/core/application.hpp" "src/sampo/core/application.cpp" "src/sampo/core/core_definitions.hpp" "src/sampo/core/layer.hpp" "src/sampo/core/layer.cpp" "src/sampo/core/log.hpp" "src/sampo/core/log.cpp" "src/sampo/core/console_arguments.cpp" "src/sampo/core/assert.hpp" "src/sampo/core/platform.hpp" "src/sampo/graphics/window.hpp" "src/sampo/events/event.hpp" "src/sampo/events/application_event.hpp" "src/sampo/events/key_event.hpp" "src/sampo/events/mouse_event.hpp" "src/sampo/input/mouse.hpp" "src/sampo/input/mouse.cpp" "src/sampo/input/input.hpp" "src/sampo/input/input.cpp" "src/sampo/input/input_mapping.hpp")
 
 # Overrides globals #
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/sampo/${outputdir})
@@ -25,15 +25,17 @@ if (WIN32)
 	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/GLFW)
 	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/glad)
 	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/spdlog)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/sampo/vendor/glm)
 
 	target_sources(sampo PUBLIC 
-	"src/platform/platform_definitions.hpp" "src/platform/windows/core/platform_win32.hpp" "src/platform/windows/core/platform_win32.cpp" "src/platform/windows/graphics/window_win32.hpp" "src/platform/windows/graphics/window_win32.cpp")
+	"src/platform/platform_definitions.hpp" "src/platform/windows/core/platform_win32.hpp" "src/platform/windows/core/platform_win32.cpp" "src/platform/windows/graphics/window_win32.hpp" "src/platform/windows/graphics/window_win32.cpp" "src/platform/windows/input/mouse_win32.cpp")
 	
 	# Link included libraries
 	target_link_libraries(sampo PUBLIC glfw)
 	target_link_libraries(sampo PUBLIC glad)
 	target_link_libraries(sampo PUBLIC opengl32.lib)
 	target_link_libraries(sampo PUBLIC spdlog::spdlog)
+	target_link_libraries(sampo PUBLIC glm::glm-header-only)
 
 	add_compile_definitions(sampo PUBLIC SAMPO_PLATFORM_WINDOWS)
 	add_compile_definitions(sampo PUBLIC GLFW_INCLUDE_NONE)

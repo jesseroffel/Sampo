@@ -5,11 +5,22 @@ namespace Sampo
 	Win32Platform::Win32Platform()
 	{
 		m_Window = new Win32Window();
+		m_Input = new Input();
+	}
+
+	Win32Platform::~Win32Platform()
+	{
+		delete m_Input;
+		delete m_Window;
 	}
 
 	bool Win32Platform::Init(const std::string& aWindowName)
 	{
-		return m_Window->Init(aWindowName);
+		if (!m_Window->Init(aWindowName))
+			return false;
+
+		m_Window->SetMouseEventCallback(BIND_EVENT_FN(Input::OnMouseEvent, m_Input));
+		return true;
 	}
 
 	void Win32Platform::Update()

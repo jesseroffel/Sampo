@@ -89,8 +89,7 @@ namespace Sampo {
 		m_Platform->Init(aStartParams.m_ApplicationName);
 
 		Window* window = m_Platform->GetWindow();
-		
-		window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+		window->SetWindowEventCallback(BIND_EVENT_FN(Application::OnEvent, this));
 
 		SAMPO_CORE_TRACE("[Sampo initialized]");
 		return true;

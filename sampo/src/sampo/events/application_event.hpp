@@ -19,7 +19,7 @@ namespace Sampo
 		}
 
 		EVENT_CLASS_TYPE(WindowResize)
-		EVENT_CLASS_CATEGORY(App)
+		EVENT_CLASS_CATEGORY(EventApplicaton)
 	private:
 		uint32 m_Width, m_Height;
 	};
@@ -30,6 +30,6 @@ namespace Sampo
 		WindowCloseEvent() = default;
 
 		EVENT_CLASS_TYPE(WindowClose)
-		EVENT_CLASS_CATEGORY(App)
+		EVENT_CLASS_CATEGORY(EventApplicaton)
 	};
 }

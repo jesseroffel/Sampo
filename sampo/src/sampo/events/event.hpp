@@ -14,10 +14,10 @@ namespace Sampo
 	enum EventCategory
 	{
 		None = 0,
-		Input = 1 << 0,
-		Keyboard = 1 << 1,
-		Mouse = 1 << 2,
-		App = 1 << 3
+		EventInput = 1 << 0,
+		EventKeyboard = 1 << 1,
+		EventMouse = 1 << 2,
+		EventApplicaton = 1 << 3
 	};
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
