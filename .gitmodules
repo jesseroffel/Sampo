@@ -7,3 +7,6 @@
 [submodule "sampo/vendor/glm"]
 	path = sampo/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "sampo/vendor/imgui"]
+	path = sampo/vendor/imgui
+	url = https://github.com/ocornut/imgui

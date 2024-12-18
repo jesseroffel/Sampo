@@ -21,5 +21,4 @@ target_link_libraries(demo PUBLIC sampo)
 # Compiler version specifics # 
 if (MSVC)
 	target_compile_options(demo PUBLIC /MP)
-	target_compile_options(demo PUBLIC /W4)
 endif()

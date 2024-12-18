@@ -6,6 +6,7 @@
 
 #include "sampo/core/platform.hpp"
 #include "sampo/graphics/window.hpp"
+#include "sampo/debugging/imgui_layer.hpp"
 
 namespace Sampo {
 	Application* Application::s_Instance = nullptr;
@@ -24,10 +25,6 @@ namespace Sampo {
 		return s_Instance;
 	}
 
-	Application::~Application()
-	{
-	}
-
 	Application& Application::GetInstance()
 	{
 		SAMPO_ASSERT_MSG(s_Instance, "Application instance has not been created!");
@@ -42,7 +39,7 @@ namespace Sampo {
 
 	void Application::PopLayer(Layer* layer)
 	{
-		m_LayerStack.PushLayer(layer);
+		m_LayerStack.PopLayer(layer);
 		layer->OnDetach();
 	}
 
@@ -56,8 +53,19 @@ namespace Sampo {
 	{
 		while (m_Running)
 		{
+			Window* window = GetPlatform()->GetWindow();
+			float time = window->GetTime();
+			float deltaTime = time - m_Time;
+			m_Time = time;
+
+			window->OnStartFrame();
+
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(0);
+				layer->OnUpdate(deltaTime);
+
+			m_ImGuiLayer->Begin();
+			// layer->ImGuiDebug();
+			m_ImGuiLayer->End();
 
 			if (m_Platform)
 				m_Platform->Update();
@@ -90,6 +98,12 @@ namespace Sampo {
 
 		Window* window = m_Platform->GetWindow();
 		window->SetWindowEventCallback(BIND_EVENT_FN(Application::OnEvent, this));
+
+		if (aStartParams.m_EnableImGui)
+		{
+			m_ImGuiLayer = new ImGuiLayer();
+			PushLayer(m_ImGuiLayer);
+		}
 
 		SAMPO_CORE_TRACE("[Sampo initialized]");
 		return true;

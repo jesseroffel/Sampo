@@ -6,6 +6,7 @@
 namespace Sampo 
 {
 	class Event;
+	class ImGuiLayer;
 	class WindowCloseEvent;
 
 	struct StartParams
@@ -14,6 +15,7 @@ namespace Sampo
 		std::string m_WindowName;
 		std::string m_ExecuteDir;
 		std::string m_DataDir;
+		bool m_EnableImGui{ false };
 
 		int m_Argc{ -1 };
 		char** m_Argv{ nullptr };
@@ -33,8 +35,10 @@ namespace Sampo
 		void Run();
 		void Shutdown();
 
+		const Platform* GetPlatform() const { return m_Platform; }
+
 	protected:
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		static Application* CreateApplication();
 
@@ -42,10 +46,13 @@ namespace Sampo
 
 		void OnWindowClose();
 
-		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		Platform* m_Platform;
+		Platform* m_Platform{ nullptr };
+		ImGuiLayer* m_ImGuiLayer{ nullptr };
+
+		bool m_Running{ true };
+		float m_Time{ 0.0f };
 
 	private:
 		static Application* s_Instance;

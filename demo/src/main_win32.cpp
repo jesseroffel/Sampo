@@ -8,6 +8,7 @@ int main(int argc, char* argv[])
 	startParams.m_ApplicationName = "Demo - Sampo Application";
 	startParams.m_Argc = argc;
 	startParams.m_Argv = argv;
+	startParams.m_EnableImGui = true;
 
 	if (!Application::Create(startParams))
 	{

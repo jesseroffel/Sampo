@@ -28,11 +28,13 @@ namespace Sampo
 		~Win32Window();
 
 		bool Init(const WindowParams& aWindowProperties);
+		void OnStartFrame();
 		void Update();
 		void Shutdown();
 
 		virtual uint32 GetWidth() const { return m_Params.m_Width; }
 		virtual uint32 GetHeight() const { return m_Params.m_Height; }
+		virtual float GetTime() const;
 		virtual const std::string& GetWindowName() const { return m_Params.m_WindowName; }
 		void* GetNativeWindow() const { return m_GLFWWindow; }
 

@@ -40,13 +40,18 @@ namespace Sampo
 
 		LogRendererInfo();
 		SetGLFWCallbacks();
+
+		glClearColor(0, 0, 0.5, 1);
 		return true;
+	}
+
+	void Win32Window::OnStartFrame()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void Win32Window::Update()
 	{
-		glClearColor(0, 0, 0.5, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
 		glfwSwapBuffers(m_GLFWWindow);
 	}
@@ -56,6 +61,11 @@ namespace Sampo
 		SAMPO_ASSERT_MSG(m_GLFWWindow, "Window does not exists!");
 		glfwDestroyWindow(m_GLFWWindow);
 		m_GLFWWindow = nullptr;
+	}
+
+	float Win32Window::GetTime() const
+	{
+		return static_cast<float>(glfwGetTime());
 	}
 
 	void Win32Window::SetVSync(bool anEnable)
