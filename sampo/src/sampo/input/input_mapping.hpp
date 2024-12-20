@@ -2,7 +2,7 @@
 
 namespace Sampo
 {
-	enum class ButtonState
+	enum class ButtonKeyState
 	{
 		kUp = 0,
 		kFalling,

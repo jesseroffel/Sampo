@@ -1,4 +1,6 @@
 #pragma once
+#include "input_device.hpp"
+
 #include "mouse.hpp"
 
 namespace Sampo
@@ -8,17 +10,23 @@ namespace Sampo
 	{
 	public:
 		Input() = default;
-		~Input() = default;
+		~Input();
 
-		// Buttons
-		// Gamepad
-		bool IsMousePresent() const;
-		glm::vec2 GetMousePosition() const;
-		float GetMouseScrollOffset() const;
+		virtual bool Init();
+
+		virtual InputDevice* AddInputDevice(InputDevice* anInputDevice);
+
+		int GetFirstInputDeviceIndexByType(InputType anInputType) const;
+		const InputDevice* GetInputDevice(uint32 anInputDeviceIndex) const;
+		std::vector<const InputDevice*> GetInputDevicesByUserIndex(int anUserIndex) const;
+		std::vector<const InputDevice*> GetAllInputDevicesOfTypeInputType(InputType anInputType) const;
 
 		void OnMouseEvent(Event& aMouseEvent);
 
+		virtual void ImGuiDebug();
+
 	protected:
-		Mouse m_Mouse;
+		Mouse* m_Mouse{ nullptr };
+		std::vector<InputDevice*> myInputDevices;
 	};
 }

@@ -66,7 +66,7 @@ namespace Sampo
 			{
 				MouseScrolledEvent& scrolledEvent = static_cast<MouseScrolledEvent&>(aMouseEvent);
 				scrolledEvent.ToString();
-				SetScrollOffset(scrolledEvent.GetXOffset());
+				SetScrollOffset(scrolledEvent.GetOffset());
 				break;
 			}
 			default:

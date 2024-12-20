@@ -169,7 +169,7 @@ namespace Sampo
 		{
 			WindowParams& params = *static_cast<WindowParams*>(glfwGetWindowUserPointer(aWindow));
 
-			MouseScrolledEvent mouseScrollEvent(static_cast<float>(xOffset), static_cast<float>(yOffset));
+			MouseScrolledEvent mouseScrollEvent({ xOffset, yOffset });
 			params.m_MouseEventCallback(mouseScrollEvent);
 		});
 

@@ -64,7 +64,10 @@ namespace Sampo {
 				layer->OnUpdate(deltaTime);
 
 			m_ImGuiLayer->Begin();
-			// layer->ImGuiDebug();
+
+			// TODO - change to debugger container for imgui rendering
+			m_Platform->ImGuiDebug();
+
 			m_ImGuiLayer->End();
 
 			if (m_Platform)

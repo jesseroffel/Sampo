@@ -29,22 +29,21 @@ namespace Sampo
 	class MouseScrolledEvent : public Event
 	{
 	public:
-		MouseScrolledEvent(float aXOffset, float aYOffset) : m_OffsetX(aXOffset), m_OffsetY(aYOffset) {}
+		MouseScrolledEvent(const glm::vec2& anOffset) : m_Offset(anOffset){}
 
-		float GetXOffset() const { return m_OffsetX; }
-		float GetYOffset() const { return m_OffsetY; }
+		const glm::vec2& GetOffset() const { return m_Offset; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseScrolled Event: " << m_OffsetX << ", " << m_OffsetY;
+			ss << "MouseScrolled Event: " << m_Offset.x << ", " << m_Offset.y;
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(MouseScrolled)
 		EVENT_CLASS_CATEGORY(EventMouse | EventInput)
 	private:
-		float m_OffsetX, m_OffsetY;
+		glm::vec2 m_Offset;
 	};
 
 	class MouseButtonEvent : public Event

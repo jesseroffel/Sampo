@@ -1,5 +1,7 @@
 #include "platform/windows/core/platform_win32.hpp"
 
+#include <imgui.h>
+
 namespace Sampo
 {
 	Win32Platform::Win32Platform()
@@ -19,6 +21,7 @@ namespace Sampo
 		if (!m_Window->Init(aWindowName))
 			return false;
 
+		m_Input->Init();
 		m_Window->SetMouseEventCallback(BIND_EVENT_FN(Input::OnMouseEvent, m_Input));
 		return true;
 	}
@@ -40,4 +43,17 @@ namespace Sampo
 	{
 		return m_Window;
 	}
+
+	void Win32Platform::ImGuiDebug()
+	{
+		ImGui::Begin("Basic device debugger");
+
+		ImGuiIO& io = ImGui::GetIO();
+		ImGui::Text("Average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+		m_Input->ImGuiDebug();
+
+		ImGui::End();
+	}
+
 }
