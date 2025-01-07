@@ -22,6 +22,7 @@ namespace Sampo
 			return false;
 
 		m_Input->Init();
+		m_Window->SetKeyboardEventCallback(BIND_EVENT_FN(Input::OnKeyboardEvent, m_Input));
 		m_Window->SetMouseEventCallback(BIND_EVENT_FN(Input::OnMouseEvent, m_Input));
 		return true;
 	}

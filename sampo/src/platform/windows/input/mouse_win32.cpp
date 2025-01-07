@@ -1,39 +1,40 @@
 #include "sampo_pch.hpp"
 #include "sampo/input/mouse.hpp"
 
-#include <GLFW/glfw3.h>
 #include "sampo/events/mouse_event.hpp"
+
+#include <GLFW/glfw3.h>
 
 namespace Sampo
 {
 	MouseButton Mouse::GetMouseButtonFromPlatform(int aMouseCode) const
 	{
-		MouseButton button = MouseButton::kUnknownMouseButton;
+		MouseButton button = MouseButton::kUnknownButton;
 		switch (aMouseCode)
 		{
 		case GLFW_MOUSE_BUTTON_LEFT:
 		{
-			button = MouseButton::kLeftMouse;
+			button = MouseButton::kLeft;
 			break;
 		}
 		case GLFW_MOUSE_BUTTON_RIGHT:
 		{
-			button = MouseButton::kRightMouse;
+			button = MouseButton::kRight;
 			break;
 		}
 		case GLFW_MOUSE_BUTTON_MIDDLE:
 		{
-			button = MouseButton::kMiddleMouse;
+			button = MouseButton::kMiddle;
 			break;
 		}
 		case GLFW_MOUSE_BUTTON_4:
 		{
-			button = MouseButton::kMouseButton4;
+			button = MouseButton::kButton4;
 			break;
 		}
 		case GLFW_MOUSE_BUTTON_5:
 		{
-			button = MouseButton::kMouseButton5;
+			button = MouseButton::kButton5;
 			break;
 		}
 		}

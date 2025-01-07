@@ -1,10 +1,12 @@
 #pragma once
 #include "input_device.hpp"
 
-#include "mouse.hpp"
-
 namespace Sampo
 {
+	class Event;
+	class Keyboard;
+	class Mouse;
+
 	// Input container class to retrieve input data from
 	class Input
 	{
@@ -22,11 +24,14 @@ namespace Sampo
 		std::vector<const InputDevice*> GetAllInputDevicesOfTypeInputType(InputType anInputType) const;
 
 		void OnMouseEvent(Event& aMouseEvent);
+		void OnKeyboardEvent(Event& aKeyboardEvent);
 
 		virtual void ImGuiDebug();
 
 	protected:
 		Mouse* m_Mouse{ nullptr };
+		Keyboard* m_Keyboard{ nullptr };
+
 		std::vector<InputDevice*> myInputDevices;
 	};
 }

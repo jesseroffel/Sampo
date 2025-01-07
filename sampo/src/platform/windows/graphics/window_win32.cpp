@@ -124,19 +124,19 @@ namespace Sampo
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent keyPressEvent(aKey, 0);
-					params.m_WindowEventCallback(keyPressEvent);
+					params.m_KeyboardEventCallback(keyPressEvent);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent keyReleasedEvent(aKey);
-					params.m_WindowEventCallback(keyReleasedEvent);
+					params.m_KeyboardEventCallback(keyReleasedEvent);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent keyRepeatEvent(aKey, 1);
-					params.m_WindowEventCallback(keyRepeatEvent);
+					params.m_KeyboardEventCallback(keyRepeatEvent);
 					break;
 				}
 			}

@@ -36,7 +36,8 @@ add_library(sampo STATIC
 	${SAMPO_SOURCE_DIR}/input/input.hpp
 	${SAMPO_SOURCE_DIR}/input/input.cpp
 	${SAMPO_SOURCE_DIR}/input/input_mapping.hpp
-)
+	${SAMPO_SOURCE_DIR}/input/keyboard.hpp
+	${SAMPO_SOURCE_DIR}/input/keyboard.cpp)
 
 # Configure solution #
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)
@@ -65,6 +66,7 @@ if (WIN32)
 		${PLATFORM_INCLUDE_DIR}/windows/graphics/window_win32.hpp
 		${PLATFORM_INCLUDE_DIR}/windows/graphics/window_win32.cpp
 		${PLATFORM_INCLUDE_DIR}/windows/input/mouse_win32.cpp
+		${PLATFORM_INCLUDE_DIR}/windows/input/keyboard_win32.cpp
 		${VENDOR_INCLUDE_DIR}/imgui/imgui.h
 		${VENDOR_INCLUDE_DIR}/imgui/imgui.cpp
 		${VENDOR_INCLUDE_DIR}/imgui/imgui_draw.cpp

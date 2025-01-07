@@ -13,6 +13,7 @@ namespace Sampo
 		uint32 m_Height;
 
 		std::function<void(Event&)> m_WindowEventCallback;
+		std::function<void(Event&)> m_KeyboardEventCallback;
 		std::function<void(Event&)> m_MouseEventCallback;
 
 		WindowParams(const std::string& aWindowName = "Sampo Application", uint32 aWidth = 1280, uint32 aHeight = 720)
@@ -39,6 +40,7 @@ namespace Sampo
 		void* GetNativeWindow() const { return m_GLFWWindow; }
 
 		void SetWindowEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_WindowEventCallback = aCallback; }
+		void SetKeyboardEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_KeyboardEventCallback = aCallback; }
 		void SetMouseEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_MouseEventCallback = aCallback; }
 
 	private:

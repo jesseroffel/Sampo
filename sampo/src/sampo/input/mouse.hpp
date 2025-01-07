@@ -1,7 +1,6 @@
 #pragma once
-#include "input_mapping.hpp"
-
 #include "input_device.hpp"
+#include "input_mapping.hpp"
 
 #include <glm/glm.hpp>
 
@@ -13,7 +12,7 @@ namespace Sampo
 	{
 		glm::vec2 m_Position{ -1, -1 };
 		glm::vec2 m_ScrollOffset{ 0.f, 0.f };
-		bool m_Pressed[5]{ false };
+		ButtonKeyState m_Keys[8]{ ButtonKeyState::kUp };
 		bool m_Enabled{ false };
 	};
 
@@ -27,7 +26,7 @@ namespace Sampo
 		void SetIsMousePresent(bool aState) { m_MouseState.m_Enabled = aState; }
 		bool IsPresent() const { return m_MouseState.m_Enabled; }
 
-		static bool IsValidButton(MouseButton aMouseButton);
+		bool IsValidButton(MouseButton aMouseButton) const;
 
 		void SetPosition(const glm::vec2& aPosition) { m_MouseState.m_Position = aPosition; }
 		void SetScrollOffset(const glm::vec2& anOffset) { m_MouseState.m_ScrollOffset = anOffset; }
