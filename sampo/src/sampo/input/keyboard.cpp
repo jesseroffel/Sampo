@@ -22,7 +22,7 @@ namespace Sampo
 		const uint32 index = static_cast<uint32>(aKeyboardButton) - 1;
 
 		const bool repeating = aIsDown && m_Keys[index] == ButtonKeyState::kFalling || m_Keys[index] == ButtonKeyState::kDown;
-		const ButtonKeyState keyState = repeating ? ButtonKeyState::kDown : aIsDown ? ButtonKeyState::kFalling : ButtonKeyState::kUp;
+		const ButtonKeyState keyState = !aIsDown ? ButtonKeyState::kUp : repeating ? ButtonKeyState::kDown : ButtonKeyState::kFalling;
 		m_Keys[index] = keyState;
 	}
 

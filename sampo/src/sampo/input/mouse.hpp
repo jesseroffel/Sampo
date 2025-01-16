@@ -13,18 +13,12 @@ namespace Sampo
 		glm::vec2 m_Position{ -1, -1 };
 		glm::vec2 m_ScrollOffset{ 0.f, 0.f };
 		ButtonKeyState m_Keys[8]{ ButtonKeyState::kUp };
-		bool m_Enabled{ false };
 	};
 
 	class Mouse : public InputDevice
 	{
 	public:
 		Mouse();
-
-		bool InitDevice() override;
-
-		void SetIsMousePresent(bool aState) { m_MouseState.m_Enabled = aState; }
-		bool IsPresent() const { return m_MouseState.m_Enabled; }
 
 		bool IsValidButton(MouseButton aMouseButton) const;
 
@@ -40,6 +34,8 @@ namespace Sampo
 		const MouseState& GetMouseState() const { return m_MouseState; }
 
 		void OnMouseEvent(Event& aMouseEvent);
+
+		void ImGuiDebug() override;
 
 	private:
 		MouseState m_MouseState;

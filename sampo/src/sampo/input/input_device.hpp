@@ -14,6 +14,8 @@ namespace Sampo
 
 		InputType GetInputType() const { return m_InputType; }
 		int GetUserIndex() const { return m_UserIndex; }
+
+		virtual void ImGuiDebug() {};
 	private:
 		InputType m_InputType{ InputType::kUnknown };
 		int m_UserIndex{ -1 };

@@ -4,6 +4,7 @@
 #include "sampo/events/key_event.hpp"
 
 #include <GLFW/glfw3.h>
+#include <imgui.h>
 
 namespace Sampo
 {
@@ -12,7 +13,7 @@ namespace Sampo
 		KeyboardButton button = KeyboardButton::kUnknownButton;
 		switch(aKeyboardCode)
 		{
-			case GLFW_KEY_SPACE: button = KeyboardButton::kBACKSPACE; break;
+			case GLFW_KEY_SPACE: button = KeyboardButton::kSPACE; break;
 			case GLFW_KEY_APOSTROPHE: button = KeyboardButton::kAPOSTROPHE; break;
 			case GLFW_KEY_COMMA: button = KeyboardButton::kCOMMA; break;
 			case GLFW_KEY_MINUS: button = KeyboardButton::kMINUS; break;
@@ -147,5 +148,172 @@ namespace Sampo
 				break;
 			}
 		}
+	}
+
+	void Keyboard::ImGuiDebug()
+	{
+		constexpr ImVec2 buttonSize(30, 20);
+		constexpr ImColor buttonPressedColor(1.0f, 0.4f, 0.4f);
+
+		auto printKey = [&buttonSize, &buttonPressedColor, this](KeyboardButton aKey, const char* label) {
+			bool isPressed = GetIsButtonPressed(aKey);
+			if (isPressed)
+				ImGui::PushStyleColor(ImGuiCol_Button, static_cast<ImVec4>(buttonPressedColor));
+			ImGui::PushID(static_cast<int>(aKey));
+			ImGui::Button(label, buttonSize);
+			if (isPressed)
+				ImGui::PopStyleColor(1);
+			ImGui::PopID();
+			ImGui::SameLine();
+		};
+
+		auto printEmpty = [&buttonSize](const char* label) {
+			ImGui::Button(label, buttonSize);
+			ImGui::SameLine();
+		};
+
+		printKey(KeyboardButton::kESCAPE, "ESC");
+		printEmpty("##row01");
+		printKey(KeyboardButton::kF1, "F1");
+		printKey(KeyboardButton::kF2, "F2");
+		printKey(KeyboardButton::kF3, "F3");
+		printKey(KeyboardButton::kF4, "F4");
+		printKey(KeyboardButton::kF5, "F5");
+		printKey(KeyboardButton::kF6, "F6");
+		printKey(KeyboardButton::kF7, "F7");
+		printKey(KeyboardButton::kF8, "F8");
+		printKey(KeyboardButton::kF9, "F9");
+		printKey(KeyboardButton::kF10, "F10");
+		printKey(KeyboardButton::kF11, "F11");
+		printKey(KeyboardButton::kF12, "F12");
+		printEmpty("##row02");
+		printKey(KeyboardButton::kPRINT_SCREEN, "PSC");
+		printKey(KeyboardButton::kSCROLL_LOCK, "SLK");
+		printKey(KeyboardButton::kPAUSE, "PAU");
+
+		ImGui::NewLine();
+		printKey(KeyboardButton::kGRAVE_ACCENT, "`");
+		printKey(KeyboardButton::k1, "1");
+		printKey(KeyboardButton::k2, "2");
+		printKey(KeyboardButton::k3, "3");
+		printKey(KeyboardButton::k4, "4");
+		printKey(KeyboardButton::k5, "5");
+		printKey(KeyboardButton::k6, "6");
+		printKey(KeyboardButton::k7, "7");
+		printKey(KeyboardButton::k8, "8");
+		printKey(KeyboardButton::k9, "9");
+		printKey(KeyboardButton::k0, "0");
+		printKey(KeyboardButton::kMINUS, "-");
+		printKey(KeyboardButton::kEQUAL, "=");
+		printKey(KeyboardButton::kBACKSPACE, "BAC");
+		printEmpty("##row11");
+		printKey(KeyboardButton::kINSERT, "INS");
+		printKey(KeyboardButton::kHOME, "HOM");
+		printKey(KeyboardButton::kPAGE_UP, "PGU");
+		printEmpty("##row12");
+		printKey(KeyboardButton::kNUM_LOCK, "NLK");
+		printKey(KeyboardButton::kKP_DIVIDE, "/");
+		printKey(KeyboardButton::kKP_MULTIPLY, "*");
+		printKey(KeyboardButton::kKP_SUBTRACT, "-");
+
+		ImGui::NewLine();
+		printKey(KeyboardButton::kTAB, "TAB");
+		printKey(KeyboardButton::kQ, "Q");
+		printKey(KeyboardButton::kW, "W");
+		printKey(KeyboardButton::kE, "E");
+		printKey(KeyboardButton::kR, "R");
+		printKey(KeyboardButton::kT, "T");
+		printKey(KeyboardButton::kY, "Y");
+		printKey(KeyboardButton::kU, "U");
+		printKey(KeyboardButton::kI, "I");
+		printKey(KeyboardButton::kO, "O");
+		printKey(KeyboardButton::kP, "P");
+		printKey(KeyboardButton::kLEFT_BRACKET, "[");
+		printKey(KeyboardButton::kRIGHT_BRACKET, "]");
+		printKey(KeyboardButton::kBACKSLASH, "\\");
+		printEmpty("##row21");
+		printKey(KeyboardButton::kDELETE, "DEL");
+		printKey(KeyboardButton::kEND, "END");
+		printKey(KeyboardButton::kPAGE_DOWN, "PGD");
+		printEmpty("##row22");
+		printKey(KeyboardButton::kKP_7, "7");
+		printKey(KeyboardButton::kKP_8, "8");
+		printKey(KeyboardButton::kKP_9, "9");
+		printKey(KeyboardButton::kKP_ADD, "+");
+
+		ImGui::NewLine();
+		printKey(KeyboardButton::kCAPS_LOCK, "CAP");
+		printKey(KeyboardButton::kA, "A");
+		printKey(KeyboardButton::kS, "S");
+		printKey(KeyboardButton::kD, "D");
+		printKey(KeyboardButton::kF, "F");
+		printKey(KeyboardButton::kG, "G");
+		printKey(KeyboardButton::kH, "H");
+		printKey(KeyboardButton::kJ, "J");
+		printKey(KeyboardButton::kK, "K");
+		printKey(KeyboardButton::kL, "L");
+		printKey(KeyboardButton::kSEMICOLON, ";");
+		printKey(KeyboardButton::kAPOSTROPHE, "'");
+		printKey(KeyboardButton::kENTER, "ENT");
+		printEmpty("##row31");
+		printEmpty("##row32");
+		printEmpty("##row33");
+		printEmpty("##row34");
+		printEmpty("##row35");
+		printEmpty("##row36");
+		printKey(KeyboardButton::kKP_4, "4");
+		printKey(KeyboardButton::kKP_5, "5");
+		printKey(KeyboardButton::kKP_6, "6");
+		printEmpty("##row37");
+
+		ImGui::NewLine();
+		printKey(KeyboardButton::kLEFT_SHIFT, "LSH");
+		printKey(KeyboardButton::kZ, "Z");
+		printKey(KeyboardButton::kX, "X");
+		printKey(KeyboardButton::kC, "C");
+		printKey(KeyboardButton::kV, "V");
+		printKey(KeyboardButton::kB, "B");
+		printKey(KeyboardButton::kN, "N");
+		printKey(KeyboardButton::kM, "M");
+		printKey(KeyboardButton::kCOMMA, ",");
+		printKey(KeyboardButton::kPERIOD, ".");
+		printKey(KeyboardButton::kSLASH, "/");
+		printKey(KeyboardButton::kRIGHT_SHIFT, "RSH");
+		printEmpty("##row41");
+		printEmpty("##row42");
+		printEmpty("##row43");
+		printEmpty("##row44");
+		printKey(KeyboardButton::kUP, "UP");
+		printEmpty("##row45");
+		printEmpty("##row46");
+		printKey(KeyboardButton::kKP_1, "1");
+		printKey(KeyboardButton::kKP_2,  "2");
+		printKey(KeyboardButton::kKP_3, "3");
+		printKey(KeyboardButton::kKP_ENTER, "ENT");
+
+		ImGui::NewLine();
+		printKey(KeyboardButton::kLEFT_CONTROL,  "LCL");
+		printKey(KeyboardButton::kLEFT_SUPER, "LSH");
+		printKey(KeyboardButton::kLEFT_ALT, "LAL");
+		printEmpty("##row51");
+		printKey(KeyboardButton::kWorld1, "WO1");
+		printEmpty("##row52");
+		printKey(KeyboardButton::kSPACE, "SPC");
+		printEmpty("##row53");
+		printKey(KeyboardButton::kWorld2, "WO2");
+		printEmpty("##row54");
+		printKey(KeyboardButton::kRIGHT_ALT, "RAL");
+		printKey(KeyboardButton::kRIGHT_SUPER, "RSU");
+		printKey(KeyboardButton::kMENU, "MEN");
+		printKey(KeyboardButton::kRIGHT_CONTROL, "RCL");
+		printEmpty("##row55");
+		printKey(KeyboardButton::kLEFT, "LEF");
+		printKey(KeyboardButton::kDOWN, "DWN");
+		printKey(KeyboardButton::kRIGHT, "RIG");
+		printEmpty("##row56");
+		printKey(KeyboardButton::kKP_0, "0");
+		printEmpty("##row57");
+		printKey(KeyboardButton::kKP_DECIMAL, ".");
+		printEmpty("##row58");
 	}
 }

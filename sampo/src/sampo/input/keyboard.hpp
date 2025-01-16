@@ -20,6 +20,8 @@ namespace Sampo
 
 		KeyboardButton GetKeyboardButtonFromPlatform(int aKeyboardCode) const;
 		void OnKeyboardEvent(Event& aKeyboardEvent);
+
+		void ImGuiDebug() override;
 	private:
 		ButtonKeyState m_Keys[104]{ ButtonKeyState::kUp };
 	};

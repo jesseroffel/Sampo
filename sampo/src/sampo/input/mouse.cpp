@@ -8,12 +8,6 @@ namespace Sampo
 	{
 	}
 
-	bool Mouse::InitDevice()
-	{
-		m_MouseState.m_Enabled = true;
-		return true;
-	}
-
 	bool Mouse::IsValidButton(MouseButton aMouseButton) const
 	{
 		const uint32 index = static_cast<uint32>(aMouseButton);

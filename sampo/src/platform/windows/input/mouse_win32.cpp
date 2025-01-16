@@ -4,6 +4,7 @@
 #include "sampo/events/mouse_event.hpp"
 
 #include <GLFW/glfw3.h>
+#include <imgui.h>
 
 namespace Sampo
 {
@@ -75,6 +76,33 @@ namespace Sampo
 				SAMPO_ASSERT_MSG(false, "Non mouse event passed through mouse event handler!");
 				break;
 			}
+		}
+	}
+
+	void Mouse::ImGuiDebug()
+	{
+		ImGui::Text("Position: %0.f, %0.f", m_MouseState.m_Position.x, m_MouseState.m_Position.y);
+		ImGui::Text("Scroll: %0.f, %0.f", m_MouseState.m_ScrollOffset.x, m_MouseState.m_ScrollOffset.y);
+
+		static constexpr ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_Hideable;
+
+		if (ImGui::BeginTable("mousePressed", 5, flags))
+		{
+			ImGui::TableSetupColumn("Left", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Middle", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Right", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Mouse4", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Mouse5", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableHeadersRow();
+
+			ImGui::TableNextRow();
+			for (int i = 0; i < 5; i++)
+			{
+				ImGui::TableSetColumnIndex(i);
+				ImGui::Text("%d", m_MouseState.m_Keys[i]);
+			}
+
+			ImGui::EndTable();
 		}
 	}
 }
