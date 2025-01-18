@@ -1,12 +1,15 @@
 #include "sampo_pch.hpp"
 #include "window_win32.hpp"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "sampo/core/application.hpp"
 
 #include "sampo/events/application_event.hpp"
 #include "sampo/events/key_event.hpp"
 #include "sampo/events/mouse_event.hpp"
+#include "sampo/events/gamepad_event.hpp"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 namespace Sampo
 {
@@ -165,20 +168,44 @@ namespace Sampo
 			}
 		});
 
-		glfwSetScrollCallback(m_GLFWWindow, [](GLFWwindow* aWindow, double xOffset, double yOffset)
+		glfwSetScrollCallback(m_GLFWWindow, [](GLFWwindow* aWindow, double anOffsetX, double anOffsetY)
 		{
 			WindowParams& params = *static_cast<WindowParams*>(glfwGetWindowUserPointer(aWindow));
 
-			MouseScrolledEvent mouseScrollEvent({ xOffset, yOffset });
+			MouseScrolledEvent mouseScrollEvent({ anOffsetX, anOffsetY });
 			params.m_MouseEventCallback(mouseScrollEvent);
 		});
 
-		glfwSetCursorPosCallback(m_GLFWWindow, [](GLFWwindow* aWindow, double xPosition, double yPosition)
+		glfwSetCursorPosCallback(m_GLFWWindow, [](GLFWwindow* aWindow, double aPositionX, double aPositionY)
 		{
 			WindowParams& params = *static_cast<WindowParams*>(glfwGetWindowUserPointer(aWindow));
 
-			MouseMovedEvent mouseMovedEvent({ xPosition, yPosition });
+			MouseMovedEvent mouseMovedEvent({ aPositionX, aPositionY });
 			params.m_MouseEventCallback(mouseMovedEvent);
+		});
+
+		glfwSetJoystickCallback([](int aJoystickId, int anEventId)
+		{
+			GLFWwindow* window = static_cast<GLFWwindow*>(Application::GetInstance().GetPlatform()->GetWindow()->GetNativeWindow());
+			if (!window)
+				return;
+
+			WindowParams& params = *static_cast<WindowParams*>(glfwGetWindowUserPointer(window));
+			switch (anEventId)
+			{
+			case GLFW_CONNECTED:
+			{
+				GamepadConnectedEvent joystickConnectedEvent(aJoystickId);
+				params.m_JoystickEventCallback(joystickConnectedEvent);
+				break;
+			}
+			case GLFW_DISCONNECTED:
+			{
+				GamepadDisconnectedEvent joystickDisconnectedEvent(aJoystickId);
+				params.m_JoystickEventCallback(joystickDisconnectedEvent);
+				break;
+			}
+			}
 		});
 	}
 }

@@ -15,6 +15,7 @@ namespace Sampo
 		std::function<void(Event&)> m_WindowEventCallback;
 		std::function<void(Event&)> m_KeyboardEventCallback;
 		std::function<void(Event&)> m_MouseEventCallback;
+		std::function<void(Event&)> m_JoystickEventCallback;
 
 		WindowParams(const std::string& aWindowName = "Sampo Application", uint32 aWidth = 1280, uint32 aHeight = 720)
 			: m_WindowName(aWindowName)
@@ -42,7 +43,7 @@ namespace Sampo
 		void SetWindowEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_WindowEventCallback = aCallback; }
 		void SetKeyboardEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_KeyboardEventCallback = aCallback; }
 		void SetMouseEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_MouseEventCallback = aCallback; }
-
+		void SetGamepadEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_JoystickEventCallback = aCallback; }
 	private:
 		void LogRendererInfo();
 		void SetGLFWCallbacks();

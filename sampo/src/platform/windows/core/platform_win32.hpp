@@ -2,10 +2,12 @@
 #include "sampo/graphics/window.hpp"
 
 #include "sampo/core/platform_types.hpp"
-#include "sampo/input/input.hpp"
 
 namespace Sampo
 {
+	class Input;
+	class Win32Window;
+
 	class Win32Platform
 	{
 	public:
@@ -22,7 +24,7 @@ namespace Sampo
 		void ImGuiDebug();
 
 	private:
-		Window* m_Window{ nullptr };
+		Win32Window* m_Window{ nullptr };
 		Input* m_Input{ nullptr };
 
 		PlatformType myPlatformType{ PlatformType::kPC };

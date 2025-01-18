@@ -1,8 +1,10 @@
 #include "sampo_pch.hpp"
-#include "sampo/input/input.hpp"
+#include "input.hpp"
 
-#include "sampo/input/keyboard.hpp"
-#include "sampo/input/mouse.hpp"
+#include "input_device.hpp"
+#include "gamepad.hpp"
+#include "keyboard.hpp"
+#include "mouse.hpp"
 
 #include "sampo/events/event.hpp"
 
@@ -18,17 +20,20 @@ namespace Sampo
 
 	bool Input::Init()
 	{
-		InputDevice* mouse = AddInputDevice(new Mouse());
-		m_Mouse = static_cast<Mouse*>(mouse);
+		m_Mouse = static_cast<Mouse*>(AddInputDevice(new Mouse()));
 		if (!m_Mouse)
 			return false;
 
-		InputDevice* keyboard = AddInputDevice(new Keyboard());
-		m_Keyboard = static_cast<Keyboard*>(keyboard);
+		m_Keyboard = static_cast<Keyboard*>(AddInputDevice(new Keyboard()));
 		if (!m_Keyboard)
 			return false;
 
 		return true;
+	}
+
+	void Input::Update()
+	{
+		PollDevices();
 	}
 
 	InputDevice* Input::AddInputDevice(InputDevice* anInputDevice)
@@ -38,7 +43,7 @@ namespace Sampo
 			delete anInputDevice;
 			return nullptr;
 		}
-		
+		m_DevicesHandled++;
 		return myInputDevices.emplace_back(anInputDevice);
 	}
 
@@ -95,7 +100,7 @@ namespace Sampo
 	{
 		SAMPO_ASSERT(m_Mouse);
 
-		if (!aMouseEvent.IsInCategory(EventCategory::EventInput))
+		if (!aMouseEvent.IsInCategory(EventCategory::EventMouse))
 			return;
 
 		m_Mouse->OnMouseEvent(aMouseEvent);
@@ -105,10 +110,63 @@ namespace Sampo
 	{
 		SAMPO_ASSERT(m_Keyboard);
 
-		if (!aKeyboardEvent.IsInCategory(EventCategory::EventInput))
+		if (!aKeyboardEvent.IsInCategory(EventCategory::EventKeyboard))
 			return;
 
 		m_Keyboard->OnKeyboardEvent(aKeyboardEvent);
+	}
+
+	void Input::OnGamepadEvent(Event& aGamepadEvent)
+	{
+		if (!aGamepadEvent.IsInCategory(EventCategory::EventGamepad))
+			return;
+
+		const EventType eventType = aGamepadEvent.GetEventType();
+		const int platformId = Gamepad::GetPlatformIdFromEvent(aGamepadEvent);
+		SAMPO_ASSERT(platformId != -1);
+
+		if (eventType == EventType::JoystickConnected)
+		{
+			AddInputDevice(new Gamepad(platformId));
+		}
+		else if (eventType == EventType::JoystickDisconnected)
+		{
+			const Gamepad* foundGamepad = GetGamepadByPlatformId(platformId);
+			SAMPO_ASSERT(foundGamepad);
+
+			myInputDevices.erase(std::remove_if(myInputDevices.begin(), myInputDevices.end(), [&platformId](const InputDevice* aDevice)
+			{ 
+				if (aDevice->GetInputType() != InputType::kGamepad)
+					return false;
+
+				return static_cast<const Gamepad*>(aDevice)->GetPlatformId() == platformId;
+			}));
+		}
+	}
+
+	void Input::PollDevices()
+	{
+		for (InputDevice* device : myInputDevices)
+		{
+			if (!device->GetRequiresPolling())
+				continue;
+
+			device->PollDevice();
+		}
+	}
+
+	const Gamepad* Input::GetGamepadByPlatformId(int aGamepadId) const
+	{
+		for (const InputDevice* device : myInputDevices)
+		{
+			if (device->GetInputType() != InputType::kGamepad)
+				continue;
+
+			const Gamepad* gamepad = static_cast<const Gamepad*>(device);
+			if (gamepad->GetPlatformId() == aGamepadId)
+				return gamepad;
+		}
+		return nullptr;
 	}
 
 	void Input::ImGuiDebug()
@@ -127,6 +185,18 @@ namespace Sampo
 			{
 				if (m_Keyboard)
 					m_Keyboard->ImGuiDebug();
+			}
+
+			if (ImGui::CollapsingHeader("Gamepad", ImGuiTreeNodeFlags_None))
+			{
+				for (InputDevice* device : myInputDevices)
+				{
+					if (device->GetInputType() == InputType::kMouse || device->GetInputType() == InputType::kKeyboard)
+						continue;
+
+					Gamepad* gamepad = static_cast<Gamepad*>(device);
+					gamepad->ImGuiDebug();
+				}
 			}
 			ImGui::TreePop();
 		}

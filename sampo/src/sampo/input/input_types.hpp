@@ -11,7 +11,7 @@ namespace Sampo
 
 	enum class GamepadType
 	{
-		kNotGamepad = 0,
+		kUnknown = 0,
 		kPS4,
 		kPS5,
 		kXBOX,

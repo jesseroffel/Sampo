@@ -1,4 +1,7 @@
+#include "sampo_pch.hpp"
 #include "platform/windows/core/platform_win32.hpp"
+
+#include "platform/windows/input/input_win32.hpp"
 
 #include <imgui.h>
 
@@ -7,7 +10,7 @@ namespace Sampo
 	Win32Platform::Win32Platform()
 	{
 		m_Window = new Win32Window();
-		m_Input = new Input();
+		m_Input = new Win32Input();
 	}
 
 	Win32Platform::~Win32Platform()
@@ -24,12 +27,14 @@ namespace Sampo
 		m_Input->Init();
 		m_Window->SetKeyboardEventCallback(BIND_EVENT_FN(Input::OnKeyboardEvent, m_Input));
 		m_Window->SetMouseEventCallback(BIND_EVENT_FN(Input::OnMouseEvent, m_Input));
+		m_Window->SetGamepadEventCallback(BIND_EVENT_FN(Input::OnGamepadEvent, m_Input));
 		return true;
 	}
 
 	void Win32Platform::Update()
 	{
 		m_Window->Update();
+		m_Input->Update();
 	}
 
 	void Win32Platform::Shutdown()

@@ -5,39 +5,42 @@ include_directories(${PROJECT_SOURCE_DIR}/sampo/src)
 
 # Overrides globals #
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/sampo/${outputdir})
-set(SAMPO_SOURCE_DIR ${PROJECT_SOURCE_DIR}/sampo/src/sampo)
 set(VENDOR_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/sampo/vendor)
 
 add_library(sampo STATIC 
-	src/sampo.hpp
-	src/sampo_pch.hpp
-	src/sampo_pch.cpp
-	${SAMPO_SOURCE_DIR}/core/console_arguments.hpp
-	${SAMPO_SOURCE_DIR}/core/datatypes.hpp
-	${SAMPO_SOURCE_DIR}/core/application.hpp
-	${SAMPO_SOURCE_DIR}/core/application.cpp
-	${SAMPO_SOURCE_DIR}/core/core_definitions.hpp
-	${SAMPO_SOURCE_DIR}/core/layer.hpp
-	${SAMPO_SOURCE_DIR}/core/layer.cpp
-	${SAMPO_SOURCE_DIR}/core/log.hpp
-	${SAMPO_SOURCE_DIR}/core/log.cpp
-	${SAMPO_SOURCE_DIR}/core/console_arguments.cpp
-	${SAMPO_SOURCE_DIR}/core/assert.hpp
-	${SAMPO_SOURCE_DIR}/core/platform.hpp
-	${SAMPO_SOURCE_DIR}/debugging/imgui_layer.hpp
-	${SAMPO_SOURCE_DIR}/debugging/imgui_layer.cpp
-	${SAMPO_SOURCE_DIR}/events/event.hpp
-	${SAMPO_SOURCE_DIR}/events/application_event.hpp
-	${SAMPO_SOURCE_DIR}/events/key_event.hpp
-	${SAMPO_SOURCE_DIR}/events/mouse_event.hpp
-	${SAMPO_SOURCE_DIR}/graphics/window.hpp
-	${SAMPO_SOURCE_DIR}/input/mouse.hpp
-	${SAMPO_SOURCE_DIR}/input/mouse.cpp
-	${SAMPO_SOURCE_DIR}/input/input.hpp
-	${SAMPO_SOURCE_DIR}/input/input.cpp
-	${SAMPO_SOURCE_DIR}/input/input_mapping.hpp
-	${SAMPO_SOURCE_DIR}/input/keyboard.hpp
-	${SAMPO_SOURCE_DIR}/input/keyboard.cpp)
+	"src/sampo.hpp"
+	"src/sampo_pch.hpp"
+	"src/sampo_pch.cpp"
+	"src/sampo/core/console_arguments.hpp"
+	"src/sampo/core/datatypes.hpp"
+	"src/sampo/core/application.hpp"
+	"src/sampo/core/application.cpp"
+	"src/sampo/core/core_definitions.hpp"
+	"src/sampo/core/layer.hpp"
+	"src/sampo/core/layer.cpp"
+	"src/sampo/core/log.hpp"
+	"src/sampo/core/log.cpp"
+	"src/sampo/core/console_arguments.cpp"
+	"src/sampo/core/assert.hpp"
+	"src/sampo/core/platform.hpp"
+	"src/sampo/debugging/imgui_layer.hpp"
+	"src/sampo/debugging/imgui_layer.cpp"
+	"src/sampo/events/event.hpp"
+	"src/sampo/events/application_event.hpp"
+	"src/sampo/events/key_event.hpp"
+	"src/sampo/events/mouse_event.hpp"
+	"src/sampo/events/gamepad_event.hpp"
+	"src/sampo/graphics/window.hpp"
+	"src/sampo/input/mouse.hpp"
+	"src/sampo/input/mouse.cpp"
+	"src/sampo/input/input.hpp"
+	"src/sampo/input/input.cpp"
+	"src/sampo/input/input_mapping.hpp"
+	"src/sampo/input/keyboard.hpp"
+	"src/sampo/input/keyboard.cpp"
+	"src/sampo/input/gamepad.hpp"
+	"src/sampo/input/gamepad.cpp"
+)
 
 # Configure solution #
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)
@@ -47,8 +50,6 @@ target_compile_features(sampo PUBLIC cxx_std_20)
 
 # Platform specifics #
 if (WIN32)
-	set(PLATFORM_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/sampo/src/platform)
-
 	# Library source includes
 	target_include_directories(sampo PUBLIC ${PROJECT_SOURCE_DIR}/sampo/src/platform)
 	target_include_directories(sampo PUBLIC ${VENDOR_INCLUDE_DIR}/imgui)
@@ -60,13 +61,17 @@ if (WIN32)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/glm)
 
 	target_sources(sampo PUBLIC 
-		src/platform/platform_definitions.hpp
-		${PLATFORM_INCLUDE_DIR}/windows/core/platform_win32.hpp
-		${PLATFORM_INCLUDE_DIR}/windows/core/platform_win32.cpp
-		${PLATFORM_INCLUDE_DIR}/windows/graphics/window_win32.hpp
-		${PLATFORM_INCLUDE_DIR}/windows/graphics/window_win32.cpp
-		${PLATFORM_INCLUDE_DIR}/windows/input/mouse_win32.cpp
-		${PLATFORM_INCLUDE_DIR}/windows/input/keyboard_win32.cpp
+		"src/platform/platform_definitions.hpp"
+		"src/platform/windows/core/platform_win32.hpp"
+		"src/platform/windows/core/platform_win32.cpp"
+		"src/platform/windows/graphics/window_win32.hpp"
+		"src/platform/windows/graphics/window_win32.cpp"
+		"src/platform/windows/input/mouse_win32.cpp"
+		"src/platform/windows/input/keyboard_win32.cpp"
+		"src/platform/windows/input/gamepad_win32.cpp"
+		"src/platform/windows/input/input_win32.hpp"
+		"src/platform/windows/input/input_win32.cpp"
+
 		${VENDOR_INCLUDE_DIR}/imgui/imgui.h
 		${VENDOR_INCLUDE_DIR}/imgui/imgui.cpp
 		${VENDOR_INCLUDE_DIR}/imgui/imgui_draw.cpp

@@ -132,22 +132,16 @@ namespace Sampo
 			{
 				KeyPressedEvent& pressedEvent = static_cast<KeyPressedEvent&>(aKeyboardEvent);
 				SetButtonState(GetKeyboardButtonFromPlatform(pressedEvent.GetKeyCode()), true);
-				break;
+				return;
 			}
 			case EventType::KeyReleased:
 			{
 				KeyReleasedEvent& keyReleasedEvent = static_cast<KeyReleasedEvent&>(aKeyboardEvent);
 				SetButtonState(GetKeyboardButtonFromPlatform(keyReleasedEvent.GetKeyCode()), false);
-				break;
-			}
-
-			default:
-			{
-
-				SAMPO_ASSERT_MSG(false, "Non keyboard event passed through keyboard event handler!");
-				break;
+				return;
 			}
 		}
+		SAMPO_ASSERT_MSG(false, "Non keyboard event passed through keyboard event handler!");
 	}
 
 	void Keyboard::ImGuiDebug()
@@ -315,5 +309,7 @@ namespace Sampo
 		printEmpty("##row57");
 		printKey(KeyboardButton::kKP_DECIMAL, ".");
 		printEmpty("##row58");
+
+		ImGui::NewLine();
 	}
 }

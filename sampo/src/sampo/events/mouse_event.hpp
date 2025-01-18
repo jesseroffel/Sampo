@@ -54,6 +54,7 @@ namespace Sampo
 		EVENT_CLASS_CATEGORY(EventMouse | EventInput)
 	protected:
 		MouseButtonEvent(int aButton) : m_Button(aButton) {}
+
 		int m_Button;
 	};
 

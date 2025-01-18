@@ -138,13 +138,34 @@ namespace Sampo
 		kMENU
 	};
 
-	enum class GamepadAxes
+	enum class GamepadAxis
 	{
-		kUnknownAxis = 0
+		kUnknown = 0,
+		kLeftX,
+		kLeftY,
+		kRightX,
+		kRightY,
+		kLeftTrigger,
+		kRightTrigger
 	};
 
 	enum class GamepadButton
 	{
-		kUnknownButton = 0
+		kUnknown = 0,
+		kActionDown,
+		kActionRight,
+		kActionLeft,
+		kActionUp,
+		kLeftBumper,
+		kRightBumper,
+		kSelect,
+		kStart,
+		kHome,
+		kLeftStick,
+		kRightStick,
+		kDpadUp,
+		kDpadLeft,
+		kDpadDown,
+		kDpadRight,
 	};
 }
