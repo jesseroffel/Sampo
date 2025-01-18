@@ -13,13 +13,13 @@ namespace Sampo
 	{
 	}
 
-	bool Gamepad::IsValidButton(GamepadButton aGamepadButton) const
+	bool Gamepad::IsValidButton(GamepadButton aGamepadButton)
 	{
 		const uint32 index = static_cast<uint32>(aGamepadButton);
-		return index >= static_cast<uint32>(GamepadButton::kActionDown) && index <= static_cast<uint32>(GamepadButton::kDpadRight);
+		return index >= static_cast<uint32>(GamepadButton::kActionDown) && index <= static_cast<uint32>(GamepadButton::kDpadLeft);
 	}
 
-	bool Gamepad::IsValidAxis(GamepadAxis aGamepadAxis) const
+	bool Gamepad::IsValidAxis(GamepadAxis aGamepadAxis)
 	{
 		const uint32 index = static_cast<uint32>(aGamepadAxis);
 		return index >= static_cast<uint32>(GamepadAxis::kLeftX) && index <= static_cast<uint32>(GamepadAxis::kRightTrigger);
@@ -30,7 +30,7 @@ namespace Sampo
 		if (!IsValidButton(aGamepadButton))
 			return;
 
-		const uint32 index = static_cast<uint32>(aGamepadButton);
+		const uint32 index = static_cast<uint32>(aGamepadButton) - 1;
 		m_Buttons[index] = aIsDown;
 	}
 
@@ -39,7 +39,7 @@ namespace Sampo
 		if (!IsValidButton(aGamepadButton))
 			return false;
 
-		const uint32 index = static_cast<uint32>(aGamepadButton);
+		const uint32 index = static_cast<uint32>(aGamepadButton) - 1;
 		return m_Buttons[index];
 	}
 
@@ -67,12 +67,12 @@ namespace Sampo
 	{
 		const EventType eventType = aGamepadEvent.GetEventType();
 
-		if (eventType == EventType::JoystickConnected)
+		if (eventType == EventType::GamepadConnected)
 		{
 			GamepadConnectedEvent& connectedEvent = static_cast<GamepadConnectedEvent&>(aGamepadEvent);
 			return connectedEvent.GetJoystickID();
 		}
-		else if (eventType == EventType::JoystickDisconnected)
+		else if (eventType == EventType::GamepadDisconnected)
 		{
 			GamepadDisconnectedEvent& disconnectedEvent = static_cast<GamepadDisconnectedEvent&>(aGamepadEvent);
 			return disconnectedEvent.GetJoystickID();

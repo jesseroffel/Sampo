@@ -9,7 +9,7 @@ namespace Sampo
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		KeyPressed, KeyReleased,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
-		JoystickConnected, JoystickDisconnected
+		GamepadConnected, GamepadDisconnected
 	};
 
 	enum EventCategory

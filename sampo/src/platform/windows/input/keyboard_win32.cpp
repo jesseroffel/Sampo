@@ -8,7 +8,7 @@
 
 namespace Sampo
 {
-	KeyboardButton Keyboard::GetKeyboardButtonFromPlatform(int aKeyboardCode) const
+	KeyboardButton Keyboard::GetKeyboardButtonFromPlatform(int aKeyboardCode)
 	{
 		KeyboardButton button = KeyboardButton::kUnknownButton;
 		switch(aKeyboardCode)

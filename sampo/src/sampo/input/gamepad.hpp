@@ -16,8 +16,6 @@ namespace Sampo
 
 		void PollDevice() override;
 
-		bool IsValidButton(GamepadButton aGamepadButton) const;
-		bool IsValidAxis(GamepadAxis aGamepadAxis) const;
 
 		void SetButtonState(GamepadButton aGamepadButton, bool aIsDown);
 		bool GetIsButtonPressed(GamepadButton aGamepadButton) const;
@@ -31,6 +29,11 @@ namespace Sampo
 		std::string_view GetGamepadName() const { return m_GamepadName; }
 
 		void OnGamepadEvent(Event& aGamepadEvent);
+
+		static bool IsValidButton(GamepadButton aGamepadButton);
+		static bool IsValidAxis(GamepadAxis aGamepadAxis);
+		static GamepadButton GetButtomFromPlatform(int aGamepadButtonIndex);
+		static GamepadAxis GetAxisFromPlatform(int aGamepadAxisIndex);
 		static int GetPlatformIdFromEvent(Event& aGamepadEvent);
 
 		void ImGuiDebug() override;

@@ -8,7 +8,7 @@ namespace Sampo
 	{
 	}
 
-	bool Keyboard::IsValidButton(KeyboardButton aKeyboardCode) const
+	bool Keyboard::IsValidButton(KeyboardButton aKeyboardCode)
 	{
 		const uint32 index = static_cast<uint32>(aKeyboardCode);
 		return index >= static_cast<uint32>(KeyboardButton::kSPACE) && index <= static_cast<uint32>(KeyboardButton::kMENU);

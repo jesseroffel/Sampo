@@ -13,31 +13,11 @@ namespace Sampo
 		MouseButton button = MouseButton::kUnknownButton;
 		switch (aMouseCode)
 		{
-		case GLFW_MOUSE_BUTTON_LEFT:
-		{
-			button = MouseButton::kLeft;
-			break;
-		}
-		case GLFW_MOUSE_BUTTON_RIGHT:
-		{
-			button = MouseButton::kRight;
-			break;
-		}
-		case GLFW_MOUSE_BUTTON_MIDDLE:
-		{
-			button = MouseButton::kMiddle;
-			break;
-		}
-		case GLFW_MOUSE_BUTTON_4:
-		{
-			button = MouseButton::kButton4;
-			break;
-		}
-		case GLFW_MOUSE_BUTTON_5:
-		{
-			button = MouseButton::kButton5;
-			break;
-		}
+		case GLFW_MOUSE_BUTTON_LEFT: { button = MouseButton::kLeft; break; }
+		case GLFW_MOUSE_BUTTON_RIGHT: { button = MouseButton::kRight; break; }
+		case GLFW_MOUSE_BUTTON_MIDDLE: { button = MouseButton::kMiddle;break; }
+		case GLFW_MOUSE_BUTTON_4: { button = MouseButton::kButton4; break; }
+		case GLFW_MOUSE_BUTTON_5: { button = MouseButton::kButton5; break; }
 		}
 		return button;
 	}

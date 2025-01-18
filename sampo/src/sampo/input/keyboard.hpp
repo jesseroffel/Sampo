@@ -13,12 +13,13 @@ namespace Sampo
 
 		bool InitDevice() override { return true; }
 
-		bool IsValidButton(KeyboardButton aKeyboardButton) const;
 
 		void SetButtonState(KeyboardButton aKeyboardButton, bool aIsDown);
 		bool GetIsButtonPressed(KeyboardButton aKeyboardButton) const;
 
-		KeyboardButton GetKeyboardButtonFromPlatform(int aKeyboardCode) const;
+		static bool IsValidButton(KeyboardButton aKeyboardButton);
+		static KeyboardButton GetKeyboardButtonFromPlatform(int aKeyboardCode);
+
 		void OnKeyboardEvent(Event& aKeyboardEvent);
 
 		void ImGuiDebug() override;

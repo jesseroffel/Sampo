@@ -125,21 +125,21 @@ namespace Sampo
 		const int platformId = Gamepad::GetPlatformIdFromEvent(aGamepadEvent);
 		SAMPO_ASSERT(platformId != -1);
 
-		if (eventType == EventType::JoystickConnected)
+		if (eventType == EventType::GamepadConnected)
 		{
 			AddInputDevice(new Gamepad(platformId));
 		}
-		else if (eventType == EventType::JoystickDisconnected)
+		else if (eventType == EventType::GamepadDisconnected)
 		{
 			const Gamepad* foundGamepad = GetGamepadByPlatformId(platformId);
 			SAMPO_ASSERT(foundGamepad);
 
-			myInputDevices.erase(std::remove_if(myInputDevices.begin(), myInputDevices.end(), [&platformId](const InputDevice* aDevice)
+			myInputDevices.erase(std::remove_if(myInputDevices.begin(), myInputDevices.end(), [&foundGamepad](const InputDevice* aDevice)
 			{ 
 				if (aDevice->GetInputType() != InputType::kGamepad)
 					return false;
 
-				return static_cast<const Gamepad*>(aDevice)->GetPlatformId() == platformId;
+				return static_cast<const Gamepad*>(aDevice)->GetPlatformId() == foundGamepad->GetPlatformId();
 			}));
 		}
 	}

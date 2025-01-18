@@ -20,7 +20,7 @@ namespace Sampo
 	public:
 		Mouse();
 
-		bool IsValidButton(MouseButton aMouseButton) const;
+		static bool IsValidButton(MouseButton aMouseButton);
 
 		void SetPosition(const glm::vec2& aPosition) { m_MouseState.m_Position = aPosition; }
 		void SetScrollOffset(const glm::vec2& anOffset) { m_MouseState.m_ScrollOffset = anOffset; }

@@ -28,7 +28,7 @@ namespace Sampo
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(JoystickConnected)
+		EVENT_CLASS_TYPE(GamepadConnected)
 	};
 
 	class GamepadDisconnectedEvent : public GamepadConnectionEvent
@@ -43,6 +43,6 @@ namespace Sampo
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(JoystickDisconnected)
+		EVENT_CLASS_TYPE(GamepadDisconnected)
 	};
 }

@@ -28,19 +28,58 @@ namespace Sampo
 		if (!glfwGetGamepadState(m_PlatformId, &state))
 			return;
 
-		for (int i = 0; i <= GLFW_GAMEPAD_BUTTON_LAST - 4; i++)
+		for (int i = 0; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
 		{
-			// Should translate based on detected type
-			GamepadButton button = static_cast<GamepadButton>(i + 1);
-			SetButtonState(button, state.buttons[i]);
+			GamepadButton button = GetButtomFromPlatform(i);
+			if (button != GamepadButton::kUnknownButton)
+				SetButtonState(button, state.buttons[i]);
 		}
 
 		for (int i = 0; i <= GLFW_GAMEPAD_AXIS_LAST; i++)
 		{
-			// Should translate based on detected type
-			GamepadAxis axis = static_cast<GamepadAxis>(i + 1);
-			SetAxisState(axis, state.axes[i]);
+			GamepadAxis axis = GetAxisFromPlatform(i);
+			if (axis != GamepadAxis::kUnknownAxis)
+				SetAxisState(axis, state.axes[i]);
 		}
+	}
+
+	GamepadButton Gamepad::GetButtomFromPlatform(int aGamepadButtonIndex)
+	{
+		GamepadButton button = GamepadButton::kUnknownButton;
+		switch (aGamepadButtonIndex)
+		{
+		case GLFW_GAMEPAD_BUTTON_A: { button = GamepadButton::kActionDown; break; }
+		case GLFW_GAMEPAD_BUTTON_B: { button = GamepadButton::kActionRight; break; }
+		case GLFW_GAMEPAD_BUTTON_X: { button = GamepadButton::kActionLeft; break; }
+		case GLFW_GAMEPAD_BUTTON_Y: { button = GamepadButton::kActionUp; break; }
+		case GLFW_GAMEPAD_BUTTON_LEFT_BUMPER: { button = GamepadButton::kLeftBumper; break; }
+		case GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER: { button = GamepadButton::kRightBumper; break; }
+		case GLFW_GAMEPAD_BUTTON_BACK: { button = GamepadButton::kSelect; break; }
+		case GLFW_GAMEPAD_BUTTON_START: { button = GamepadButton::kStart; break; }
+		case GLFW_GAMEPAD_BUTTON_GUIDE: { button = GamepadButton::kHome; break; }
+		case GLFW_GAMEPAD_BUTTON_LEFT_THUMB: { button = GamepadButton::kLeftStick; break; }
+		case GLFW_GAMEPAD_BUTTON_RIGHT_THUMB: { button = GamepadButton::kRightStick; break; }
+		case GLFW_GAMEPAD_BUTTON_DPAD_UP: { button = GamepadButton::kDpadUp; break; }
+		case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT: { button = GamepadButton::kDpadRight; break; }
+		case GLFW_GAMEPAD_BUTTON_DPAD_DOWN: { button = GamepadButton::kDpadDown; break; }
+		case GLFW_GAMEPAD_BUTTON_DPAD_LEFT: { button = GamepadButton::kDpadLeft; break; }
+		}
+		return button;
+	}
+
+	GamepadAxis Gamepad::GetAxisFromPlatform(int aGamepadAxisIndex)
+	{
+		GamepadAxis axis = GamepadAxis::kUnknownAxis;
+		switch (aGamepadAxisIndex)
+		{
+		case GLFW_GAMEPAD_AXIS_LEFT_X: { axis = GamepadAxis::kLeftX; break; }
+		case GLFW_GAMEPAD_AXIS_LEFT_Y: { axis = GamepadAxis::kLeftY; break; }
+		case GLFW_GAMEPAD_AXIS_RIGHT_X: { axis = GamepadAxis::kRightX; break; }
+		case GLFW_GAMEPAD_AXIS_RIGHT_Y: { axis = GamepadAxis::kRightY; break; }
+		case GLFW_GAMEPAD_AXIS_LEFT_TRIGGER: { axis = GamepadAxis::kLeftTrigger; break; }
+		case GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER: { axis = GamepadAxis::kRightTrigger; break; }
+		}
+		return axis;
 	}
 
 	void Gamepad::OnGamepadEvent(Event& aGamepadEvent)
@@ -95,9 +134,9 @@ namespace Sampo
 			printButton(GamepadButton::kLeftStick, "LS");
 			printButton(GamepadButton::kRightStick, "RS");
 			printButton(GamepadButton::kDpadUp, "Up");
-			printButton(GamepadButton::kDpadLeft, "Left");
-			printButton(GamepadButton::kDpadDown, "Down");
 			printButton(GamepadButton::kDpadRight, "Right");
+			printButton(GamepadButton::kDpadDown, "Down");
+			printButton(GamepadButton::kDpadLeft, "Left");
 			ImGui::NewLine();
 
 			printAxis(GamepadAxis::kLeftX, "Left X");

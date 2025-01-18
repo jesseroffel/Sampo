@@ -140,7 +140,7 @@ namespace Sampo
 
 	enum class GamepadAxis
 	{
-		kUnknown = 0,
+		kUnknownAxis = 0,
 		kLeftX,
 		kLeftY,
 		kRightX,
@@ -151,7 +151,7 @@ namespace Sampo
 
 	enum class GamepadButton
 	{
-		kUnknown = 0,
+		kUnknownButton = 0,
 		kActionDown,
 		kActionRight,
 		kActionLeft,
@@ -164,8 +164,8 @@ namespace Sampo
 		kLeftStick,
 		kRightStick,
 		kDpadUp,
-		kDpadLeft,
-		kDpadDown,
 		kDpadRight,
+		kDpadDown,
+		kDpadLeft,
 	};
 }

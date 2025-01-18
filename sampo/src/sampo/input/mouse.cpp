@@ -8,7 +8,7 @@ namespace Sampo
 	{
 	}
 
-	bool Mouse::IsValidButton(MouseButton aMouseButton) const
+	bool Mouse::IsValidButton(MouseButton aMouseButton)
 	{
 		const uint32 index = static_cast<uint32>(aMouseButton);
 		return index >= static_cast<uint32>(MouseButton::kLeft) && index <= static_cast<uint32>(MouseButton::kButton8);
