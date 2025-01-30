@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/glm.hpp>
 
 struct GLFWwindow;
 
@@ -9,18 +10,17 @@ namespace Sampo
 	struct WindowParams
 	{
 		std::string m_WindowName;
-		uint32 m_Width;
-		uint32 m_Height;
+		glm::vec2 m_WindowSize;
 
 		std::function<void(Event&)> m_WindowEventCallback;
 		std::function<void(Event&)> m_KeyboardEventCallback;
 		std::function<void(Event&)> m_MouseEventCallback;
 		std::function<void(Event&)> m_JoystickEventCallback;
 
-		WindowParams(const std::string& aWindowName = "Sampo Application", uint32 aWidth = 1280, uint32 aHeight = 720)
+		WindowParams(const std::string& aWindowName = "Sampo Application", const glm::vec2& aWindowSize = { 1280, 720 })
 			: m_WindowName(aWindowName)
-			, m_Width(aWidth)
-			, m_Height(aHeight) {}
+			, m_WindowSize(aWindowSize)
+		{ }
 	};
 
 	class Win32Window
@@ -31,11 +31,10 @@ namespace Sampo
 
 		bool Init(const WindowParams& aWindowProperties);
 		void OnStartFrame();
-		void Update();
+		void OnEndFrame();
 		void Shutdown();
 
-		virtual uint32 GetWidth() const { return m_Params.m_Width; }
-		virtual uint32 GetHeight() const { return m_Params.m_Height; }
+		const glm::vec2& GetWindowSize() const { return m_Params.m_WindowSize; }
 		virtual float GetTime() const;
 		virtual const std::string& GetWindowName() const { return m_Params.m_WindowName; }
 		void* GetNativeWindow() const { return m_GLFWWindow; }

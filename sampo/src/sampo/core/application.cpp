@@ -60,6 +60,9 @@ namespace Sampo {
 
 			window->OnStartFrame();
 
+			if (m_Platform)
+				m_Platform->Update();
+
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(deltaTime);
 
@@ -68,10 +71,12 @@ namespace Sampo {
 			// TODO - change to debugger container for imgui rendering
 			m_Platform->ImGuiDebug();
 
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+
 			m_ImGuiLayer->End();
 
-			if (m_Platform)
-				m_Platform->Update();
+			window->OnEndFrame();
 		}
 	}
 

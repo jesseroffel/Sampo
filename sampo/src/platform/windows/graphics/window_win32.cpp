@@ -21,8 +21,8 @@ namespace Sampo
 	bool Win32Window::Init(const WindowParams& aWindowProperties)
 	{
 		m_Params = aWindowProperties;
-
-		SAMPO_CORE_INFO("Creating window [{0}] ({1}, {2})", m_Params.m_WindowName, m_Params.m_Width, m_Params.m_Height);
+		const glm::vec2& aWindowSize = m_Params.m_WindowSize;
+		SAMPO_CORE_INFO("Creating window [{0}] ({1}, {2})", m_Params.m_WindowName, aWindowSize.x, aWindowSize.y);
 
 		if (!m_GLFWInitialized)
 		{
@@ -34,7 +34,7 @@ namespace Sampo
 			});
 		}
 
-		m_GLFWWindow = glfwCreateWindow((int)m_Params.m_Width, m_Params.m_Height, m_Params.m_WindowName.c_str(), nullptr, nullptr);
+		m_GLFWWindow = glfwCreateWindow(static_cast<int>(aWindowSize.x), static_cast<int>(aWindowSize.y), m_Params.m_WindowName.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_GLFWWindow);
 		SAMPO_ASSERT_MSG(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize Glad!");
 
@@ -50,12 +50,14 @@ namespace Sampo
 
 	void Win32Window::OnStartFrame()
 	{
+		glfwPollEvents();
+		const glm::vec2& windowSize = GetWindowSize();
+		glViewport(0, 0, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y));
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void Win32Window::Update()
+	void Win32Window::OnEndFrame()
 	{
-		glfwPollEvents();
 		glfwSwapBuffers(m_GLFWWindow);
 	}
 
@@ -100,8 +102,8 @@ namespace Sampo
 		glfwSetWindowSizeCallback(m_GLFWWindow, [](GLFWwindow* aWindow, int aWidth, int aHeight)
 		{
 			WindowParams& params = *static_cast<WindowParams*>(glfwGetWindowUserPointer(aWindow));
-			params.m_Width = aWidth;
-			params.m_Height = aHeight;
+			params.m_WindowSize.x = static_cast<glm::vec2::value_type>(aWidth);
+			params.m_WindowSize.y = static_cast<glm::vec2::value_type>(aHeight);
 
 			WindowsResizeEvent windowEvent(aWidth, aHeight);
 			params.m_WindowEventCallback(windowEvent);

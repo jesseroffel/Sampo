@@ -24,7 +24,9 @@ namespace Sampo
 		if (!m_Window->Init(aWindowName))
 			return false;
 
-		m_Input->Init();
+		if (!m_Input->Init())
+			return false;
+
 		m_Window->SetKeyboardEventCallback(BIND_EVENT_FN(Input::OnKeyboardEvent, m_Input));
 		m_Window->SetMouseEventCallback(BIND_EVENT_FN(Input::OnMouseEvent, m_Input));
 		m_Window->SetGamepadEventCallback(BIND_EVENT_FN(Input::OnGamepadEvent, m_Input));
@@ -33,7 +35,6 @@ namespace Sampo
 
 	void Win32Platform::Update()
 	{
-		m_Window->Update();
 		m_Input->Update();
 	}
 

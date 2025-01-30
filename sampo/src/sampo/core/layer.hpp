@@ -17,6 +17,7 @@ namespace Sampo
         virtual void OnAttach() {};
         virtual void OnUpdate(float ts) { UNUSED(ts); };
         virtual void OnDetach() {};
+        virtual void OnImGuiRender() {};
 
         inline const std::string& GetLayerName() { return m_LayerName; }
 
