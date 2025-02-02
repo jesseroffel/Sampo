@@ -34,7 +34,7 @@ namespace Sampo
 			glDeleteShader(vertexShader);
 			
 			SAMPO_CORE_ERROR("{0}", infoLog.data());
-			SAMPO_ASSERT_MSG(false, "Vertex shader compilation failed!")
+			SAMPO_ASSERT_MSG(false, "Vertex shader compilation failed!");
 			return;
 		}
 
@@ -65,7 +65,7 @@ namespace Sampo
 			glDeleteShader(vertexShader);
 
 			SAMPO_CORE_ERROR("{0}", infoLog.data());
-			SAMPO_ASSERT_MSG(false, "Fragment shader compilation failed!")
+			SAMPO_ASSERT_MSG(false, "Fragment shader compilation failed!");
 			return;
 		}
 
@@ -100,7 +100,7 @@ namespace Sampo
 			glDeleteShader(fragmentShader);
 
 			SAMPO_CORE_ERROR("{0}", infoLog.data());
-			SAMPO_ASSERT_MSG(false, "Shader linking failed!")
+			SAMPO_ASSERT_MSG(false, "Shader linking failed!");
 			return;
 		}
 
