@@ -30,6 +30,8 @@ add_library(sampo STATIC
 	"src/sampo/events/key_event.hpp"
 	"src/sampo/events/mouse_event.hpp"
 	"src/sampo/events/gamepad_event.hpp"
+	"src/sampo/graphics/graphics_context.hpp"
+	"src/sampo/graphics/shader.cpp"
 	"src/sampo/graphics/window.hpp"
 	"src/sampo/input/mouse.hpp"
 	"src/sampo/input/mouse.cpp"
@@ -62,6 +64,8 @@ if (WIN32)
 
 	target_sources(sampo PUBLIC 
 		"src/platform/platform_definitions.hpp"
+		"src/platform/opengl/opengl_context.hpp"
+		"src/platform/opengl/opengl_context.cpp"
 		"src/platform/windows/core/platform_win32.hpp"
 		"src/platform/windows/core/platform_win32.cpp"
 		"src/platform/windows/graphics/window_win32.hpp"

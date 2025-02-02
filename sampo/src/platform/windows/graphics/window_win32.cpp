@@ -8,7 +8,8 @@
 #include "sampo/events/mouse_event.hpp"
 #include "sampo/events/gamepad_event.hpp"
 
-#include <glad/glad.h>
+#include "platform/opengl/opengl_context.hpp"
+
 #include <GLFW/glfw3.h>
 
 namespace Sampo
@@ -35,30 +36,33 @@ namespace Sampo
 		}
 
 		m_GLFWWindow = glfwCreateWindow(static_cast<int>(aWindowSize.x), static_cast<int>(aWindowSize.y), m_Params.m_WindowName.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_GLFWWindow);
-		SAMPO_ASSERT_MSG(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize Glad!");
+		
+		m_GraphicsContext = new OpenGLContext(this, m_GLFWWindow);
+		m_GraphicsContext->Init();
 
 		glfwSetWindowUserPointer(m_GLFWWindow, &m_Params);
 		SetVSync(true);
 
-		LogRendererInfo();
+		m_GraphicsContext->LogRendererInfo();
 		SetGLFWCallbacks();
 
-		glClearColor(0, 0, 0.5, 1);
+		m_GraphicsContext->PostInit();
 		return true;
 	}
 
 	void Win32Window::OnStartFrame()
 	{
-		glfwPollEvents();
-		const glm::vec2& windowSize = GetWindowSize();
-		glViewport(0, 0, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y));
-		glClear(GL_COLOR_BUFFER_BIT);
+		m_GraphicsContext->OnStartFrame();
+	}
+
+	void Win32Window::Update()
+	{
+		m_GraphicsContext->Draw();
 	}
 
 	void Win32Window::OnEndFrame()
 	{
-		glfwSwapBuffers(m_GLFWWindow);
+		m_GraphicsContext->SwapBuffers();
 	}
 
 	void Win32Window::Shutdown()
@@ -76,25 +80,6 @@ namespace Sampo
 	void Win32Window::SetVSync(bool anEnable)
 	{
 		glfwSwapInterval(anEnable ? 1 : 0);
-	}
-
-	void Win32Window::LogRendererInfo()
-	{
-		int glfwMajor = glfwGetWindowAttrib(m_GLFWWindow, GLFW_CONTEXT_VERSION_MAJOR);
-		int glfwMinor = glfwGetWindowAttrib(m_GLFWWindow, GLFW_CONTEXT_VERSION_MINOR);
-		int glfwRevision = glfwGetWindowAttrib(m_GLFWWindow, GLFW_CONTEXT_REVISION);
-
-		SAMPO_CORE_INFO("Glfw: {0}.{1}.{2}", glfwMajor, glfwMinor, glfwRevision);
-
-		const auto glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
-		const auto glRenderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
-		const auto glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-		const auto glShaderVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-		SAMPO_CORE_INFO("OpenGL Vendor {0}", glVendor);
-		SAMPO_CORE_INFO("OpenGL Renderer {0}", glRenderer);
-		SAMPO_CORE_INFO("OpenGL Version {0}", glVersion);
-		SAMPO_CORE_INFO("OpenGL Shader Version {0}", glShaderVersion);
 	}
 
 	void Win32Window::SetGLFWCallbacks()

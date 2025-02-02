@@ -76,6 +76,7 @@ namespace Sampo {
 
 			m_ImGuiLayer->End();
 
+			window->Update();
 			window->OnEndFrame();
 		}
 	}

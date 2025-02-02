@@ -6,6 +6,7 @@ struct GLFWwindow;
 namespace Sampo
 {
 	class Event;
+	class GraphicsContext;
 
 	struct WindowParams
 	{
@@ -31,6 +32,7 @@ namespace Sampo
 
 		bool Init(const WindowParams& aWindowProperties);
 		void OnStartFrame();
+		void Update();
 		void OnEndFrame();
 		void Shutdown();
 
@@ -44,7 +46,6 @@ namespace Sampo
 		void SetMouseEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_MouseEventCallback = aCallback; }
 		void SetGamepadEventCallback(const std::function<void(Event&)> aCallback) { m_Params.m_JoystickEventCallback = aCallback; }
 	private:
-		void LogRendererInfo();
 		void SetGLFWCallbacks();
 
 		void SetVSync(bool anEnable);
@@ -53,5 +54,6 @@ namespace Sampo
 
 		bool m_GLFWInitialized{ false };
 		GLFWwindow* m_GLFWWindow{ nullptr };
+		GraphicsContext* m_GraphicsContext{ nullptr };
 	};
 }
