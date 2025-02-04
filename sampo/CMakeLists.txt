@@ -30,7 +30,11 @@ add_library(sampo STATIC
 	"src/sampo/events/key_event.hpp"
 	"src/sampo/events/mouse_event.hpp"
 	"src/sampo/events/gamepad_event.hpp"
+	"src/sampo/graphics/buffer.hpp"
+	"src/sampo/graphics/buffer.cpp"
 	"src/sampo/graphics/graphics_context.hpp"
+	"src/sampo/graphics/renderer.cpp"
+	"src/sampo/graphics/shader.hpp"
 	"src/sampo/graphics/shader.cpp"
 	"src/sampo/graphics/window.hpp"
 	"src/sampo/input/mouse.hpp"
@@ -41,8 +45,7 @@ add_library(sampo STATIC
 	"src/sampo/input/keyboard.hpp"
 	"src/sampo/input/keyboard.cpp"
 	"src/sampo/input/gamepad.hpp"
-	"src/sampo/input/gamepad.cpp"
-)
+	"src/sampo/input/gamepad.cpp")
 
 # Configure solution #
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)
@@ -64,6 +67,8 @@ if (WIN32)
 
 	target_sources(sampo PUBLIC 
 		"src/platform/platform_definitions.hpp"
+		"src/platform/opengl/opengl_buffer.hpp"
+		"src/platform/opengl/opengl_buffer.cpp"
 		"src/platform/opengl/opengl_context.hpp"
 		"src/platform/opengl/opengl_context.cpp"
 		"src/platform/windows/core/platform_win32.hpp"

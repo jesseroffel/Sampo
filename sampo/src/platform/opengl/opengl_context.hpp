@@ -7,6 +7,8 @@ struct GLFWwindow;
 namespace Sampo
 {
 	class Shader;
+	class IndexBuffer;
+	class VertexBuffer;
 
 	class OpenGLContext : public GraphicsContext
 	{
@@ -25,9 +27,9 @@ namespace Sampo
 		GLFWwindow* m_WindowHandle{ nullptr };
 
 		uint32 m_VertexArray = 0;
-		uint32 m_VertexBuffer = 0;
-		uint32 m_IndexBuffer = 0;
 
 		std::unique_ptr<Shader> m_Shader;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
+		std::unique_ptr<IndexBuffer> m_IndexBuffer;
 	};
 }

@@ -68,7 +68,7 @@ namespace Sampo {
 
 			m_ImGuiLayer->Begin();
 
-			// TODO - change to debugger container for imgui rendering
+			// TODO - change to debugger container for ImGui rendering
 			m_Platform->ImGuiDebug();
 
 			for (Layer* layer : m_LayerStack)
