@@ -31,4 +31,14 @@ namespace Sampo
 		return nullptr;
 	}
 
+	void BufferLayout::CalculateOffsetsAndStride()
+	{
+		m_Stride = 0;
+		for (BufferElement& bufferElement : m_BufferElements)
+		{
+			bufferElement.m_Offset = m_Stride;
+			m_Stride += bufferElement.m_Size;
+		}
+	}
+
 }

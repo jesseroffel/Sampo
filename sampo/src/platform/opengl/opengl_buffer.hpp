@@ -12,7 +12,11 @@ namespace Sampo
 
 		void Bind() const override;
 		void Unbind() const override;
+
+		const BufferLayout& GetLayout() const override { return m_Layout; }
+		void SetLayout(const BufferLayout& aLayout) override { m_Layout = aLayout; }
 	private:
+		BufferLayout m_Layout;
 		uint32 m_RendererID{ uint32_max };
 	};
 

@@ -9,6 +9,28 @@
 
 namespace Sampo
 {
+	static GLenum ShaderDataTypeToOpenGLType(ShaderDataType aDataType)
+	{
+		switch (aDataType)
+		{
+		case Sampo::ShaderDataType::None:
+		case Sampo::ShaderDataType::Bool: return GL_BOOL;
+		case Sampo::ShaderDataType::Int: return GL_INT;
+		case Sampo::ShaderDataType::Int2: return GL_INT;
+		case Sampo::ShaderDataType::Int3: return GL_INT;
+		case Sampo::ShaderDataType::Int4: return GL_INT;
+		case Sampo::ShaderDataType::Float: return GL_FLOAT;
+		case Sampo::ShaderDataType::Float2: return GL_FLOAT;
+		case Sampo::ShaderDataType::Float3: return GL_FLOAT;
+		case Sampo::ShaderDataType::Float4: return GL_FLOAT;
+		case Sampo::ShaderDataType::Mat3: return GL_FLOAT;
+		case Sampo::ShaderDataType::Mat4: return GL_FLOAT;
+		}
+
+		SAMPO_ASSERT_MSG(false, "Cannot convert Shader Data Type to OpenGL Type as the data type is invalid!");
+		return 0;
+	}
+
 	OpenGLContext::OpenGLContext(Window* aWindow, GLFWwindow* aWindowHandle)
 		: m_Window(aWindow)
 		, m_WindowHandle(aWindowHandle)
@@ -30,16 +52,33 @@ namespace Sampo
 		glGenVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);
 
-		float vertices[3 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
+		float vertices[3 * 7] = {
+			-0.5f, -0.5f, 0.0f, 0.75f, 0.25f, 0.75f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 0.25f, 0.3f, 0.75f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 0.75f, 0.75f, 0.25f, 1.0f,
 		};
 
 		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		BufferLayout layout = {
+			{ ShaderDataType::Float3, "aPosition"},
+			{ ShaderDataType::Float4, "aColor" }
+		};
+		m_VertexBuffer->SetLayout(layout);
+
+		uint32 index = 0;
+		const BufferLayout& vertexLayout = m_VertexBuffer->GetLayout();
+		for (const BufferElement& bufferElement : vertexLayout)
+		{
+			glEnableVertexAttribArray(index);
+			const uint32 componentCount = bufferElement.GetComponentCount();
+			const GLenum dataType = ShaderDataTypeToOpenGLType(bufferElement.m_Type);
+			const GLboolean normalized = bufferElement.m_Normalized ? GL_TRUE : GL_FALSE;
+			const uint32 stride = vertexLayout.GetStride();
+			glVertexAttribPointer(index, componentCount, dataType, normalized, stride, (const void*)bufferElement.m_Offset);
+			index++;
+		}
+
 
 		uint32 indices[3] = { 0, 1, 2 };
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32)));
@@ -48,12 +87,15 @@ namespace Sampo
 			#version 330 core
 			
 			layout(location = 0) in vec3 aPosition;
+			layout(location = 1) in vec4 aColor;
 
 			out vec3 vPosition;
+			out vec4 vColor;
 
 			void main()
 			{
 				vPosition = aPosition;
+				vColor = aColor;
 				gl_Position = vec4(aPosition, 1.0);
 			}
 		)";
@@ -64,10 +106,12 @@ namespace Sampo
 			layout(location = 0) out vec4 colorOut;
 
 			in vec3 vPosition;
+			in vec4 vColor;
 
 			void main()
 			{
 				colorOut = vec4((vPosition * 0.5) + 0.5, 1.0);
+				colorOut = vColor;
 			}
 		)";
 
