@@ -4,6 +4,10 @@
 #include "sampo/graphics/buffer.hpp"
 #include "sampo/graphics/shader.hpp"
 #include "sampo/graphics/vertex_array.hpp"
+#include "sampo/graphics/renderer.hpp"
+#include "sampo/graphics/render_command.hpp"
+
+#include "platform/opengl/opengl_renderer_api.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -23,7 +27,7 @@ namespace Sampo
 		glfwMakeContextCurrent(m_WindowHandle);
 		SAMPO_ASSERT_MSG(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize Glad!");
 
-		glClearColor(0.075f, 0.15f, 0.25f, 1);
+		RenderCommand::SetClearColor({ 0.075f, 0.15f, 0.25f, 1 });
 	}
 
 	void OpenGLContext::PostInit()
@@ -140,7 +144,6 @@ namespace Sampo
 	{
 		const glm::vec2& windowSize = m_Window->GetWindowSize();
 		glViewport(0, 0, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y));
-		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void OpenGLContext::SwapBuffers()
@@ -151,13 +154,17 @@ namespace Sampo
 
 	void OpenGLContext::Draw()
 	{
+		RenderCommand::Clear();
+
+		Renderer::BeginScene();
+
 		m_SquareShader->Bind();
-		m_SquareVA->Bind();
-		glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		Renderer::Submit(m_SquareVA);
 
 		m_Shader->Bind();
-		m_VertexArray->Bind();
-		glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		Renderer::Submit(m_VertexArray);
+
+		Renderer::EndScene();
 	}
 
 	void OpenGLContext::LogRendererInfo()

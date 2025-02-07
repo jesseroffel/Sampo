@@ -11,8 +11,8 @@ namespace Sampo
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLVertexBuffer(aVertices, aSize);
+		case RendererAPI::API::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(aVertices, aSize);
 		}
 
 		SAMPO_ASSERT_MSG(false, "API Version not supported!");
@@ -23,8 +23,8 @@ namespace Sampo
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLIndexBuffer(anIndices, aSize);
+		case RendererAPI::API::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(anIndices, aSize);
 		}
 
 		SAMPO_ASSERT_MSG(false, "API Version not supported!");
