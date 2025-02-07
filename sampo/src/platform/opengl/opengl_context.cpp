@@ -3,34 +3,13 @@
 
 #include "sampo/graphics/buffer.hpp"
 #include "sampo/graphics/shader.hpp"
+#include "sampo/graphics/vertex_array.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Sampo
 {
-	static GLenum ShaderDataTypeToOpenGLType(ShaderDataType aDataType)
-	{
-		switch (aDataType)
-		{
-		case Sampo::ShaderDataType::None:
-		case Sampo::ShaderDataType::Bool: return GL_BOOL;
-		case Sampo::ShaderDataType::Int: return GL_INT;
-		case Sampo::ShaderDataType::Int2: return GL_INT;
-		case Sampo::ShaderDataType::Int3: return GL_INT;
-		case Sampo::ShaderDataType::Int4: return GL_INT;
-		case Sampo::ShaderDataType::Float: return GL_FLOAT;
-		case Sampo::ShaderDataType::Float2: return GL_FLOAT;
-		case Sampo::ShaderDataType::Float3: return GL_FLOAT;
-		case Sampo::ShaderDataType::Float4: return GL_FLOAT;
-		case Sampo::ShaderDataType::Mat3: return GL_FLOAT;
-		case Sampo::ShaderDataType::Mat4: return GL_FLOAT;
-		}
-
-		SAMPO_ASSERT_MSG(false, "Cannot convert Shader Data Type to OpenGL Type as the data type is invalid!");
-		return 0;
-	}
-
 	OpenGLContext::OpenGLContext(Window* aWindow, GLFWwindow* aWindowHandle)
 		: m_Window(aWindow)
 		, m_WindowHandle(aWindowHandle)
@@ -49,8 +28,7 @@ namespace Sampo
 
 	void OpenGLContext::PostInit()
 	{
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
+		m_VertexArray.reset(VertexArray::Create());
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.75f, 0.25f, 0.75f, 1.0f,
@@ -58,30 +36,21 @@ namespace Sampo
 			 0.0f,  0.5f, 0.0f, 0.75f, 0.75f, 0.25f, 1.0f,
 		};
 
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		std::shared_ptr<VertexBuffer> vertexBuffer;
+		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "aPosition"},
 			{ ShaderDataType::Float4, "aColor" }
 		};
-		m_VertexBuffer->SetLayout(layout);
 
-		uint32 index = 0;
-		const BufferLayout& vertexLayout = m_VertexBuffer->GetLayout();
-		for (const BufferElement& bufferElement : vertexLayout)
-		{
-			glEnableVertexAttribArray(index);
-			const uint32 componentCount = bufferElement.GetComponentCount();
-			const GLenum dataType = ShaderDataTypeToOpenGLType(bufferElement.m_Type);
-			const GLboolean normalized = bufferElement.m_Normalized ? GL_TRUE : GL_FALSE;
-			const uint32 stride = vertexLayout.GetStride();
-			glVertexAttribPointer(index, componentCount, dataType, normalized, stride, (const void*)bufferElement.m_Offset);
-			index++;
-		}
-
+		vertexBuffer->SetLayout(layout);
+		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32 indices[3] = { 0, 1, 2 };
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32)));
+		std::shared_ptr<IndexBuffer> indexBuffer;
+		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32)));
+		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		std::string vertexSource = R"(
 			#version 330 core
@@ -116,6 +85,55 @@ namespace Sampo
 		)";
 
 		m_Shader.reset(new Shader(vertexSource, fragmentSource));
+
+		m_SquareVA.reset(VertexArray::Create());
+
+		float squareVertices[3 * 4] = {
+			-0.75f, -0.75f, 0.0f,
+			 0.75f, -0.75f, 0.0f,
+			 0.75f,  0.75f, 0.0f,
+			 -0.75f,  0.75f, 0.0f
+		};
+
+		std::shared_ptr<VertexBuffer> squareVB;
+		squareVB.reset(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		squareVB->SetLayout({ { ShaderDataType::Float3, "aPosition" } });
+		m_SquareVA->AddVertexBuffer(squareVB);
+
+		uint32 squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<IndexBuffer> squareIB;
+		squareIB.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32)));
+		m_SquareVA->SetIndexBuffer(squareIB);
+
+		std::string vertexSquareSource = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 aPosition;
+
+			out vec3 vPosition;
+
+			void main()
+			{
+				vPosition = aPosition;
+				gl_Position = vec4(aPosition, 1.0);
+			}
+		)";
+
+		std::string fragmentSquareSource = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 colorOut;
+
+			in vec3 vPosition;
+
+			void main()
+			{
+				colorOut = vec4(0.25, 0.35, 0.75, 1.0);
+			}
+		)";
+
+		m_SquareShader.reset(new Shader(vertexSquareSource, fragmentSquareSource));
+
 	}
 
 	void OpenGLContext::OnStartFrame()
@@ -133,10 +151,13 @@ namespace Sampo
 
 	void OpenGLContext::Draw()
 	{
-		m_Shader->Bind();
+		m_SquareShader->Bind();
+		m_SquareVA->Bind();
+		glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-		glBindVertexArray(m_VertexArray);
-		glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+		m_Shader->Bind();
+		m_VertexArray->Bind();
+		glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLContext::LogRendererInfo()
