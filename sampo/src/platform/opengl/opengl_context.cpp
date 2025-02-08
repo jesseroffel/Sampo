@@ -17,6 +17,7 @@ namespace Sampo
 	OpenGLContext::OpenGLContext(Window* aWindow, GLFWwindow* aWindowHandle)
 		: m_Window(aWindow)
 		, m_WindowHandle(aWindowHandle)
+		, m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		SAMPO_ASSERT_MSG(m_Window, "Window must be provided to set up OpenGL Context!");
 		SAMPO_ASSERT_MSG(m_WindowHandle, "Window Handle must be set in order to setup OpenGL Context!");
@@ -62,6 +63,8 @@ namespace Sampo
 			layout(location = 0) in vec3 aPosition;
 			layout(location = 1) in vec4 aColor;
 
+			uniform mat4 uViewProjection;
+
 			out vec3 vPosition;
 			out vec4 vColor;
 
@@ -69,7 +72,7 @@ namespace Sampo
 			{
 				vPosition = aPosition;
 				vColor = aColor;
-				gl_Position = vec4(aPosition, 1.0);
+				gl_Position = uViewProjection * vec4(aPosition, 1.0);
 			}
 		)";
 
@@ -114,12 +117,14 @@ namespace Sampo
 			
 			layout(location = 0) in vec3 aPosition;
 
+			uniform mat4 uViewProjection;
+
 			out vec3 vPosition;
 
 			void main()
 			{
 				vPosition = aPosition;
-				gl_Position = vec4(aPosition, 1.0);
+				gl_Position = uViewProjection * vec4(aPosition, 1.0);
 			}
 		)";
 
@@ -156,13 +161,10 @@ namespace Sampo
 	{
 		RenderCommand::Clear();
 
-		Renderer::BeginScene();
+		Renderer::BeginScene(m_Camera);
 
-		m_SquareShader->Bind();
-		Renderer::Submit(m_SquareVA);
-
-		m_Shader->Bind();
-		Renderer::Submit(m_VertexArray);
+		Renderer::Submit(m_SquareShader, m_SquareVA);
+		Renderer::Submit(m_Shader, m_VertexArray);
 
 		Renderer::EndScene();
 	}
