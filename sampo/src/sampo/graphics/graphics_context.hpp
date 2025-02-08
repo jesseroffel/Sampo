@@ -6,7 +6,6 @@ namespace Sampo
 	{
 	public:
 		virtual void Init() = 0;
-		virtual void PostInit() = 0;
 		virtual void OnStartFrame() = 0;
 		virtual void SwapBuffers() = 0;
 		virtual void Draw() = 0;

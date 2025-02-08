@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 
 namespace Sampo
 {
@@ -48,7 +47,7 @@ namespace Sampo
 	public:
 		EventDispatcher(Event& anEvent) : m_Event(anEvent) {}
 
-		template<typename T, typename F>
+		template<typename T>
 		bool Dispatch(std::function<bool(T&)> aFunc)
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())

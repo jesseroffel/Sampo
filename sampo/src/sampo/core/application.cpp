@@ -2,11 +2,11 @@
 #include "application.hpp"
 
 #include "console_arguments.hpp"
-#include "sampo/events/application_event.hpp"
+#include "platform.hpp"
 
-#include "sampo/core/platform.hpp"
-#include "sampo/graphics/window.hpp"
 #include "sampo/debugging/imgui_layer.hpp"
+#include "sampo/events/application_event.hpp"
+#include "sampo/graphics/window.hpp"
 
 namespace Sampo {
 	Application* Application::s_Instance = nullptr;
@@ -47,6 +47,13 @@ namespace Sampo {
 	{
 		if (anEvent.GetEventType() == EventType::WindowClose)
 			OnWindowClose();
+
+		for (auto iter = m_LayerStack.end(); iter != m_LayerStack.begin(); )
+		{
+			(*--iter)->OnEvent(anEvent);
+			if (anEvent.m_Processed)
+				break;
+		}
 	}
 
 	void Application::Run()
@@ -68,8 +75,7 @@ namespace Sampo {
 
 			m_ImGuiLayer->Begin();
 
-			// TODO - change to debugger container for ImGui rendering
-			m_Platform->ImGuiDebug();
+			m_Platform->ImGuiDebug(); // TODO - change to debugger container for ImGui rendering
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();

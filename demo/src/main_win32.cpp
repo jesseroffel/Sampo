@@ -1,5 +1,7 @@
 #include "sampo/core/application.hpp"
 
+#include "demo_layer.hpp"
+
 int main(int argc, char* argv[])
 {
 	using namespace Sampo;
@@ -17,7 +19,15 @@ int main(int argc, char* argv[])
 	}
 
 	Application& application = Application::GetInstance();
+
+	DemoLayer* demolayer = new DemoLayer();
+	application.PushLayer(demolayer);
+
 	application.Run();
+
+	application.PopLayer(demolayer);
+	delete demolayer;
+
 	application.Shutdown();
 	return 0;
 }

@@ -45,8 +45,6 @@ namespace Sampo
 
 		m_GraphicsContext->LogRendererInfo();
 		SetGLFWCallbacks();
-
-		m_GraphicsContext->PostInit();
 		return true;
 	}
 
