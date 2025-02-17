@@ -3,12 +3,14 @@
 
 #include "console_arguments.hpp"
 #include "platform.hpp"
+#include "timestep.hpp"
 
 #include "sampo/debugging/imgui_layer.hpp"
 #include "sampo/events/application_event.hpp"
 #include "sampo/graphics/window.hpp"
 
-namespace Sampo {
+namespace Sampo
+{
 	Application* Application::s_Instance = nullptr;
 
 	Application* Application::Create(StartParams& aStartParams)
@@ -60,11 +62,12 @@ namespace Sampo {
 	{
 		while (m_Running)
 		{
-			Window* window = GetPlatform()->GetWindow();
-			float time = window->GetTime();
-			float deltaTime = time - m_Time;
-			m_Time = time;
+			const Platform* platform = GetPlatform();
+			const float platformTime = platform->GetTime();
+			Timestep deltaTime = platformTime - m_LastFrameTime;
+			m_LastFrameTime = platformTime;
 
+			Window* window = platform->GetWindow();
 			window->OnStartFrame();
 
 			if (m_Platform)

@@ -23,6 +23,7 @@ add_library(sampo STATIC
 	"src/sampo/core/log.hpp"
 	"src/sampo/core/log.cpp"
 	"src/sampo/core/platform.hpp"
+	"src/sampo/core/timestep.hpp"
 	"src/sampo/debugging/imgui_layer.hpp"
 	"src/sampo/debugging/imgui_layer.cpp"
 	"src/sampo/events/event.hpp"

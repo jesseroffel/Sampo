@@ -21,6 +21,8 @@ namespace Sampo
 		Window* GetWindow() const;
 		Input& GetInput() const { return *m_Input; }
 
+		float GetTime() const;
+
 		void ImGuiDebug();
 
 	private:

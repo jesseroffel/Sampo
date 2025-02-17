@@ -51,6 +51,11 @@ namespace Sampo
 		return m_Window;
 	}
 
+	float Win32Platform::GetTime() const
+	{
+		return m_Window ? m_Window->GetTime() : 0.0f;
+	}
+
 	void Win32Platform::ImGuiDebug()
 	{
 		ImGui::Begin("Basic device debugger");

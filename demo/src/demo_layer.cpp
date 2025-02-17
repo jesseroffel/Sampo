@@ -8,10 +8,6 @@ DemoLayer::DemoLayer()
 	: Sampo::Layer("DemoLayer")
 	, m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	, m_Keyboard(nullptr)
-	, m_CameraPosition(0.0f)
-	, m_CameraRotation(0.0f)
-	, m_CameraMoveSpeed(0.01f)
-	, m_CameraRotationSpeed(0.5f)
 {
 }
 
@@ -134,23 +130,21 @@ void DemoLayer::OnAttach()
 	m_SquareShader.reset(new Sampo::Shader(vertexSquareSource, fragmentSquareSource));
 }
 
-void DemoLayer::OnUpdate(float aTimeStamp)
+void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 {
-	SAMPO_UNUSED(aTimeStamp);
-
 	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kLEFT))
-		m_CameraPosition.x -= m_CameraMoveSpeed;
+		m_CameraPosition.x -= m_CameraMoveSpeed * aDeltaTime;
 	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kRIGHT))
-		m_CameraPosition.x += m_CameraMoveSpeed;
+		m_CameraPosition.x += m_CameraMoveSpeed * aDeltaTime;
 	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kDOWN))
-		m_CameraPosition.y -= m_CameraMoveSpeed;
+		m_CameraPosition.y -= m_CameraMoveSpeed * aDeltaTime;
 	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kUP))
-		m_CameraPosition.y += m_CameraMoveSpeed;
+		m_CameraPosition.y += m_CameraMoveSpeed * aDeltaTime;
 
 	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kA))
-		m_CameraRotation += m_CameraRotationSpeed;
+		m_CameraRotation += m_CameraRotationSpeed * aDeltaTime;
 	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kD))
-		m_CameraRotation -= m_CameraRotationSpeed;
+		m_CameraRotation -= m_CameraRotationSpeed * aDeltaTime;
 
 	m_Camera.SetPosition(m_CameraPosition);
 	m_Camera.SetRotation(m_CameraRotation);

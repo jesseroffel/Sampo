@@ -5,6 +5,7 @@
 #include "sampo/core/application.hpp"
 #include "sampo/core/layer.hpp"
 #include "sampo/core/log.hpp"
+#include "sampo/core/timestep.hpp"
 
 #include "sampo/events/event.hpp"
 

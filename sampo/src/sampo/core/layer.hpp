@@ -1,4 +1,6 @@
 #pragma once
+#include "timestep.hpp"
+
 #include "sampo/events/event.hpp"
 
 namespace Sampo
@@ -14,7 +16,7 @@ namespace Sampo
 
 		virtual void OnAttach() {};
 		virtual void OnDetach() {};
-		virtual void OnUpdate(float ts) { UNUSED(ts); };
+		virtual void OnUpdate(Timestep aDeltaTime) { UNUSED(aDeltaTime); };
 		virtual void OnImGuiRender() {};
 		virtual void OnEvent(Event& anEvent) { UNUSED(anEvent); };
 

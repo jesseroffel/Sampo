@@ -1,14 +1,9 @@
 #pragma once
-
 #include "sampo.hpp"
-#include "sampo/events/key_event.hpp"
 
 namespace Sampo
 {
-	class Event;
 	class Keyboard;
-	class Shader;
-	class VertexArray;
 }
 
 class DemoLayer : public Sampo::Layer
@@ -18,11 +13,9 @@ public:
 	~DemoLayer() = default;
 
 	void OnAttach() override;
-	void OnUpdate(float aTimeStamp) override;
+	void OnUpdate(Sampo::Timestep aDeltaTime) override;
 
 private:
-	bool OnKeyPressedEvent(Sampo::KeyPressedEvent& anEvent);
-
 	Sampo::OrthographicCamera m_Camera;
 
 	std::shared_ptr<Sampo::Shader> m_Shader;
@@ -33,8 +26,8 @@ private:
 
 	const Sampo::Keyboard* m_Keyboard;
 
-	glm::vec3 m_CameraPosition;
-	float m_CameraRotation;
-	float m_CameraMoveSpeed;
-	float m_CameraRotationSpeed;
+	glm::vec3 m_CameraPosition{ 0.0f };
+	float m_CameraRotation{ 0.0f };
+	float m_CameraMoveSpeed{ 1.0f };
+	float m_CameraRotationSpeed{ 60.0f };
 };

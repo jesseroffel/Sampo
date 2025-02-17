@@ -5,9 +5,7 @@
 // Application Class, using the main entry point to start common systems, to be defined in the client application // 
 namespace Sampo 
 {
-	class Event;
 	class ImGuiLayer;
-	class WindowCloseEvent;
 
 	struct StartParams
 	{
@@ -51,9 +49,9 @@ namespace Sampo
 		Platform* m_Platform{ nullptr };
 		ImGuiLayer* m_ImGuiLayer{ nullptr };
 
-		bool m_Running{ true };
-		float m_Time{ 0.0f };
+		float m_LastFrameTime{ 0.0f };
 
+		bool m_Running{ true };
 	private:
 		static Application* s_Instance;
 	};
