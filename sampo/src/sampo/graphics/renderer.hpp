@@ -14,7 +14,7 @@ namespace Sampo
 		static void BeginScene(OrthographicCamera& aCamera);
 		static void EndScene() {};
 
-		static void Submit(const std::shared_ptr<Shader>& aShader, const std::shared_ptr<VertexArray>& aVertexArray);
+		static void Submit(const std::shared_ptr<Shader>& aShader, const std::shared_ptr<VertexArray>& aVertexArray, const glm::mat4& aTransform = glm::mat4(1.0f));
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	private:

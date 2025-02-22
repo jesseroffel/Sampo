@@ -1,20 +1,17 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 namespace Sampo
 {
 	class Shader
 	{
 	public:
-		Shader(const std::string& aVertexSource, const std::string& aFragmentSource);
-		~Shader();
+		virtual ~Shader() = default;
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		void UploadUniformMat4(const std::string& aName, const glm::mat4& aMatrix);
+		static Shader* Create(const std::string& aVertexSource, const std::string& aFragmentSource);
 	private:
-		uint32 m_RendererID;
+		uint32 m_RendererID{ uint32_max };
 	};
 }

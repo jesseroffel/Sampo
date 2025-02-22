@@ -3,7 +3,9 @@
 
 #include "renderer.hpp"
 
-#include "platform/opengl/opengl_buffer.hpp"	// TODO - Add platform ifdefs
+#if SAMPO_PLATFORM_WINDOWS
+	#include "platform/opengl/opengl_buffer.hpp"
+#endif // SAMPO_PLATFORM_WINDOWS
 
 namespace Sampo
 {

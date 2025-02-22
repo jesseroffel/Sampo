@@ -1,8 +1,16 @@
 #include "demo_layer.hpp"
 
-#include "platform/platform_definitions.hpp"
 #include "sampo/input/input.hpp"
 #include "sampo/input/keyboard.hpp"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <imgui.h>
+
+#if SAMPO_PLATFORM_WINDOWS
+	#include "platform/opengl/opengl_shader.hpp"
+#endif 
 
 DemoLayer::DemoLayer()
 	: Sampo::Layer("DemoLayer")
@@ -50,6 +58,7 @@ void DemoLayer::OnAttach()
 			layout(location = 1) in vec4 aColor;
 
 			uniform mat4 uViewProjection;
+			uniform mat4 uTransform;
 
 			out vec3 vPosition;
 			out vec4 vColor;
@@ -58,7 +67,7 @@ void DemoLayer::OnAttach()
 			{
 				vPosition = aPosition;
 				vColor = aColor;
-				gl_Position = uViewProjection * vec4(aPosition, 1.0);
+				gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
 			}
 		)";
 
@@ -77,7 +86,7 @@ void DemoLayer::OnAttach()
 			}
 		)";
 
-	m_Shader.reset(new Sampo::Shader(vertexSource, fragmentSource));
+	m_Shader.reset(Sampo::Shader::Create(vertexSource, fragmentSource));
 
 	m_SquareVA.reset(Sampo::VertexArray::Create());
 
@@ -104,13 +113,14 @@ void DemoLayer::OnAttach()
 			layout(location = 0) in vec3 aPosition;
 
 			uniform mat4 uViewProjection;
+			uniform mat4 uTransform;
 
 			out vec3 vPosition;
 
 			void main()
 			{
 				vPosition = aPosition;
-				gl_Position = uViewProjection * vec4(aPosition, 1.0);
+				gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
 			}
 		)";
 
@@ -121,13 +131,15 @@ void DemoLayer::OnAttach()
 
 			in vec3 vPosition;
 
+			uniform vec3 uColor;
+
 			void main()
 			{
-				colorOut = vec4(0.25, 0.35, 0.75, 1.0);
+				colorOut = vec4(uColor, 1.0);
 			}
 		)";
 
-	m_SquareShader.reset(new Sampo::Shader(vertexSquareSource, fragmentSquareSource));
+	m_SquareShader.reset(Sampo::Shader::Create(vertexSquareSource, fragmentSquareSource));
 }
 
 void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
@@ -153,8 +165,33 @@ void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 
 	Sampo::Renderer::BeginScene(m_Camera);
 
-	Sampo::Renderer::Submit(m_SquareShader, m_SquareVA);
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+	glm::vec4 redColor(0.75f, 0.25f, 0.35f, 1.0f);
+	glm::vec4 blueColor(0.25f, 0.35f, 0.75f, 1.0f);
+
+	std::shared_ptr<Sampo::OpenGLShader> squareShader = std::dynamic_pointer_cast<Sampo::OpenGLShader>(m_SquareShader);
+	squareShader->Bind();
+	squareShader->UploadUniformFloat3("uColor", m_SquareColor);
+
+	for (int y = 0; y < 20; y++)
+	{
+		for (int x = 0; x < 20; x++)
+		{
+			glm::vec3 position(x * 0.175f, y * 0.175f, 0.0f);
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * scale;
+			Sampo::Renderer::Submit(m_SquareShader, m_SquareVA, transform);
+		}
+	}
+
 	Sampo::Renderer::Submit(m_Shader, m_VertexArray);
 
 	Sampo::Renderer::EndScene();
+}
+
+void DemoLayer::OnImGuiRender()
+{
+	ImGui::Begin("DemoSettings");
+	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+	ImGui::End();
 }

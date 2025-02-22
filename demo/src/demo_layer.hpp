@@ -14,6 +14,7 @@ public:
 
 	void OnAttach() override;
 	void OnUpdate(Sampo::Timestep aDeltaTime) override;
+	void OnImGuiRender() override;
 
 private:
 	Sampo::OrthographicCamera m_Camera;
@@ -26,6 +27,7 @@ private:
 
 	const Sampo::Keyboard* m_Keyboard;
 
+	glm::vec3 m_SquareColor{ 0.25f, 0.35f, 0.75f };
 	glm::vec3 m_CameraPosition{ 0.0f };
 	float m_CameraRotation{ 0.0f };
 	float m_CameraMoveSpeed{ 1.0f };

@@ -54,7 +54,8 @@ add_library(sampo STATIC
 	"src/sampo/input/keyboard.hpp"
 	"src/sampo/input/keyboard.cpp"
 	"src/sampo/input/mouse.hpp"
-	"src/sampo/input/mouse.cpp")
+	"src/sampo/input/mouse.cpp"
+)
 
 # Configure solution #
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)
@@ -82,6 +83,8 @@ if (WIN32)
 		"src/platform/opengl/opengl_context.cpp"
 		"src/platform/opengl/opengl_renderer_api.hpp"
 		"src/platform/opengl/opengl_renderer_api.cpp"
+		"src/platform/opengl/opengl_shader.hpp"
+		"src/platform/opengl/opengl_shader.cpp"
 		"src/platform/opengl/opengl_vertex_array.hpp"
 		"src/platform/opengl/opengl_vertex_array.cpp"
 		"src/platform/windows/core/platform_win32.hpp"

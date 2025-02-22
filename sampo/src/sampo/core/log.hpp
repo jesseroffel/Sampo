@@ -1,25 +1,24 @@
 #pragma once
 #include "sampo/core/core_definitions.hpp"
 
-// This ignores all warnings raised inside External headers
 #pragma warning(push, 0)
-    #include <spdlog/spdlog.h>
-    #include <spdlog/fmt/ostr.h>
+	#include <spdlog/spdlog.h>
+	#include <spdlog/fmt/ostr.h>
 #pragma warning(pop)
 
 namespace Sampo {
 
-    class Log
-    {
-    public:
-        static void Create();
+	class Log
+	{
+	public:
+		static void Create();
 
-        static Ref<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-        static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
-    private:
-        static Ref<spdlog::logger> s_CoreLogger;
-        static Ref<spdlog::logger> s_ClientLogger;
-    };
+		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+	private:
+		static std::shared_ptr<spdlog::logger> s_CoreLogger;
+		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+	};
 }
 
 // Core log macros
