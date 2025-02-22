@@ -26,85 +26,24 @@ void DemoLayer::OnAttach()
 	if (const unsigned int index = input.GetFirstInputDeviceIndexByType(Sampo::InputType::kKeyboard) != -1)
 		m_Keyboard = static_cast<const Sampo::Keyboard*>(input.GetInputDevice(index));
 
-	m_VertexArray.reset(Sampo::VertexArray::Create());
+	m_SquareVA = Sampo::VertexArray::Create();
 
-	float vertices[3 * 7] = {
-		-0.5f, -0.5f, 0.0f, 0.75f, 0.25f, 0.75f, 1.0f,
-		 0.5f, -0.5f, 0.0f, 0.25f, 0.3f, 0.75f, 1.0f,
-		 0.0f,  0.5f, 0.0f, 0.75f, 0.75f, 0.25f, 1.0f,
+	float squareVertices[5 * 4] = {
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+		 -0.5f, 0.5f, 0.0f, 0.0f, 1.0f
 	};
 
-	std::shared_ptr<Sampo::VertexBuffer> vertexBuffer;
-	vertexBuffer.reset(Sampo::VertexBuffer::Create(vertices, sizeof(vertices)));
-
-	Sampo::BufferLayout layout = {
-		{ Sampo::ShaderDataType::Float3, "aPosition"},
-		{ Sampo::ShaderDataType::Float4, "aColor" }
-	};
-
-	vertexBuffer->SetLayout(layout);
-	m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-	uint32 indices[3] = { 0, 1, 2 };
-
-	std::shared_ptr<Sampo::IndexBuffer> indexBuffer;
-	indexBuffer.reset(Sampo::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32)));
-	m_VertexArray->SetIndexBuffer(indexBuffer);
-
-	const std::string vertexSource = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 aPosition;
-			layout(location = 1) in vec4 aColor;
-
-			uniform mat4 uViewProjection;
-			uniform mat4 uTransform;
-
-			out vec3 vPosition;
-			out vec4 vColor;
-
-			void main()
-			{
-				vPosition = aPosition;
-				vColor = aColor;
-				gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
-			}
-		)";
-
-	const std::string fragmentSource = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 colorOut;
-
-			in vec3 vPosition;
-			in vec4 vColor;
-
-			void main()
-			{
-				colorOut = vec4((vPosition * 0.5) + 0.5, 1.0);
-				colorOut = vColor;
-			}
-		)";
-
-	m_Shader.reset(Sampo::Shader::Create(vertexSource, fragmentSource));
-
-	m_SquareVA.reset(Sampo::VertexArray::Create());
-
-	float squareVertices[3 * 4] = {
-		-0.75f, -0.75f, 0.0f,
-		 0.75f, -0.75f, 0.0f,
-		 0.75f,  0.75f, 0.0f,
-		 -0.75f,  0.75f, 0.0f
-	};
-
-	std::shared_ptr<Sampo::VertexBuffer> squareVB;
-	squareVB.reset(Sampo::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
-	squareVB->SetLayout({ { Sampo::ShaderDataType::Float3, "aPosition" } });
+	std::shared_ptr<Sampo::VertexBuffer> squareVB = Sampo::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
+	squareVB->SetLayout({ 
+		{ Sampo::ShaderDataType::Float3, "aPosition" },
+		{ Sampo::ShaderDataType::Float2, "aTextureCoord" }
+		});
 	m_SquareVA->AddVertexBuffer(squareVB);
 
 	uint32 squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-	std::shared_ptr<Sampo::IndexBuffer> squareIB;
-	squareIB.reset(Sampo::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32)));
+	std::shared_ptr<Sampo::IndexBuffer> squareIB = Sampo::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32));
 	m_SquareVA->SetIndexBuffer(squareIB);
 
 	const std::string vertexSquareSource = R"(
@@ -139,7 +78,48 @@ void DemoLayer::OnAttach()
 			}
 		)";
 
-	m_SquareShader.reset(Sampo::Shader::Create(vertexSquareSource, fragmentSquareSource));
+	m_SquareShader = Sampo::Shader::Create(vertexSquareSource, fragmentSquareSource);
+
+	const std::string textureVertexSource = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 aPosition;
+			layout(location = 1) in vec2 aTextureCoord;
+
+			uniform mat4 uViewProjection;
+			uniform mat4 uTransform;
+
+			out vec2 vTextureCoord;
+
+			void main()
+			{
+				vTextureCoord = aTextureCoord;
+				gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
+			}
+		)";
+
+	const std::string textureFragmentSource = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 colorOut;
+
+			in vec2 vTextureCoord;
+
+			uniform sampler2D uTexture;
+
+			void main()
+			{
+				colorOut = texture(uTexture, vTextureCoord);
+			}
+		)";
+
+	m_TextureShader = Sampo::Shader::Create(textureVertexSource, textureFragmentSource);
+
+	m_Texture = Sampo::Texture2D::Create("../../../../../demo/data/assets/textures/checkerboard.png");
+
+	std::shared_ptr<Sampo::OpenGLShader> texture = std::dynamic_pointer_cast<Sampo::OpenGLShader>(m_TextureShader);
+	texture->Bind();
+	texture->UploadUniformInt("uTexture", 0);
 }
 
 void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
@@ -184,7 +164,8 @@ void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 		}
 	}
 
-	Sampo::Renderer::Submit(m_Shader, m_VertexArray);
+	m_Texture->Bind();
+	Sampo::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
 
 	Sampo::Renderer::EndScene();
 }

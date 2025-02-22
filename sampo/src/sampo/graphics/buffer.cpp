@@ -9,24 +9,24 @@
 
 namespace Sampo
 {
-	VertexBuffer* VertexBuffer::Create(float* aVertices, uint32 aSize)
+	std::shared_ptr<VertexBuffer> VertexBuffer::Create(float* aVertices, uint32 aSize)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(aVertices, aSize);
+		case RendererAPI::API::OpenGL: return CreateShared<OpenGLVertexBuffer>(aVertices, aSize);
 		}
 
 		SAMPO_ASSERT_MSG(false, "API Version not supported!");
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32* anIndices, uint32 aSize)
+	std::shared_ptr<IndexBuffer> IndexBuffer::Create(uint32* anIndices, uint32 aSize)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(anIndices, aSize);
+		case RendererAPI::API::OpenGL: return CreateShared<OpenGLIndexBuffer>(anIndices, aSize);
 		}
 
 		SAMPO_ASSERT_MSG(false, "API Version not supported!");

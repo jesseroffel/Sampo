@@ -15,6 +15,7 @@
 
 #include "sampo/graphics/buffer.hpp"
 #include "sampo/graphics/shader.hpp"
+#include "sampo/graphics/texture.hpp"
 #include "sampo/graphics/vertex_array.hpp"
 
 #include "sampo/graphics/camera.hpp"

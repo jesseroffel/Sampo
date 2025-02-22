@@ -9,12 +9,12 @@
 
 namespace Sampo
 {
-	Shader* Shader::Create(const std::string& aVertexSource, const std::string& aFragmentSource)
+	std::shared_ptr<Shader> Shader::Create(const std::string& aVertexSource, const std::string& aFragmentSource)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None: SAMPO_ASSERT_MSG(false, "Headless API not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL: return new OpenGLShader(aVertexSource, aFragmentSource);
+		case RendererAPI::API::OpenGL: return CreateShared<OpenGLShader>(aVertexSource, aFragmentSource);
 		}
 
 		SAMPO_ASSERT_MSG(false, "API Version not supported!");

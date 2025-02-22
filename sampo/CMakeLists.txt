@@ -43,6 +43,8 @@ add_library(sampo STATIC
 	"src/sampo/graphics/renderer_api.hpp"
 	"src/sampo/graphics/shader.hpp"
 	"src/sampo/graphics/shader.cpp"
+	"src/sampo/graphics/texture.hpp"
+	"src/sampo/graphics/texture.cpp"
 	"src/sampo/graphics/vertex_array.hpp"
 	"src/sampo/graphics/vertex_array.cpp"
 	"src/sampo/graphics/window.hpp"
@@ -68,8 +70,9 @@ if (WIN32)
 	# Library source includes
 	target_include_directories(sampo PUBLIC ${PROJECT_SOURCE_DIR}/sampo/src/platform)
 	target_include_directories(sampo PUBLIC ${VENDOR_INCLUDE_DIR}/imgui)
+	target_include_directories(sampo PUBLIC ${VENDOR_INCLUDE_DIR}/stb)
 
-	# Library includes
+	# Submodule Library includes
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/GLFW)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/glad)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/spdlog)
@@ -85,8 +88,11 @@ if (WIN32)
 		"src/platform/opengl/opengl_renderer_api.cpp"
 		"src/platform/opengl/opengl_shader.hpp"
 		"src/platform/opengl/opengl_shader.cpp"
+		"src/platform/opengl/opengl_texture.hpp"
+		"src/platform/opengl/opengl_texture.cpp"
 		"src/platform/opengl/opengl_vertex_array.hpp"
 		"src/platform/opengl/opengl_vertex_array.cpp"
+		"src/platform/vendor/stb_image.cpp"
 		"src/platform/windows/core/platform_win32.hpp"
 		"src/platform/windows/core/platform_win32.cpp"
 		"src/platform/windows/graphics/window_win32.hpp"

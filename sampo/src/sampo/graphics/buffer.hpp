@@ -115,7 +115,7 @@ namespace Sampo
 		virtual const BufferLayout& GetLayout() const = 0;
 		virtual void SetLayout(const BufferLayout& aLayout) = 0;
 
-		static VertexBuffer* Create(float* aVertices, uint32 aSize);
+		static std::shared_ptr<VertexBuffer> Create(float* aVertices, uint32 aSize);
 	};
 
 	class IndexBuffer
@@ -128,7 +128,6 @@ namespace Sampo
 
 		virtual uint32 GetCount() const = 0;
 
-		static IndexBuffer* Create(uint32* anIndices, uint32 aCount);
-
+		static std::shared_ptr<IndexBuffer> Create(uint32* anIndices, uint32 aCount);
 	};
 }

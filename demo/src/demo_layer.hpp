@@ -19,11 +19,11 @@ public:
 private:
 	Sampo::OrthographicCamera m_Camera;
 
-	std::shared_ptr<Sampo::Shader> m_Shader;
-	std::shared_ptr<Sampo::VertexArray> m_VertexArray;
-
 	std::shared_ptr<Sampo::Shader> m_SquareShader;
 	std::shared_ptr<Sampo::VertexArray> m_SquareVA;
+
+	std::shared_ptr<Sampo::Shader> m_TextureShader;
+	std::shared_ptr<Sampo::Texture2D> m_Texture;
 
 	const Sampo::Keyboard* m_Keyboard;
 
