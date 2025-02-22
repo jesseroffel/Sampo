@@ -10,3 +10,6 @@
 [submodule "sampo/vendor/imgui"]
 	path = sampo/vendor/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "sampo/vendor/stb"]
+	path = sampo/vendor/stb
+	url = https://github.com/nothings/stb
