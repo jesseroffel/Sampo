@@ -3,11 +3,18 @@
 
 #include "vertex_array.hpp"
 
-#include "platform/opengl/opengl_renderer_api.hpp"
+#ifdef SAMPO_PLATFORM_WINDOWS
+	#include "platform/opengl/opengl_renderer_api.hpp"
+#endif // SAMPO_PLATFORM_WINDOWS
 
 namespace Sampo
 {
 	RendererAPI* RenderCommand::s_RendererAPI = new OpenGLRendererAPI;
+
+	void RenderCommand::Init()
+	{
+		s_RendererAPI->Init();
+	}
 
 	void RenderCommand::SetClearColor(const glm::vec4& aColor)
 	{

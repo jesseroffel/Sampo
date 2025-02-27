@@ -80,42 +80,10 @@ void DemoLayer::OnAttach()
 
 	m_SquareShader = Sampo::Shader::Create(vertexSquareSource, fragmentSquareSource);
 
-	const std::string textureVertexSource = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 aPosition;
-			layout(location = 1) in vec2 aTextureCoord;
-
-			uniform mat4 uViewProjection;
-			uniform mat4 uTransform;
-
-			out vec2 vTextureCoord;
-
-			void main()
-			{
-				vTextureCoord = aTextureCoord;
-				gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
-			}
-		)";
-
-	const std::string textureFragmentSource = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 colorOut;
-
-			in vec2 vTextureCoord;
-
-			uniform sampler2D uTexture;
-
-			void main()
-			{
-				colorOut = texture(uTexture, vTextureCoord);
-			}
-		)";
-
-	m_TextureShader = Sampo::Shader::Create(textureVertexSource, textureFragmentSource);
+	m_TextureShader = Sampo::Shader::Create("../../../../../demo/data/assets/shaders/texture.glsl");
 
 	m_Texture = Sampo::Texture2D::Create("../../../../../demo/data/assets/textures/checkerboard.png");
+	m_TransparentTexture = Sampo::Texture2D::Create("../../../../../demo/data/assets/textures/transparent_test.png");
 
 	std::shared_ptr<Sampo::OpenGLShader> texture = std::dynamic_pointer_cast<Sampo::OpenGLShader>(m_TextureShader);
 	texture->Bind();
@@ -165,6 +133,9 @@ void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 	}
 
 	m_Texture->Bind();
+	Sampo::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
+
+	m_TransparentTexture->Bind();
 	Sampo::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
 
 	Sampo::Renderer::EndScene();

@@ -11,6 +11,8 @@ namespace Sampo
 	class Renderer
 	{
 	public:
+		static void Init();
+
 		static void BeginScene(OrthographicCamera& aCamera);
 		static void EndScene() {};
 

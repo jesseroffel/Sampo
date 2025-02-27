@@ -8,6 +8,7 @@
 #include "sampo/debugging/imgui_layer.hpp"
 #include "sampo/events/application_event.hpp"
 #include "sampo/graphics/window.hpp"
+#include "sampo/graphics/renderer.hpp"
 
 namespace Sampo
 {
@@ -116,6 +117,8 @@ namespace Sampo
 
 		Window* window = m_Platform->GetWindow();
 		window->SetWindowEventCallback(BIND_EVENT_FN(Application::OnEvent, this));
+
+		Renderer::Init();
 
 		if (aStartParams.m_EnableImGui)
 		{

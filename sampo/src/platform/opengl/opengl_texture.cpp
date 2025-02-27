@@ -18,13 +18,17 @@ namespace Sampo
 		m_TextureSize.x = width;
 		m_TextureSize.y = height;
 
+		const GLenum internalFormat = channels == 3 ? GL_RGB8 : channels == 4 ? GL_RGBA8 : 0;
+		const GLenum dataFormat = channels == 3 ? GL_RGB : channels == 4 ? GL_RGBA : 0;
+		SAMPO_ASSERT_MSG(internalFormat & dataFormat, "Unsupported texture format!");
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		glTextureStorage2D(m_RendererID, 1, GL_RGB8, m_TextureSize.x, m_TextureSize.y);
+		glTextureStorage2D(m_RendererID, 1, internalFormat, m_TextureSize.x, m_TextureSize.y);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_TextureSize.x, m_TextureSize.y, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_TextureSize.x, m_TextureSize.y, dataFormat, GL_UNSIGNED_BYTE, imageData);
 
 		stbi_image_free(imageData);
 	}

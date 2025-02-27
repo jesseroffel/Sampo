@@ -14,6 +14,11 @@ namespace Sampo
 {
 	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(OrthographicCamera& aCamera)
 	{
 		m_SceneData->m_ViewProjectionMatrix = aCamera.GetViewProjectionMatrix();

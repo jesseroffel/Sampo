@@ -8,9 +8,11 @@ namespace Sampo
 	{
 	public:
 		virtual ~OpenGLRendererAPI() = default;
-		virtual void SetClearColor(const glm::vec4& aColor) override;
-		virtual void Clear() override;
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray) override;
+		void Init() override;
+		void SetClearColor(const glm::vec4& aColor) override;
+		void Clear() override;
+
+		void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray) override;
 	};
 }

@@ -15,6 +15,7 @@ namespace Sampo
 			OpenGL
 		};
 
+		virtual void Init() = 0;
 		virtual void SetClearColor(const glm::vec4& aColor) = 0;
 		virtual void Clear() = 0;
 

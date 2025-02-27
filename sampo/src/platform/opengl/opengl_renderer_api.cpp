@@ -11,6 +11,12 @@ namespace Sampo
 {
 	RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;
 
+	void OpenGLRendererAPI::Init()
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& aColor)
 	{
 		glClearColor(aColor.r, aColor.g, aColor.b, aColor.a);
@@ -25,5 +31,4 @@ namespace Sampo
 	{
 		glDrawElements(GL_TRIANGLES, aVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
-
 }

@@ -24,6 +24,7 @@ private:
 
 	std::shared_ptr<Sampo::Shader> m_TextureShader;
 	std::shared_ptr<Sampo::Texture2D> m_Texture;
+	std::shared_ptr<Sampo::Texture2D> m_TransparentTexture;
 
 	const Sampo::Keyboard* m_Keyboard;
 
