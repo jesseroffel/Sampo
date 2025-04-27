@@ -17,5 +17,8 @@
 #include "sampo/graphics/shader.hpp"
 #include "sampo/graphics/texture.hpp"
 #include "sampo/graphics/vertex_array.hpp"
-
 #include "sampo/graphics/camera.hpp"
+
+#include "sampo/input/input.hpp"
+#include "sampo/input/gamepad.hpp"
+#include "sampo/input/orthographic_camera_controller.hpp"

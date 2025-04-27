@@ -57,7 +57,8 @@ add_library(sampo STATIC
 	"src/sampo/input/keyboard.cpp"
 	"src/sampo/input/mouse.hpp"
 	"src/sampo/input/mouse.cpp"
-)
+	"src/sampo/input/orthographic_camera_controller.hpp"
+	"src/sampo/input/orthographic_camera_controller.cpp")
 
 # Configure solution #
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)

@@ -9,11 +9,14 @@ namespace Sampo
 	public:
 		OrthographicCamera(float aLeft, float aRight, float aBottom, float aTop);
 
+		void SetProjection(float aLeft, float aRight, float aBottom, float aTop);
+
 		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(const glm::vec3& aPosition);
 
 		float GetRotiation() const{ return m_Rotation; }
 		void SetRotation(float aRotation);
+
 
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }

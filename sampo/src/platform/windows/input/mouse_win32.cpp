@@ -47,7 +47,6 @@ namespace Sampo
 			case EventType::MouseScrolled:
 			{
 				MouseScrolledEvent& scrolledEvent = static_cast<MouseScrolledEvent&>(aMouseEvent);
-				scrolledEvent.ToString();
 				SetScrollOffset(scrolledEvent.GetOffset());
 				break;
 			}

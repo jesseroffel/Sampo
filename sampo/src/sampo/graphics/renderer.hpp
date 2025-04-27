@@ -13,7 +13,7 @@ namespace Sampo
 	public:
 		static void Init();
 
-		static void BeginScene(OrthographicCamera& aCamera);
+		static void BeginScene(const OrthographicCamera& aCamera);
 		static void EndScene() {};
 
 		static void Submit(const std::shared_ptr<Shader>& aShader, const std::shared_ptr<VertexArray>& aVertexArray, const glm::mat4& aTransform = glm::mat4(1.0f));

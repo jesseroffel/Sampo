@@ -12,20 +12,14 @@
 	#include "platform/opengl/opengl_shader.hpp"
 #endif 
 
-DemoLayer::DemoLayer()
+DemoLayer::DemoLayer(const glm::vec2& aWindowSize)
 	: Sampo::Layer("DemoLayer")
-	, m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
-	, m_Keyboard(nullptr)
+	, m_CameraController(aWindowSize.x / aWindowSize.y)
 {
 }
 
 void DemoLayer::OnAttach()
 {
-	Sampo::Application& application = Sampo::Application::GetInstance();
-	Sampo::Input& input = application.GetPlatform()->GetInput();
-	if (const unsigned int index = input.GetFirstInputDeviceIndexByType(Sampo::InputType::kKeyboard) != -1)
-		m_Keyboard = static_cast<const Sampo::Keyboard*>(input.GetInputDevice(index));
-
 	m_SquareVA = Sampo::VertexArray::Create();
 
 	float squareVertices[5 * 4] = {
@@ -92,26 +86,11 @@ void DemoLayer::OnAttach()
 
 void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 {
-	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kLEFT))
-		m_CameraPosition.x -= m_CameraMoveSpeed * aDeltaTime;
-	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kRIGHT))
-		m_CameraPosition.x += m_CameraMoveSpeed * aDeltaTime;
-	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kDOWN))
-		m_CameraPosition.y -= m_CameraMoveSpeed * aDeltaTime;
-	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kUP))
-		m_CameraPosition.y += m_CameraMoveSpeed * aDeltaTime;
-
-	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kA))
-		m_CameraRotation += m_CameraRotationSpeed * aDeltaTime;
-	if (m_Keyboard->GetIsButtonPressed(Sampo::KeyboardButton::kD))
-		m_CameraRotation -= m_CameraRotationSpeed * aDeltaTime;
-
-	m_Camera.SetPosition(m_CameraPosition);
-	m_Camera.SetRotation(m_CameraRotation);
+	m_CameraController.OnUpdate(aDeltaTime);
 
 	Sampo::RenderCommand::Clear();
 
-	Sampo::Renderer::BeginScene(m_Camera);
+	Sampo::Renderer::BeginScene(m_CameraController.GetCamera());
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -148,4 +127,9 @@ void DemoLayer::OnImGuiRender()
 	ImGui::Begin("DemoSettings");
 	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
 	ImGui::End();
+}
+
+void DemoLayer::OnEvent(Sampo::Event& anEvent)
+{
+	m_CameraController.OnEvent(anEvent);
 }

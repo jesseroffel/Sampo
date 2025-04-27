@@ -13,6 +13,12 @@ namespace Sampo
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
+	void OrthographicCamera::SetProjection(float aLeft, float aRight, float aBottom, float aTop)
+	{
+		m_ProjectionMatrix = glm::ortho(aLeft, aRight, aBottom, aTop, -1.0f, 1.0f);
+		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+	}
+
 	void OrthographicCamera::SetPosition(const glm::vec3& aPosition)
 	{
 		m_Position = aPosition;
