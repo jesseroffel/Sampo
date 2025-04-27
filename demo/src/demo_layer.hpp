@@ -17,12 +17,12 @@ public:
 	void OnImGuiRender() override;
 
 private:
+	Sampo::ShaderLibrary m_ShaderLibrary;
 	Sampo::OrthographicCamera m_Camera;
 
 	std::shared_ptr<Sampo::Shader> m_SquareShader;
 	std::shared_ptr<Sampo::VertexArray> m_SquareVA;
 
-	std::shared_ptr<Sampo::Shader> m_TextureShader;
 	std::shared_ptr<Sampo::Texture2D> m_Texture;
 	std::shared_ptr<Sampo::Texture2D> m_TransparentTexture;
 

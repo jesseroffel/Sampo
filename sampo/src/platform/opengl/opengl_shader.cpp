@@ -1,6 +1,7 @@
 #include "sampo_pch.hpp"
 #include "opengl_shader.hpp"
 
+#include <filesystem>
 #include <fstream>
 
 #include <glm/glm.hpp>
@@ -27,9 +28,13 @@ namespace Sampo
 
 		const std::unordered_map<GLenum, std::string> sources = PreprocessFile(fileContents);
 		Compile(sources);
+
+		const std::filesystem::path path = aFilepath;
+		m_Name = path.stem().string();
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& aVertexSource, const std::string& aFragmentSource)
+	OpenGLShader::OpenGLShader(const std::string& aName, const std::string& aVertexSource, const std::string& aFragmentSource)
+		: m_Name(aName)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 		shaderSources[GL_VERTEX_SHADER] = aVertexSource;
@@ -142,9 +147,11 @@ namespace Sampo
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& aShaderSources)
 	{
+		SAMPO_ASSERT_MSG(aShaderSources.size() <= 2, "We only support up to two shaders, needs increase if ever triggered.");
 		GLuint programID = glCreateProgram();
-		std::vector<GLuint> glShaderIDs(aShaderSources.size());
 
+		std::array<GLuint, 2> glShaderIDs;
+		int glShaderIndex = 0;
 		for (auto&& [key, value] : aShaderSources)
 		{
 			GLenum shaderType = key;
@@ -175,7 +182,7 @@ namespace Sampo
 			}
 
 			glAttachShader(programID, shader);
-			glShaderIDs.emplace_back(shader);
+			glShaderIDs[glShaderIndex++] = shader;
 		}
 
 		glLinkProgram(programID);

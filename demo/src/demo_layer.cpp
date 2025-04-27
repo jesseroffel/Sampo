@@ -78,14 +78,14 @@ void DemoLayer::OnAttach()
 			}
 		)";
 
-	m_SquareShader = Sampo::Shader::Create(vertexSquareSource, fragmentSquareSource);
+	m_SquareShader = Sampo::Shader::Create("VertexColorSquare", vertexSquareSource, fragmentSquareSource);
 
-	m_TextureShader = Sampo::Shader::Create("../../../../../demo/data/assets/shaders/texture.glsl");
+	std::shared_ptr<Sampo::Shader> textureShader = m_ShaderLibrary.Load("../../../../../demo/data/assets/shaders/texture.glsl");
 
 	m_Texture = Sampo::Texture2D::Create("../../../../../demo/data/assets/textures/checkerboard.png");
 	m_TransparentTexture = Sampo::Texture2D::Create("../../../../../demo/data/assets/textures/transparent_test.png");
 
-	std::shared_ptr<Sampo::OpenGLShader> texture = std::dynamic_pointer_cast<Sampo::OpenGLShader>(m_TextureShader);
+	std::shared_ptr<Sampo::OpenGLShader> texture = std::dynamic_pointer_cast<Sampo::OpenGLShader>(textureShader);
 	texture->Bind();
 	texture->UploadUniformInt("uTexture", 0);
 }
@@ -132,11 +132,13 @@ void DemoLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 		}
 	}
 
+	std::shared_ptr<Sampo::Shader> textureShader = m_ShaderLibrary.Get("texture");
+
 	m_Texture->Bind();
-	Sampo::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
+	Sampo::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
 
 	m_TransparentTexture->Bind();
-	Sampo::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
+	Sampo::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.50f)));
 
 	Sampo::Renderer::EndScene();
 }

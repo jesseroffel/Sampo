@@ -10,11 +10,13 @@ namespace Sampo
 	{
 	public:
 		OpenGLShader(const std::string& aFilepath);
-		OpenGLShader(const std::string& aVertexSource, const std::string& aFragmentSource);
+		OpenGLShader(const std::string& aName, const std::string& aVertexSource, const std::string& aFragmentSource);
 		virtual ~OpenGLShader();
 
 		void Bind() const override;
 		void Unbind() const override;
+
+		virtual const std::string& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const std::string& aName, int aValue);
 
@@ -30,6 +32,7 @@ namespace Sampo
 		std::unordered_map<GLenum, std::string> PreprocessFile(const std::string& aSourceString);
 		void Compile(const std::unordered_map<GLenum, std::string>& aShaderSources);
 
+		std::string m_Name;
 		uint32 m_RendererID{ uint32_max };
 	};
 }
