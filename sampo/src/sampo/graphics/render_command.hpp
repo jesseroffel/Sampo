@@ -12,6 +12,8 @@ namespace Sampo
 	public:
 		static void Init();
 
+		static void SetViewport(uint32 aViewportX, uint32 aViewportY, uint32 aWidth, uint32 aHeight);
+
 		static void SetClearColor(const glm::vec4& aColor);
 		static void Clear();
 

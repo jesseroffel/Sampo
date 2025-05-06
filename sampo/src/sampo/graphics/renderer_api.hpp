@@ -16,6 +16,7 @@ namespace Sampo
 		};
 
 		virtual void Init() = 0;
+		virtual void SetViewport(uint32 aViewportX, uint32 aViewportY, uint32 aWidth, uint32 aHeight) = 0;
 		virtual void SetClearColor(const glm::vec4& aColor) = 0;
 		virtual void Clear() = 0;
 

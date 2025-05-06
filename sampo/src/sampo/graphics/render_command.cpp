@@ -16,6 +16,11 @@ namespace Sampo
 		s_RendererAPI->Init();
 	}
 
+	void RenderCommand::SetViewport(uint32 aViewportX, uint32 aViewportY, uint32 aWidth, uint32 aHeight)
+	{
+		s_RendererAPI->SetViewport(aViewportX, aViewportY, aWidth, aHeight);
+	}
+
 	void RenderCommand::SetClearColor(const glm::vec4& aColor)
 	{
 		s_RendererAPI->SetClearColor(aColor);

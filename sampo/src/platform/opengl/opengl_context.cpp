@@ -28,11 +28,11 @@ namespace Sampo
 	{
 		const glm::vec2& windowSize = m_Window->GetWindowSize();
 		glViewport(0, 0, static_cast<int>(windowSize.x), static_cast<int>(windowSize.y));
+		glfwPollEvents();
 	}
 
 	void OpenGLContext::SwapBuffers()
 	{
-		glfwPollEvents();
 		glfwSwapBuffers(m_WindowHandle);
 	}
 

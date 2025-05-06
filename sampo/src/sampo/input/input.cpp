@@ -6,6 +6,7 @@
 #include "keyboard.hpp"
 #include "mouse.hpp"
 
+#include "sampo/core/application.hpp"
 #include "sampo/events/event.hpp"
 
 #include <imgui.h>
@@ -104,6 +105,8 @@ namespace Sampo
 			return;
 
 		m_Mouse->OnMouseEvent(aMouseEvent);
+
+		Application::GetInstance().OnEvent(aMouseEvent);
 	}
 
 	void Input::OnKeyboardEvent(Event& aKeyboardEvent)
@@ -114,6 +117,8 @@ namespace Sampo
 			return;
 
 		m_Keyboard->OnKeyboardEvent(aKeyboardEvent);
+
+		Application::GetInstance().OnEvent(aKeyboardEvent);
 	}
 
 	void Input::OnGamepadEvent(Event& aGamepadEvent)
@@ -142,6 +147,8 @@ namespace Sampo
 				return static_cast<const Gamepad*>(aDevice)->GetPlatformId() == foundGamepad->GetPlatformId();
 			}));
 		}
+
+		Application::GetInstance().OnEvent(aGamepadEvent);
 	}
 
 	void Input::PollDevices()

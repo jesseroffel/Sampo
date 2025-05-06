@@ -50,6 +50,8 @@ namespace Sampo
 	{
 		if (anEvent.GetEventType() == EventType::WindowClose)
 			OnWindowClose();
+		else if (anEvent.GetEventType() == EventType::WindowMinimize)
+			OnWindowMinimize(anEvent);
 
 		for (auto iter = m_LayerStack.end(); iter != m_LayerStack.begin(); )
 		{
@@ -74,8 +76,11 @@ namespace Sampo
 			if (m_Platform)
 				m_Platform->Update();
 
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(deltaTime);
+			if (!m_Minimized)
+			{
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(deltaTime);
+			}
 
 			m_ImGuiLayer->Begin();
 
@@ -86,8 +91,11 @@ namespace Sampo
 
 			m_ImGuiLayer->End();
 
-			window->Update();
-			window->OnEndFrame();
+			if (!m_Minimized)
+			{
+				window->Update();
+				window->OnEndFrame();
+			}
 		}
 	}
 
@@ -115,9 +123,6 @@ namespace Sampo
 		m_Platform = new Platform();
 		m_Platform->Init(aStartParams.m_ApplicationName);
 
-		Window* window = m_Platform->GetWindow();
-		window->SetWindowEventCallback(BIND_EVENT_FN(Application::OnEvent, this));
-
 		Renderer::Init();
 
 		if (aStartParams.m_EnableImGui)
@@ -133,5 +138,11 @@ namespace Sampo
 	void Application::OnWindowClose()
 	{
 		m_Running = false;
+	}
+
+	void Application::OnWindowMinimize(Event& aWindowMinimizeEvent)
+	{
+		WindowsMinimizeEvent& minimizeEvent = static_cast<WindowsMinimizeEvent&>(aWindowMinimizeEvent);
+		m_Minimized = minimizeEvent.GetIsMinimizing();
 	}
 }

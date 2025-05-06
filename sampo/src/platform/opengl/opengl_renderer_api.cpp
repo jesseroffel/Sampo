@@ -17,6 +17,11 @@ namespace Sampo
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
+	void OpenGLRendererAPI::SetViewport(uint32 aViewportX, uint32 aViewportY, uint32 aWidth, uint32 aHeight)
+	{
+		glViewport(aViewportX, aViewportY, aWidth, aHeight);
+	}
+
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& aColor)
 	{
 		glClearColor(aColor.r, aColor.g, aColor.b, aColor.a);

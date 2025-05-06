@@ -10,6 +10,8 @@ namespace Sampo
 		virtual ~OpenGLRendererAPI() = default;
 
 		void Init() override;
+
+		void SetViewport(uint32 aViewportX, uint32 aViewportY, uint32 aWidth, uint32 aHeight) override;
 		void SetClearColor(const glm::vec4& aColor) override;
 		void Clear() override;
 

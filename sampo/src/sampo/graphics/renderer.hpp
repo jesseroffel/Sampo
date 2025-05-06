@@ -12,6 +12,7 @@ namespace Sampo
 	{
 	public:
 		static void Init();
+		static void OnWindowResize(uint32 aWidth, uint32 aHeight);
 
 		static void BeginScene(const OrthographicCamera& aCamera);
 		static void EndScene() {};

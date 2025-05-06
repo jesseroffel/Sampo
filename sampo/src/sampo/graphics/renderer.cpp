@@ -19,6 +19,11 @@ namespace Sampo
 		RenderCommand::Init();
 	}
 
+	void Renderer::OnWindowResize(uint32 aWidth, uint32 aHeight)
+	{
+		RenderCommand::SetViewport(0, 0, aWidth, aHeight);
+	}
+
 	void Renderer::BeginScene(const OrthographicCamera& aCamera)
 	{
 		m_SceneData->m_ViewProjectionMatrix = aCamera.GetViewProjectionMatrix();

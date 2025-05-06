@@ -8,6 +8,8 @@
 #include "sampo/events/mouse_event.hpp"
 #include "sampo/events/gamepad_event.hpp"
 
+#include "sampo/graphics/renderer.hpp"
+
 #include "platform/opengl/opengl_context.hpp"
 
 #include <GLFW/glfw3.h>
@@ -45,6 +47,8 @@ namespace Sampo
 
 		m_GraphicsContext->LogRendererInfo();
 		SetGLFWCallbacks();
+
+		SetWindowEventCallback(BIND_EVENT_FN(Window::OnWindowEvent, this));
 		return true;
 	}
 
@@ -75,6 +79,23 @@ namespace Sampo
 		return static_cast<float>(glfwGetTime());
 	}
 
+	void Win32Window::OnWindowEvent(Event& aWindowEvent)
+	{
+		switch (aWindowEvent.GetEventType())
+		{
+			case EventType::WindowResize:
+			{
+				WindowsResizeEvent& resizeEvent = static_cast<WindowsResizeEvent&>(aWindowEvent);
+				if (resizeEvent.GetWidth() == 0 || resizeEvent.GetHeight() == 0)
+					break;
+
+				Renderer::OnWindowResize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
+			}
+		}
+
+		Application::GetInstance().OnEvent(aWindowEvent);
+	}
+
 	void Win32Window::SetVSync(bool anEnable)
 	{
 		glfwSwapInterval(anEnable ? 1 : 0);
@@ -89,6 +110,14 @@ namespace Sampo
 			params.m_WindowSize.y = static_cast<glm::vec2::value_type>(aHeight);
 
 			WindowsResizeEvent windowEvent(aWidth, aHeight);
+			params.m_WindowEventCallback(windowEvent);
+		});
+
+		glfwSetWindowIconifyCallback(m_GLFWWindow, [](GLFWwindow* aWindow, int aIconified)
+		{
+			WindowParams& params = *static_cast<WindowParams*>(glfwGetWindowUserPointer(aWindow));
+
+			WindowsMinimizeEvent windowEvent(aIconified);
 			params.m_WindowEventCallback(windowEvent);
 		});
 

@@ -24,6 +24,26 @@ namespace Sampo
 		uint32 m_Width, m_Height;
 	};
 
+	class WindowsMinimizeEvent : public Event
+	{
+	public:
+		WindowsMinimizeEvent(int aMinimizeState) : m_Minimized(aMinimizeState) {}
+
+		bool GetIsMinimizing() const { return m_Minimized > 0; }
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowsMinimizeEvent Event: " << m_Minimized;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(WindowMinimize)
+		EVENT_CLASS_CATEGORY(EventApplicaton)
+	private:
+		int m_Minimized;
+	};
+
 	class WindowCloseEvent : public Event
 	{
 	public:

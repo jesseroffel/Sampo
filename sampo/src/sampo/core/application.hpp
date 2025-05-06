@@ -43,6 +43,7 @@ namespace Sampo
 		virtual bool Init(StartParams& aStartParams);
 
 		void OnWindowClose();
+		void OnWindowMinimize(Event& aWindowMinimizeEvent);
 
 		LayerStack m_LayerStack;
 
@@ -52,6 +53,7 @@ namespace Sampo
 		float m_LastFrameTime{ 0.0f };
 
 		bool m_Running{ true };
+		bool m_Minimized{ false };
 	private:
 		static Application* s_Instance;
 	};
