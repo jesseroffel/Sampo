@@ -31,8 +31,8 @@ __forceinline void Sampo_Assert(const char* aExprString, const char* aFile, int 
 	#define SAMPO_ASSERT(X)				SAMPO_ASSERT_IMPL(X);
 	#define SAMPO_ASSERT_MSG(X, Msg)	SAMPO_ASSERT_MSG_IMPL(X, Msg);
 #else
-	#define SAMPO_ASSERT(X)				(static_cast<void>(0))
-	#define SAMPO_ASSERT_MSG(X, Msg)	(static_cast<void>(0))
+	#define SAMPO_ASSERT(X)				(X)
+	#define SAMPO_ASSERT_MSG(X, Msg)	(X)
 #endif // SAMPO_ASSERT_ENABLED
 
 #define SAMPO_UNUSED(X) (static_cast<void>(X))
