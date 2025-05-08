@@ -5,6 +5,7 @@
 #include "shader.hpp"
 #include "render_command.hpp"
 #include "vertex_array.hpp"
+#include "renderer2D.hpp"
 
 #if SAMPO_PLATFORM_WINDOWS
 	#include "platform/opengl/opengl_shader.hpp"
@@ -17,6 +18,7 @@ namespace Sampo
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32 aWidth, uint32 aHeight)

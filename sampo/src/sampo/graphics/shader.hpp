@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 namespace Sampo
 {
 	class Shader
@@ -10,6 +12,10 @@ namespace Sampo
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		
+		virtual void SetFloat3(const std::string& aName, const glm::vec3& aValue) = 0;
+		virtual void SetFloat4(const std::string& aName, const glm::vec4& aValue) = 0;
+		virtual void SetMatrix4(const std::string& aName, const glm::mat4& aValue) = 0;
+
 		virtual const std::string& GetName() const = 0;
 
 		static std::shared_ptr<Shader> Create(const std::string& aFilepath);

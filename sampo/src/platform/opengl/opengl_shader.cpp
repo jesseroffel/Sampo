@@ -57,6 +57,22 @@ namespace Sampo
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetFloat3(const std::string& aName, const glm::vec3& aValue)
+	{
+		UploadUniformFloat3(aName, aValue);
+	}
+
+	void OpenGLShader::SetFloat4(const std::string& aName, const glm::vec4& aValue)
+	{
+		UploadUniformFloat4(aName, aValue);
+	}
+
+	void OpenGLShader::SetMatrix4(const std::string& aName, const glm::mat4& aValue)
+	{
+		UploadUniformMatrix4(aName, aValue);
+
+	}
+
 	void OpenGLShader::UploadUniformInt(const std::string& aName, int aValue)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, aName.c_str());

@@ -14,8 +14,8 @@ namespace Sampo
 		Float2,
 		Float3,
 		Float4,
-		Mat3,
-		Mat4
+		Matrix3,
+		Matrix4
 	};
 
 	static uint32 ShaderDataTypeSize(ShaderDataType aType)
@@ -32,8 +32,8 @@ namespace Sampo
 		case Sampo::ShaderDataType::Float2: return 4 * 2;
 		case Sampo::ShaderDataType::Float3: return 4 * 3;
 		case Sampo::ShaderDataType::Float4: return 4 * 4;
-		case Sampo::ShaderDataType::Mat3: return 4 * 3 * 3;
-		case Sampo::ShaderDataType::Mat4: return 4 * 4 * 4;
+		case Sampo::ShaderDataType::Matrix3: return 4 * 3 * 3;
+		case Sampo::ShaderDataType::Matrix4: return 4 * 4 * 4;
 		}
 
 		SAMPO_ASSERT_MSG(false, "Cannot calculate Shader Data Type size as the data type is invalid!");
@@ -70,8 +70,8 @@ namespace Sampo
 			case Sampo::ShaderDataType::Float2: return 2;
 			case Sampo::ShaderDataType::Float3: return 3;
 			case Sampo::ShaderDataType::Float4: return 4;
-			case Sampo::ShaderDataType::Mat3: return 3 * 3;
-			case Sampo::ShaderDataType::Mat4: return 4 * 4;
+			case Sampo::ShaderDataType::Matrix3: return 3 * 3;
+			case Sampo::ShaderDataType::Matrix4: return 4 * 4;
 			}
 
 			SAMPO_ASSERT_MSG(false, "Cannot calculate Shader Data Type component count as the data type is invalid!");

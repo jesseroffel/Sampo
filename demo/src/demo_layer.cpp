@@ -9,7 +9,7 @@
 #include <imgui.h>
 
 #if SAMPO_PLATFORM_WINDOWS
-	#include "platform/opengl/opengl_shader.hpp"
+#include "platform/opengl/opengl_shader.hpp"
 #endif 
 
 DemoLayer::DemoLayer(const glm::vec2& aWindowSize)

@@ -41,6 +41,8 @@ add_library(sampo STATIC
 	"src/sampo/graphics/renderer.hpp"
 	"src/sampo/graphics/renderer.cpp"
 	"src/sampo/graphics/renderer_api.hpp"
+	"src/sampo/graphics/renderer2D.hpp"
+	"src/sampo/graphics/renderer2D.cpp"
 	"src/sampo/graphics/shader.hpp"
 	"src/sampo/graphics/shader.cpp"
 	"src/sampo/graphics/texture.hpp"

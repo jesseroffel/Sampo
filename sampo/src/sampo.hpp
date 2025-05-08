@@ -18,6 +18,7 @@
 #include "sampo/graphics/texture.hpp"
 #include "sampo/graphics/vertex_array.hpp"
 #include "sampo/graphics/camera.hpp"
+#include "sampo/graphics/renderer2D.hpp"
 
 #include "sampo/input/input.hpp"
 #include "sampo/input/gamepad.hpp"

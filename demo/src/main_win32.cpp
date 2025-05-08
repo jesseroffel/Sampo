@@ -1,6 +1,7 @@
 #include "sampo/core/application.hpp"
 
 #include "demo_layer.hpp"
+#include "renderer2D_layer.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -21,13 +22,17 @@ int main(int argc, char* argv[])
 	Application& application = Application::GetInstance();
 
 	const glm::vec2& windowSize = application.GetPlatform()->GetWindow()->GetWindowSize();
-	DemoLayer* demolayer = new DemoLayer(windowSize);
-	application.PushLayer(demolayer);
+	//DemoLayer* demolayer = new DemoLayer(windowSize);
+	//application.PushLayer(demolayer);
+	Renderer2DLayer* render2DLayer = new Renderer2DLayer(windowSize);
+	application.PushLayer(render2DLayer);
 
 	application.Run();
 
-	application.PopLayer(demolayer);
-	delete demolayer;
+	application.PopLayer(render2DLayer);
+	delete render2DLayer;
+	//application.PopLayer(demolayer);
+	//delete demolayer;
 
 	application.Shutdown();
 	return 0;

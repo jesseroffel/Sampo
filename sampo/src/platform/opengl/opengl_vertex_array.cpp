@@ -21,8 +21,8 @@ namespace Sampo
 			case Sampo::ShaderDataType::Float2: return GL_FLOAT;
 			case Sampo::ShaderDataType::Float3: return GL_FLOAT;
 			case Sampo::ShaderDataType::Float4: return GL_FLOAT;
-			case Sampo::ShaderDataType::Mat3: return GL_FLOAT;
-			case Sampo::ShaderDataType::Mat4: return GL_FLOAT;
+			case Sampo::ShaderDataType::Matrix3: return GL_FLOAT;
+			case Sampo::ShaderDataType::Matrix4: return GL_FLOAT;
 		}
 
 		SAMPO_ASSERT_MSG(false, "Cannot convert Shader Data Type to OpenGL Type as the data type is invalid!");
