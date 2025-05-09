@@ -16,6 +16,9 @@ namespace Sampo
 		void Bind() const override;
 		void Unbind() const override;
 
+		void SetInt(const std::string& aName, int aValue) override;
+		void SetFloat(const std::string& aName, float aValue) override;
+		void SetFloat2(const std::string& aName, const glm::vec2& aValue) override;
 		void SetFloat3(const std::string& aName, const glm::vec3& aValue) override;
 		void SetFloat4(const std::string& aName, const glm::vec4& aValue) override;
 		void SetMatrix4(const std::string& aName, const glm::mat4& aValue) override;

@@ -15,5 +15,7 @@ public:
 private:
 	Sampo::OrthographicCameraController m_CameraController;
 
+	std::shared_ptr<Sampo::Texture2D> m_Texture;
+
 	glm::vec4 m_SquareColor{ 0.25f, 0.35f, 0.75f, 1.0f };
 };

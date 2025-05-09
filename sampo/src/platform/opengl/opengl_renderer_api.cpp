@@ -15,6 +15,8 @@ namespace Sampo
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void OpenGLRendererAPI::SetViewport(uint32 aViewportX, uint32 aViewportY, uint32 aWidth, uint32 aHeight)

@@ -12,6 +12,9 @@ namespace Sampo
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		
+		virtual void SetInt(const std::string& aName, int aValue) = 0;
+		virtual void SetFloat(const std::string& aName, float aValue) = 0;
+		virtual void SetFloat2(const std::string& aName, const glm::vec2& aValue) = 0;
 		virtual void SetFloat3(const std::string& aName, const glm::vec3& aValue) = 0;
 		virtual void SetFloat4(const std::string& aName, const glm::vec4& aValue) = 0;
 		virtual void SetMatrix4(const std::string& aName, const glm::mat4& aValue) = 0;

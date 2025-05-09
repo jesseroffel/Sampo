@@ -57,6 +57,21 @@ namespace Sampo
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetInt(const std::string& aName, int aValue)
+	{
+		UploadUniformInt(aName, aValue);
+	}
+
+	void OpenGLShader::SetFloat(const std::string& aName, float aValue)
+	{
+		UploadUniformFloat(aName, aValue);
+	}
+
+	void OpenGLShader::SetFloat2(const std::string& aName, const glm::vec2& aValue)
+	{
+		UploadUniformFloat2(aName, aValue);
+	}
+
 	void OpenGLShader::SetFloat3(const std::string& aName, const glm::vec3& aValue)
 	{
 		UploadUniformFloat3(aName, aValue);
@@ -70,7 +85,6 @@ namespace Sampo
 	void OpenGLShader::SetMatrix4(const std::string& aName, const glm::mat4& aValue)
 	{
 		UploadUniformMatrix4(aName, aValue);
-
 	}
 
 	void OpenGLShader::UploadUniformInt(const std::string& aName, int aValue)
