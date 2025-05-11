@@ -112,9 +112,12 @@ namespace Sampo
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
+		virtual void SetData(const void* aData, uint32 aSize) = 0;
+
 		virtual const BufferLayout& GetLayout() const = 0;
 		virtual void SetLayout(const BufferLayout& aLayout) = 0;
 
+		static std::shared_ptr<VertexBuffer> Create(uint32 aSize);
 		static std::shared_ptr<VertexBuffer> Create(float* aVertices, uint32 aSize);
 	};
 

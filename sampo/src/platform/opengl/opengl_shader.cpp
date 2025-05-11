@@ -62,6 +62,11 @@ namespace Sampo
 		UploadUniformInt(aName, aValue);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& aName, int* aValue, uint32 aCount)
+	{
+		UploadUniformIntArray(aName, aValue, aCount);
+	}
+
 	void OpenGLShader::SetFloat(const std::string& aName, float aValue)
 	{
 		UploadUniformFloat(aName, aValue);
@@ -91,6 +96,12 @@ namespace Sampo
 	{
 		GLint location = glGetUniformLocation(m_RendererID, aName.c_str());
 		glUniform1i(location, aValue);
+	}
+
+	void OpenGLShader::UploadUniformIntArray(const std::string& aName, int* aValue, uint32 aCount)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, aName.c_str());
+		glUniform1iv(location, aCount, aValue);
 	}
 
 	void OpenGLShader::UploadUniformFloat(const std::string& aName, float aValue)

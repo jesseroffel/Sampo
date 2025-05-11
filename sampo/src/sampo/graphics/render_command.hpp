@@ -17,7 +17,7 @@ namespace Sampo
 		static void SetClearColor(const glm::vec4& aColor);
 		static void Clear();
 
-		static void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray);
+		static void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray, uint32 anIndexCount = 0);
 
 		static RendererAPI* s_RendererAPI;
 	};

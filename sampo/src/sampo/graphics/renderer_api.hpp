@@ -20,7 +20,7 @@ namespace Sampo
 		virtual void SetClearColor(const glm::vec4& aColor) = 0;
 		virtual void Clear() = 0;
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray) = 0;
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray, uint32 anIndexCount = 0) = 0;
 
 		inline static API GetAPI() { return s_API; }
 	private:

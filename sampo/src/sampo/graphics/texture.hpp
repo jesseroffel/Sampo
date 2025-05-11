@@ -13,6 +13,8 @@ namespace Sampo
 		virtual void SetData(void* aData, uint32 aSize) = 0;
 
 		virtual void Bind(uint32 aTextureSlot = 0) const = 0;
+
+		virtual bool operator==(const Texture& anOther) = 0;
 	};
 
 	class Texture2D : public Texture

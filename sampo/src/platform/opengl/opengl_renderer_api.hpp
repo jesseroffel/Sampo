@@ -15,6 +15,6 @@ namespace Sampo
 		void SetClearColor(const glm::vec4& aColor) override;
 		void Clear() override;
 
-		void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray) override;
+		void DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray, uint32 anIndexCount = 0) override;
 	};
 }

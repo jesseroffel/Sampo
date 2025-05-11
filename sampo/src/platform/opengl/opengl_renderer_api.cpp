@@ -34,8 +34,10 @@ namespace Sampo
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray)
+	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray, uint32 anIndexCount)
 	{
-		glDrawElements(GL_TRIANGLES, aVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		const uint32 count = anIndexCount > 0 ? anIndexCount : aVertexArray->GetIndexBuffer()->GetCount();
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

@@ -4,31 +4,40 @@
 #version 330 core
 
 layout(location = 0) in vec3 aPosition;
-layout(location = 1) in vec2 aTextureCoord;
+layout(location = 1) in vec4 aColor;
+layout(location = 2) in vec2 aTextureCoord;
+layout(location = 3) in float aTextureIndex;
+layout(location = 4) in float aTilingScale;
 
 uniform mat4 uViewProjection;
-uniform mat4 uTransform;
 
+out vec4 vColor;
 out vec2 vTextureCoord;
+out float vTextureIndex;
+out float vTilingScale;
 
 void main()
 {
+	vColor = aColor;
 	vTextureCoord = aTextureCoord;
-	gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
+	vTextureIndex = aTextureIndex;
+	vTilingScale = aTilingScale;
+	gl_Position = uViewProjection  * vec4(aPosition, 1.0);
 }
 
 #type fragment
 #version 330 core
 
-layout(location = 0) out vec4 colorOut;
+layout(location = 0) out vec4 color;
 
+in vec4 vColor;
 in vec2 vTextureCoord;
+in float vTextureIndex;
+in float vTilingScale;
 
-uniform vec4 uColor;
-uniform float uTilingScale;
-uniform sampler2D uTexture;
+uniform sampler2D uTexture[32];
 
 void main()
 {
-	colorOut = texture(uTexture, vTextureCoord * uTilingScale) * uColor;
+	color = texture(uTexture[int(vTextureIndex)], vTextureCoord * vTilingScale) * vColor;
 }

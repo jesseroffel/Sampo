@@ -19,6 +19,7 @@ namespace Sampo
 		virtual void SetData(void* aData, uint32 aSize) override;
 
 		virtual void Bind(uint32 aTextureSlot) const override;
+		virtual bool operator==(const Texture& anOther) override { return m_RendererID == static_cast<const OpenGLTexture2D&>(anOther).m_RendererID; }
 	private:
 		std::string m_Filepath;
 		glm::ivec2 m_TextureSize{ 0, 0 };

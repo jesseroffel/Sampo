@@ -7,11 +7,14 @@ namespace Sampo
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
+		OpenGLVertexBuffer(uint32 aSize);
 		OpenGLVertexBuffer(float* aVertices, uint32 aSize);
 		virtual ~OpenGLVertexBuffer();
 
 		void Bind() const override;
 		void Unbind() const override;
+
+		void SetData(const void* aData, uint32 aSize) override;
 
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 		void SetLayout(const BufferLayout& aLayout) override { m_Layout = aLayout; }

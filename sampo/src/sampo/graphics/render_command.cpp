@@ -31,9 +31,9 @@ namespace Sampo
 		s_RendererAPI->Clear();
 	}
 
-	void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray)
+	void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& aVertexArray, uint32 anIndexCount)
 	{
-		s_RendererAPI->DrawIndexed(aVertexArray);
+		s_RendererAPI->DrawIndexed(aVertexArray, anIndexCount);
 	}
 
 }

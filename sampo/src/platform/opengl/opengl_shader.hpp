@@ -17,6 +17,7 @@ namespace Sampo
 		void Unbind() const override;
 
 		void SetInt(const std::string& aName, int aValue) override;
+		void SetIntArray(const std::string& aName, int* aValue, uint32 aCount) override;
 		void SetFloat(const std::string& aName, float aValue) override;
 		void SetFloat2(const std::string& aName, const glm::vec2& aValue) override;
 		void SetFloat3(const std::string& aName, const glm::vec3& aValue) override;
@@ -26,6 +27,7 @@ namespace Sampo
 		virtual const std::string& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const std::string& aName, int aValue);
+		void UploadUniformIntArray(const std::string& aName, int* aValue, uint32 aCount);
 
 		void UploadUniformFloat(const std::string& aName, float aValue);
 		void UploadUniformFloat2(const std::string& aName, const glm::vec2& aValue);
