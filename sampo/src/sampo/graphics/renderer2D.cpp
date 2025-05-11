@@ -26,9 +26,9 @@ namespace Sampo
 
 	struct Renderer2DData
 	{
-		const uint32 m_MaximumDrawCallQuads{ 10000 };
-		const uint32 m_MaximumDrawCallVertices{ m_MaximumDrawCallQuads * s_QuadVerticesCount };
-		const uint32 m_MaximumDrawCallIndices{ m_MaximumDrawCallQuads * s_QuadIndicesCount };
+		static const uint32 s_MaximumDrawCallQuads{ 1000 };
+		static const uint32 s_MaximumDrawCallVertices{ s_MaximumDrawCallQuads * s_QuadVerticesCount };
+		static const uint32 s_MaximumDrawCallIndices{ s_MaximumDrawCallQuads * s_QuadIndicesCount };
 
 		std::array<std::shared_ptr<Texture2D>, s_MaximumTextureSlots> m_TextureSlots;
 		uint32 m_TextureSlotIndex{ 1 }; // Default texture takes slot 0 for now;
@@ -42,6 +42,8 @@ namespace Sampo
 		std::shared_ptr<VertexBuffer> m_QuadVertexBuffer;
 		std::shared_ptr<Shader> m_TextureShader;
 		std::shared_ptr<Texture2D> m_WhiteTexture;
+
+		Renderer2D::Statistics m_Statistics;
 	};
 	static Renderer2DData s_Renderer2DData;
 
@@ -49,7 +51,7 @@ namespace Sampo
 	{
 		s_Renderer2DData.m_QuadVertexArray = VertexArray::Create();
 
-		s_Renderer2DData.m_QuadVertexBuffer = VertexBuffer::Create(s_Renderer2DData.m_MaximumDrawCallVertices * sizeof(QuadVertex));
+		s_Renderer2DData.m_QuadVertexBuffer = VertexBuffer::Create(s_Renderer2DData.s_MaximumDrawCallVertices * sizeof(QuadVertex));
 		s_Renderer2DData.m_QuadVertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "aPosition" },
 			{ ShaderDataType::Float4, "aColor" },
@@ -59,12 +61,12 @@ namespace Sampo
 			});
 		s_Renderer2DData.m_QuadVertexArray->AddVertexBuffer(s_Renderer2DData.m_QuadVertexBuffer);
 
-		s_Renderer2DData.m_QuadVertexBufferBase = new QuadVertex[s_Renderer2DData.m_MaximumDrawCallVertices];
+		s_Renderer2DData.m_QuadVertexBufferBase = new QuadVertex[s_Renderer2DData.s_MaximumDrawCallVertices];
 
 		// Used regular unique_ptr creation instead of CreateUnique to avoid each element being default initialized with a value
-		std::unique_ptr<uint32[]> quadIndices = std::unique_ptr<uint32[]>{ new uint32[s_Renderer2DData.m_MaximumDrawCallIndices] };
+		std::unique_ptr<uint32[]> quadIndices = std::unique_ptr<uint32[]>{ new uint32[s_Renderer2DData.s_MaximumDrawCallIndices] };
 		uint32 quadOffset = 0;
-		for (uint32 i = 0; i < s_Renderer2DData.m_MaximumDrawCallIndices; i += 6)
+		for (uint32 i = 0; i < s_Renderer2DData.s_MaximumDrawCallIndices; i += 6)
 		{
 			quadIndices[i + 0] = quadOffset + 0;
 			quadIndices[i + 1] = quadOffset + 1;
@@ -76,7 +78,7 @@ namespace Sampo
 
 			quadOffset += 4;
 		}
-		std::shared_ptr<IndexBuffer> quadIB = IndexBuffer::Create(quadIndices.get(), s_Renderer2DData.m_MaximumDrawCallIndices);
+		std::shared_ptr<IndexBuffer> quadIB = IndexBuffer::Create(quadIndices.get(), s_Renderer2DData.s_MaximumDrawCallIndices);
 		s_Renderer2DData.m_QuadVertexArray->SetIndexBuffer(quadIB);
 
 		s_Renderer2DData.m_WhiteTexture = Texture2D::Create(1, 1);
@@ -99,19 +101,12 @@ namespace Sampo
 		s_Renderer2DData.m_QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 	}
 
-	void Renderer2D::Shutdown()
-	{
-	}
-
 	void Renderer2D::BeginScene(const OrthographicCamera& aCamera)
 	{
 		s_Renderer2DData.m_TextureShader->Bind();
 		s_Renderer2DData.m_TextureShader->SetMatrix4("uViewProjection", aCamera.GetViewProjectionMatrix());
 
-		s_Renderer2DData.m_QuadIndexCount = 0;
-		s_Renderer2DData.m_QuadVertexBufferPtr = s_Renderer2DData.m_QuadVertexBufferBase;
-
-		s_Renderer2DData.m_TextureSlotIndex = 1;
+		SetBlankBatchContext();
 	}
 
 	void Renderer2D::EndScene()
@@ -128,6 +123,7 @@ namespace Sampo
 			s_Renderer2DData.m_TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(s_Renderer2DData.m_QuadVertexArray, s_Renderer2DData.m_QuadIndexCount);
+		s_Renderer2DData.m_Statistics.m_DrawCalls++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& aPosition, const glm::vec2& aSize, const glm::vec4& aColor)
@@ -137,6 +133,9 @@ namespace Sampo
 
 	void Renderer2D::DrawQuad(const glm::vec3& aPosition, const glm::vec2& aSize, const glm::vec4& aColor)
 	{
+		if (s_Renderer2DData.m_QuadIndexCount >= Renderer2DData::s_MaximumDrawCallIndices)
+			FlushAndReset();
+
 		const glm::mat4 transform = glm::translate(glm::mat4(1.0f), aPosition)
 			* glm::scale(glm::mat4(1.0f), { aSize.x, aSize.y, 1.0f });
 
@@ -145,6 +144,8 @@ namespace Sampo
 
 		SetBatchQuadVertexBuffer(transform, aColor, defaultTextureIndex, defaultTilingScale);
 		s_Renderer2DData.m_QuadIndexCount += s_QuadIndicesCount;
+
+		s_Renderer2DData.m_Statistics.m_QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& aPosition, const glm::vec2& aSize, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor, float aTilingScale)
@@ -154,6 +155,9 @@ namespace Sampo
 
 	void Renderer2D::DrawQuad(const glm::vec3& aPosition, const glm::vec2& aSize, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor, float aTilingScale)
 	{
+		if (s_Renderer2DData.m_QuadIndexCount >= Renderer2DData::s_MaximumDrawCallIndices)
+			FlushAndReset();
+
 		const glm::mat4 transform = glm::translate(glm::mat4(1.0f), aPosition)
 			* glm::scale(glm::mat4(1.0f), { aSize.x, aSize.y, 1.0f });
 
@@ -161,6 +165,8 @@ namespace Sampo
 
 		SetBatchQuadVertexBuffer(transform, aColor, textureIndex, aTilingScale);
 		s_Renderer2DData.m_QuadIndexCount += s_QuadIndicesCount;
+
+		s_Renderer2DData.m_Statistics.m_QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& aPosition, const glm::vec2& aSize, float aRotationRadians, const glm::vec4& aColor)
@@ -170,6 +176,9 @@ namespace Sampo
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& aPosition, const glm::vec2& aSize, float aRotationRadians, const glm::vec4& aColor)
 	{
+		if (s_Renderer2DData.m_QuadIndexCount >= Renderer2DData::s_MaximumDrawCallIndices)
+			FlushAndReset();
+
 		const glm::mat4 transform = glm::translate(glm::mat4(1.0f), aPosition)
 			* glm::rotate(glm::mat4(1.0f), aRotationRadians, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { aSize.x, aSize.y, 1.0f });
@@ -179,6 +188,8 @@ namespace Sampo
 
 		SetBatchQuadVertexBuffer(transform, aColor, defaultTextureIndex, defaultTilingScale);
 		s_Renderer2DData.m_QuadIndexCount += s_QuadIndicesCount;
+
+		s_Renderer2DData.m_Statistics.m_QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& aPosition, const glm::vec2& aSize, float aRotationRadians, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor, float aTilingScale)
@@ -188,6 +199,9 @@ namespace Sampo
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& aPosition, const glm::vec2& aSize, float aRotationRadians, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor, float aTilingScale)
 	{
+		if (s_Renderer2DData.m_QuadIndexCount >= Renderer2DData::s_MaximumDrawCallIndices)
+			FlushAndReset();
+
 		const glm::mat4 transform = glm::translate(glm::mat4(1.0f), aPosition)
 			* glm::rotate(glm::mat4(1.0f), aRotationRadians, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { aSize.x, aSize.y, 1.0f });
@@ -196,6 +210,23 @@ namespace Sampo
 
 		SetBatchQuadVertexBuffer(transform, aColor, textureIndex, aTilingScale);
 		s_Renderer2DData.m_QuadIndexCount += s_QuadIndicesCount;
+
+		s_Renderer2DData.m_Statistics.m_QuadCount++;
+	}
+
+	void Renderer2D::FlushAndReset()
+	{
+		EndScene();
+
+		SetBlankBatchContext();
+	}
+
+	void Renderer2D::SetBlankBatchContext()
+	{
+		s_Renderer2DData.m_QuadIndexCount = 0;
+		s_Renderer2DData.m_QuadVertexBufferPtr = s_Renderer2DData.m_QuadVertexBufferBase;
+
+		s_Renderer2DData.m_TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::SetBatchQuadVertexBuffer(const glm::mat4& aTransform, const glm::vec4& aColor, float aTextureIndex, float aTilingScale)
@@ -248,5 +279,15 @@ namespace Sampo
 		float textureIndex = static_cast<float>(s_Renderer2DData.m_TextureSlotIndex);
 		s_Renderer2DData.m_TextureSlotIndex++;
 		return textureIndex;
+	}
+
+	const Renderer2D::Statistics& Renderer2D::GetStatistics()
+	{
+		return s_Renderer2DData.m_Statistics;
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&s_Renderer2DData.m_Statistics, 0, sizeof(Renderer2D::Statistics));
 	}
 }
