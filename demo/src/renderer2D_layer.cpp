@@ -21,12 +21,18 @@ void Renderer2DLayer::OnUpdate(Sampo::Timestep aDeltaTime)
 
 	Sampo::RenderCommand::Clear();
 
+	m_squareRotation += aDeltaTime * 45.0f;
+	if (m_squareRotation > 360.0f)
+		m_squareRotation = m_squareRotation - 360;
+	else if (m_squareRotation < -360.0f)
+		m_squareRotation = m_squareRotation + 360;
+
 	Sampo::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Sampo::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.75f, 0.75f }, { 0.75f, 0.25f, 0.40f, 1.0f });
-	Sampo::Renderer2D::DrawQuad({ 0.5f, 0.5f }, { 0.5f, 0.75f }, { 0.25f, 0.75f, 0.40f, 1.0f });
-	Sampo::Renderer2D::DrawQuad({ -10.0f, -10.0f, -0.2f }, { 20.0f, 20.0f }, m_Texture, { 0.5f,0.5f,0.5f,0.5f }, 10.0f);
-	Sampo::Renderer2D::DrawQuad({ -0.5f, -0.5f }, { 2.0f, 2.0f }, m_Texture, { 0.5f,0.5f,0.5f,0.5f }, 20.0f);
-	//Sampo::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 1.5f, 1.5f }, glm::radians(45.0f), {0.2f,0.2f,0.5f,1.0f});
+	Sampo::Renderer2D::DrawQuad({ -0.50f, -0.25f }, { 0.5f, 0.5f }, { 0.75f, 0.25f, 0.40f, 1.0f });
+	Sampo::Renderer2D::DrawQuad({ 0.5f, 0.25f }, { 0.5f, 0.5f }, { 0.25f, 0.75f, 0.40f, 1.0f });
+	Sampo::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 10.0f, 10.0f }, m_Texture, { 0.5f,0.5f,0.5f,0.5f }, 10.0f);
+	Sampo::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 0.5f, 0.5f }, glm::radians(m_squareRotation), m_Texture, { 0.5f, 0.5f, 0.5f, 0.5f }, 2.5f);
+	Sampo::Renderer2D::DrawRotatedQuad({ -0.0f, 0.0f, -0.1f }, { 1.5f, 1.5f }, glm::radians(-m_squareRotation), m_SquareColor);
 	Sampo::Renderer2D::EndScene();
 }
 
@@ -34,6 +40,7 @@ void Renderer2DLayer::OnImGuiRender()
 {
 	ImGui::Begin("DemoSettings");
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+	ImGui::DragFloat("Rotation", &m_squareRotation);
 	ImGui::End();
 }
 

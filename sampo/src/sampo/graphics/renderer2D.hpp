@@ -18,10 +18,16 @@ namespace Sampo
 
 		static void DrawQuad(const glm::vec2& aPosition, const glm::vec2& aSize, const glm::vec4& aColor);
 		static void DrawQuad(const glm::vec3& aPosition, const glm::vec2& aSize, const glm::vec4& aColor);
-		static void DrawQuad(const glm::vec2& aPosition, const glm::vec2& aSize, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColorTint = { 1.0f, 1.0f, 1.0f, 1.0f }, float aTilingScale = 1.0f);
-		static void DrawQuad(const glm::vec3& aPosition, const glm::vec2& aSize, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColorTint = { 1.0f, 1.0f, 1.0f, 1.0f }, float aTilingScale = 1.0f);
+		static void DrawQuad(const glm::vec2& aPosition, const glm::vec2& aSize, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor = { 1.0f, 1.0f, 1.0f, 1.0f }, float aTilingScale = 1.0f);
+		static void DrawQuad(const glm::vec3& aPosition, const glm::vec2& aSize, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor = { 1.0f, 1.0f, 1.0f, 1.0f }, float aTilingScale = 1.0f);
 
-		static void DrawRotatedQuad(const glm::vec2& aPosition, const glm::vec2& aSize, float aRotationRadiant, const glm::vec4& aColor);
-		static void DrawRotatedQuad(const glm::vec3& aPosition, const glm::vec2& aSize, float aRotationRadiant, const glm::vec4& aColor);
+		static void DrawRotatedQuad(const glm::vec2& aPosition, const glm::vec2& aSize, float aRotationRadians, const glm::vec4& aColor);
+		static void DrawRotatedQuad(const glm::vec3& aPosition, const glm::vec2& aSize, float aRotationRadians, const glm::vec4& aColor);
+		static void DrawRotatedQuad(const glm::vec2& aPosition, const glm::vec2& aSize, float aRotationRadians, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor = { 1.0f, 1.0f, 1.0f, 1.0f }, float aTilingScale = 1.0f);
+		static void DrawRotatedQuad(const glm::vec3& aPosition, const glm::vec2& aSize, float aRotationRadians, const std::shared_ptr<Texture2D>& aTexture, const glm::vec4& aColor = { 1.0f, 1.0f, 1.0f, 1.0f }, float aTilingScale = 1.0f);
+
+	private:
+		static void SetBatchQuadVertexBuffer(const glm::mat4& aTransform, const glm::vec4& aColor, float aTextureIndex, float aTilingScale);
+		static float GetTextureIndex(const std::shared_ptr<Texture2D>& aTexture);
 	};
 }
