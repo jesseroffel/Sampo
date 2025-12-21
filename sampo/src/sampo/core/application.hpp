@@ -1,23 +1,12 @@
 #pragma once
 #include "layer.hpp"
 #include "platform.hpp"
+#include "core_parameters.hpp"
 
 // Application Class, using the main entry point to start common systems, to be defined in the client application // 
 namespace Sampo 
 {
 	class ImGuiLayer;
-
-	struct StartParams
-	{
-		std::string m_ApplicationName;
-		std::string m_WindowName;
-		std::string m_ExecuteDir;
-		std::string m_DataDir;
-		bool m_EnableImGui{ false };
-
-		int m_Argc{ -1 };
-		char** m_Argv{ nullptr };
-	};
 
 	class Application
 	{
@@ -36,7 +25,7 @@ namespace Sampo
 		const Platform* GetPlatform() const { return m_Platform; }
 
 	protected:
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		static Application* CreateApplication();
 
@@ -48,7 +37,9 @@ namespace Sampo
 		LayerStack m_LayerStack;
 
 		Platform* m_Platform{ nullptr };
+#ifdef SAMPO_IMGUI_ENABLED
 		ImGuiLayer* m_ImGuiLayer{ nullptr };
+#endif // SAMPO_IMGUI_ENABLED
 
 		float m_LastFrameTime{ 0.0f };
 

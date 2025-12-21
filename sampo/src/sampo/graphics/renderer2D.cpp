@@ -26,9 +26,9 @@ namespace Sampo
 
 	struct Renderer2DData
 	{
-		static const uint32 s_MaximumDrawCallQuads{ 1000 };
-		static const uint32 s_MaximumDrawCallVertices{ s_MaximumDrawCallQuads * s_QuadVerticesCount };
-		static const uint32 s_MaximumDrawCallIndices{ s_MaximumDrawCallQuads * s_QuadIndicesCount };
+		static constexpr uint32 s_MaximumDrawCallQuads{ 1000 };
+		static constexpr uint32 s_MaximumDrawCallVertices{ s_MaximumDrawCallQuads * s_QuadVerticesCount };
+		static constexpr uint32 s_MaximumDrawCallIndices{ s_MaximumDrawCallQuads * s_QuadIndicesCount };
 
 		std::array<std::shared_ptr<Texture2D>, s_MaximumTextureSlots> m_TextureSlots;
 		uint32 m_TextureSlotIndex{ 1 }; // Default texture takes slot 0 for now;

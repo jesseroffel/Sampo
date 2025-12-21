@@ -31,7 +31,9 @@ namespace Sampo
 		void OnKeyboardEvent(Event& aKeyboardEvent);
 		void OnGamepadEvent(Event& aGamepadEvent);
 
+	#ifdef SAMPO_IMGUI_ENABLED
 		virtual void ImGuiDebug();
+	#endif // SAMPO_IMGUI_ENABLED
 
 	protected:
 		void PollDevices();

@@ -24,6 +24,13 @@ add_library(sampo STATIC
 	"src/sampo/core/log.cpp"
 	"src/sampo/core/platform.hpp"
 	"src/sampo/core/timestep.hpp"
+	"src/sampo/audio/audio_api.hpp"
+	"src/sampo/audio/audio_api.cpp"
+	"src/sampo/audio/audio_device.hpp"
+	"src/sampo/audio/sound_effect.hpp"
+	"src/sampo/audio/sound_effect_instance.hpp"
+	"src/sampo/audio/sound_library.hpp"
+	"src/sampo/audio/sound_library.cpp"
 	"src/sampo/debugging/imgui_layer.hpp"
 	"src/sampo/debugging/imgui_layer.cpp"
 	"src/sampo/events/event.hpp"
@@ -60,7 +67,8 @@ add_library(sampo STATIC
 	"src/sampo/input/mouse.hpp"
 	"src/sampo/input/mouse.cpp"
 	"src/sampo/input/orthographic_camera_controller.hpp"
-	"src/sampo/input/orthographic_camera_controller.cpp")
+	"src/sampo/input/orthographic_camera_controller.cpp"
+)
 
 # Configure solution #
 target_precompile_headers(sampo PUBLIC src/sampo_pch.cpp)
@@ -80,6 +88,7 @@ if (WIN32)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/glad)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/spdlog)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/glm)
+	add_subdirectory(${VENDOR_INCLUDE_DIR}/miniaudio)
 
 	target_sources(sampo PUBLIC 
 		"src/platform/platform_definitions.hpp"
@@ -95,7 +104,16 @@ if (WIN32)
 		"src/platform/opengl/opengl_texture.cpp"
 		"src/platform/opengl/opengl_vertex_array.hpp"
 		"src/platform/opengl/opengl_vertex_array.cpp"
-		"src/platform/vendor/stb_image.cpp"
+		"src/platform/windows/audio/audio_api_win32.hpp"
+		"src/platform/windows/audio/audio_api_win32.cpp"
+		"src/platform/windows/audio/audio_device_win32.hpp"
+		"src/platform/windows/audio/audio_device_win32.cpp"
+		"src/platform/windows/audio/sound_effect_win32.hpp"
+		"src/platform/windows/audio/sound_effect_win32.cpp"
+		"src/platform/windows/audio/sound_effect_instance_win32.hpp"
+		"src/platform/windows/audio/sound_effect_instance_win32.cpp"
+		"src/platform/windows/audio/sound_library_win32.hpp"
+		"src/platform/windows/audio/sound_library_win32.cpp"
 		"src/platform/windows/core/platform_win32.hpp"
 		"src/platform/windows/core/platform_win32.cpp"
 		"src/platform/windows/graphics/window_win32.hpp"
@@ -105,6 +123,7 @@ if (WIN32)
 		"src/platform/windows/input/gamepad_win32.cpp"
 		"src/platform/windows/input/input_win32.hpp"
 		"src/platform/windows/input/input_win32.cpp"
+		"src/platform/vendor/stb_image.cpp"
 
 		${VENDOR_INCLUDE_DIR}/imgui/imgui.h
 		${VENDOR_INCLUDE_DIR}/imgui/imgui.cpp
@@ -124,6 +143,7 @@ if (WIN32)
 	target_link_libraries(sampo PUBLIC opengl32.lib)
 	target_link_libraries(sampo PUBLIC spdlog::spdlog)
 	target_link_libraries(sampo PUBLIC glm::glm-header-only)
+	target_link_libraries(sampo PUBLIC miniaudio)
 
 	add_compile_definitions(sampo PUBLIC SAMPO_PLATFORM_WINDOWS)
 	add_compile_definitions(sampo PUBLIC GLFW_INCLUDE_NONE)

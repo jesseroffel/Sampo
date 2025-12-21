@@ -21,9 +21,10 @@ int main(int argc, char* argv[])
 
 	Application& application = Application::GetInstance();
 
+	DemoLayer* demolayer = new DemoLayer();
+	application.PushLayer(demolayer);
+
 	const glm::vec2& windowSize = application.GetPlatform()->GetWindow()->GetWindowSize();
-	//DemoLayer* demolayer = new DemoLayer(windowSize);
-	//application.PushLayer(demolayer);
 	Renderer2DLayer* render2DLayer = new Renderer2DLayer(windowSize);
 	application.PushLayer(render2DLayer);
 

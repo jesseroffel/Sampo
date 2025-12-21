@@ -23,9 +23,12 @@
 #endif // _WIN32
 
 #ifdef NDEBUG   // replace with CMAKE included argument
+	#define SAMPO_DEBUG_MODE (0)
 	#define SAMPO_ASSERT_ENABLED (0)
 #else
+	#define SAMPO_DEBUG_MODE (1)
 	#define SAMPO_ASSERT_ENABLED (1)
+	#define SAMPO_IMGUI_ENABLED (1)
 #endif //NDEBUG
 
 #if _MSC_VER

@@ -82,6 +82,7 @@ namespace Sampo
 					layer->OnUpdate(deltaTime);
 			}
 
+#ifdef SAMPO_IMGUI_ENABLED
 			m_ImGuiLayer->Begin();
 
 			m_Platform->ImGuiDebug(); // TODO - change to debugger container for ImGui rendering
@@ -90,6 +91,7 @@ namespace Sampo
 				layer->OnImGuiRender();
 
 			m_ImGuiLayer->End();
+#endif // SAMPO_IMGUI_ENABLED
 
 			if (!m_Minimized)
 			{
@@ -102,8 +104,11 @@ namespace Sampo
 	void Application::Shutdown()
 	{
 		SAMPO_ASSERT_MSG(s_Instance, "Application instance already shut down!");
- 
 		m_Platform->Shutdown();
+	}
+
+	Application::~Application()
+	{
 		delete m_Platform;
 		m_Platform = nullptr;
 
@@ -121,15 +126,18 @@ namespace Sampo
 	bool Application::Init(StartParams& aStartParams)
 	{
 		m_Platform = new Platform();
-		m_Platform->Init(aStartParams.m_ApplicationName);
+		m_Platform->Init(aStartParams);
 
-		Renderer::Init();
+		if (!aStartParams.m_IsHeadless)
+			Renderer::Init();
 
+#ifdef SAMPO_IMGUI_ENABLED
 		if (aStartParams.m_EnableImGui)
 		{
 			m_ImGuiLayer = new ImGuiLayer();
 			PushLayer(m_ImGuiLayer);
 		}
+#endif // SAMPO_IMGUI_ENABLED
 
 		SAMPO_CORE_TRACE("[Sampo initialized]");
 		return true;

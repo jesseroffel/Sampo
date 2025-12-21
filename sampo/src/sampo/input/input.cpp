@@ -176,25 +176,28 @@ namespace Sampo
 		return nullptr;
 	}
 
+#ifdef SAMPO_IMGUI_ENABLED
 	void Input::ImGuiDebug()
 	{
-		if (ImGui::TreeNode("Input"))
+		if (ImGui::CollapsingHeader("Input", ImGuiTreeNodeFlags_None))
 		{
 			ImGui::Text("Connected devices: %d", myInputDevices.size());
 
-			if (ImGui::CollapsingHeader("Mouse", ImGuiTreeNodeFlags_None))
+			if (ImGui::TreeNode("Mouse"))
 			{
 				if (m_Mouse)
 					m_Mouse->ImGuiDebug();
+				ImGui::TreePop();
 			}
 
-			if (ImGui::CollapsingHeader("Keyboard", ImGuiTreeNodeFlags_None))
+			if (ImGui::TreeNode("Keyboard"))
 			{
 				if (m_Keyboard)
 					m_Keyboard->ImGuiDebug();
+				ImGui::TreePop();
 			}
 
-			if (ImGui::CollapsingHeader("Gamepad", ImGuiTreeNodeFlags_None))
+			if (ImGui::TreeNode("Gamepad"))
 			{
 				for (InputDevice* device : myInputDevices)
 				{
@@ -204,8 +207,10 @@ namespace Sampo
 					Gamepad* gamepad = static_cast<Gamepad*>(device);
 					gamepad->ImGuiDebug();
 				}
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
 		}
 	}
+#endif // SAMPO_IMGUI_ENABLED
+
 }

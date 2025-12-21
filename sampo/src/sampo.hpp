@@ -7,6 +7,9 @@
 #include "sampo/core/log.hpp"
 #include "sampo/core/timestep.hpp"
 
+#include "sampo/audio/audio_api.hpp"
+#include "sampo/audio/sound_effect.hpp"
+
 #include "sampo/events/event.hpp"
 
 // TODO - Add optional includes when not rendering
