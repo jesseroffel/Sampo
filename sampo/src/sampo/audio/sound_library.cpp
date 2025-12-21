@@ -16,9 +16,10 @@ namespace Sampo
 		if (Exists(aFilepath))
 			return m_SoundEffects[aFilepath];
 
-		std::shared_ptr<Sampo::SoundEffect> newSoundEffect = CreateSoundEffect(aFilepath, aSoundEffectParams);
+		std::shared_ptr<SoundEffect> newSoundEffect = CreateSoundEffect(aFilepath, aSoundEffectParams);
 		m_SoundEffects.emplace(aFilepath, newSoundEffect);
-		//if (aSoundEffectParams.m_LoadImmediately)
+		
+		if (aSoundEffectParams.m_LoadImmediately)
 			newSoundEffect->Load();
 
 		if (aPlayOnce)
@@ -27,7 +28,7 @@ namespace Sampo
 		return newSoundEffect;
 	}
 
-	std::shared_ptr<Sampo::SoundEffect> SoundLibrary::Get(const std::string& aFilepath)
+	std::shared_ptr<SoundEffect> SoundLibrary::Get(const std::string& aFilepath)
 	{
 		return m_SoundEffects[aFilepath];
 	}
@@ -45,6 +46,20 @@ namespace Sampo
 	bool SoundLibrary::Exists(const std::string& aFilePath) const
 	{
 		return m_SoundEffects.contains(aFilePath);
+	}
+
+	std::shared_ptr<SoundEffect> SoundLibrary::CreateSoundEffect(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams)
+	{
+		std::shared_ptr<SoundEffect> soundEffect = nullptr;
+#ifdef SAMPO_PLATFORM_WINDOWS
+		soundEffect = CreateShared<Win32SoundEffect>(aFilepath, aSoundEffectParams);
+#endif // SAMPO_PLATFORM_WINDOWS
+
+		if (!soundEffect)
+			return nullptr;
+
+		soundEffect->m_SoundEffectID = ++m_SoundEffectCount;
+		return soundEffect;
 	}
 
 #ifdef SAMPO_IMGUI_ENABLED
@@ -73,20 +88,5 @@ namespace Sampo
 			ImGui::TreePop();
 		}
 	}
-
-	std::shared_ptr<Sampo::SoundEffect> SoundLibrary::CreateSoundEffect(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams)
-	{
-		std::shared_ptr<SoundEffect> soundEffect = nullptr;
-#ifdef SAMPO_PLATFORM_WINDOWS
-		soundEffect = CreateShared<Win32SoundEffect>(aFilepath, aSoundEffectParams);
-#endif // SAMPO_PLATFORM_WINDOWS
-		
-		if (!soundEffect)
-			return nullptr;
-
-		soundEffect->m_SoundEffectID = ++m_SoundEffectCount;
-		return soundEffect;
-	}
-
 #endif // SAMPO_IMGUI_ENABLED
 }
