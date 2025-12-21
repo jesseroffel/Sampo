@@ -13,3 +13,6 @@
 [submodule "sampo/vendor/stb"]
 	path = sampo/vendor/stb
 	url = https://github.com/nothings/stb
+[submodule "sampo/vendor/miniaudio"]
+	path = sampo/vendor/miniaudio
+	url = https://github.com/mackron/miniaudio
