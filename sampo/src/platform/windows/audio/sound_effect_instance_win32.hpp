@@ -20,5 +20,6 @@ namespace Sampo
 
 	protected:
 		ma_sound m_maSound{};
+		ma_audio_buffer_ref m_maAudioBufferRef{};
 	};
 }

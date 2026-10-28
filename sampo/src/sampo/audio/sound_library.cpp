@@ -11,6 +11,19 @@
 
 namespace Sampo
 {
+
+	SoundLibrary::~SoundLibrary()
+	{
+		for (const auto& [filePath, soundEffect] : m_SoundEffects)
+		{
+			if (soundEffect->IsLoaded())
+			{
+				soundEffect->Unload();
+				SAMPO_CORE_ERROR("Lingering Sound effect asset '{0}' was still loaded at SoundLibrary destruction!");
+			}
+		}
+	}
+
 	std::shared_ptr<SoundEffect> SoundLibrary::Create(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams, bool aPlayOnce)
 	{
 		if (Exists(aFilepath))
@@ -30,7 +43,10 @@ namespace Sampo
 
 	std::shared_ptr<SoundEffect> SoundLibrary::Get(const std::string& aFilepath)
 	{
-		return m_SoundEffects[aFilepath];
+		if (const auto foundEffectIter = m_SoundEffects.find(aFilepath); foundEffectIter != m_SoundEffects.end())
+			return foundEffectIter->second;
+
+		return nullptr;
 	}
 
 	bool SoundLibrary::Exists(const SoundEffect* aSoundEffect) const

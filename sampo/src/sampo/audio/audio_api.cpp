@@ -156,10 +156,7 @@ namespace Sampo
 	{
 		std::shared_ptr<SoundEffect> soundEffect = nullptr;
 		if (!m_SoundLibrary->Exists(aFilepath))
-		{
 			soundEffect = CreateSoundEffect(aFilepath, aSoundEffectParams, true);
-			soundEffect->Load();
-		}
 		else
 			soundEffect = m_SoundLibrary->Get(aFilepath);
 
@@ -168,7 +165,12 @@ namespace Sampo
 
 	bool AudioAPI::Stop(const SoundEffect* aSoundEffect)
 	{
-		SAMPO_UNUSED(aSoundEffect);
-		return false;
+		if (!m_SoundLibrary->Exists(aSoundEffect))
+			return false;
+
+		if (std::shared_ptr<SoundEffect> soundEffect = m_SoundLibrary->Get(aSoundEffect->GetFilepath()))
+			m_AudioDevice->Stop(soundEffect);
+
+		return true;
 	}
 }

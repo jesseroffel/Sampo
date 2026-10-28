@@ -7,9 +7,7 @@ namespace Sampo
 		uint8 m_AdjustedVolume{ 100 };
 		bool m_LoadImmediately{ false };
 		bool m_AsyncLoad{ true };
-		bool m_DecodeSound{ true };
 		bool m_Looping{ false };
-		bool m_EnableSpatialization{false};
 		bool m_StreamFile{false};
 	};
 
@@ -25,6 +23,7 @@ namespace Sampo
 		virtual bool Load() = 0;
 		virtual bool Play() = 0;
 		virtual bool Stop() = 0;
+		virtual bool Unload() = 0;
 
 		virtual bool IsLoaded() const { return m_IsLoaded; }
 		virtual void SetIsLoaded() { m_IsLoaded = true; }

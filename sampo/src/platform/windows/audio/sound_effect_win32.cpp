@@ -5,6 +5,9 @@
 
 #include "audio_device_win32.hpp"
 
+#include <filesystem>
+#include <fstream>
+
 #include <miniaudio.h>
 
 namespace Sampo
@@ -12,17 +15,13 @@ namespace Sampo
 	Win32SoundEffect::Win32SoundEffect(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams)
 		: SoundEffect(aFilepath, aSoundEffectParams)
 	{
-		SetupDataSourceSoundConfig();
-		SetupSoundInstanceConfig();
+		if (aSoundEffectParams.m_LoadImmediately)
+			Load();
 	}
 
 	Win32SoundEffect::~Win32SoundEffect()
 	{
-		if (!m_IsLoaded)
-			return;
-
-		ma_sound_uninit(&m_maSoundEffect);
-		ma_resource_manager_data_source_uninit(&m_maDataSource);
+		Unload();
 	}
 
 	bool Win32SoundEffect::Play()
@@ -35,18 +34,12 @@ namespace Sampo
 		return Sound::Stop(this);
 	}
 
-	void Win32SoundEffect::SetIsLoaded()
+	bool Win32SoundEffect::Unload()
 	{
-		SoundEffect::SetIsLoaded();
-
-		Win32AudioDevice* audioDevice = static_cast<Win32AudioDevice*>(Sound::GetAudioDevice());
-
-		const ma_result result = ma_sound_init_ex(audioDevice->GetMAEngine(), &m_maSoundInstanceConfig, &m_maSoundEffect);
-		if (result != MA_SUCCESS)
-		{
-			SAMPO_CORE_ERROR("ma_sound_init_ex error ({0}) with flags {1} when loading path: {2}.", result, m_maSoundInstanceConfig.flags, m_maSoundInstanceConfig.pFilePath);
-			return;
-		}
+		//ma_sound_uninit(&m_maMasterSound);
+		//ma_audio_buffer_ref_uninit(&m_maAudioBufferRef);
+		//ma_free(m_PCMFrames, nullptr);
+		return true;
 	}
 
 	float Win32SoundEffect::GetSoundEffectLength() const
@@ -55,98 +48,70 @@ namespace Sampo
 		return 0.f;
 	}
 
+	bool Win32SoundEffect::GetAudioBuffer(ma_audio_buffer_ref& outAudioBufferRef)
+	{
+		const ma_result bufferRefInitResult = ma_audio_buffer_ref_init(m_maDecoderConfig.format, m_maDecoderConfig.channels, m_PCMFrames, m_maFrameCount, &outAudioBufferRef);
+		if (bufferRefInitResult != MA_SUCCESS)
+		{
+			SAMPO_CORE_ERROR("Audio API init call 'ma_audio_buffer_ref_init' failed with result code {0}", bufferRefInitResult);
+			return false;
+		}
+		return true;
+	}
+
 	bool Win32SoundEffect::Load()
 	{
 		if (m_IsLoaded)
 			return true;
 
-		LoadDataSourceSound();
+		//LoadDataSource();
+		m_IsLoaded = true;
 		return true;
 	}
 
-
-	void Win32SoundEffect::SetupSoundInstanceConfig()
+	std::vector<unsigned char> Win32SoundEffect::ReadFileBytes()
 	{
-		Win32AudioDevice* audioDevice = static_cast<Win32AudioDevice*>(Sound::GetAudioDevice());
-		SAMPO_ASSERT_MSG(audioDevice, "No valid Audio Device is active!");
-
-		m_maSoundInstanceConfig = ma_sound_config_init_2(audioDevice->GetMAEngine());
-		m_maSoundInstanceConfig.pDataSource = &m_maDataSource;
-		//m_maSoundInstanceConfig.pFilePath = aFilepath.c_str();
-		m_maSoundInstanceConfig.flags = GetLoadingFlags(MASoundType::Raw);
-
-// 		const auto soundLoadedCallback = [](ma_async_notification* pNotification) {
-// 			Sound::GetSoundLibrary()->OnSoundLoaded(pNotification);
-// 		};
-// 
-// 		m_loadFinished.m_Callbacks.onSignal = soundLoadedCallback;
-// 		m_loadFinished.m_CallbackUserData = static_cast<void*>(&m_SoundEffectID);
-// 
-// 		m_maSoundInstanceConfig.initNotifications = ma_resource_manager_pipeline_notifications_init();
-// 		m_maSoundInstanceConfig.initNotifications.done.pNotification = &m_loadFinished;
+		std::ifstream file(m_Filepath, std::ios::binary | std::ios::ate);
+		if (!file) return {};
+		std::streamsize size = file.tellg();
+		file.seekg(0, std::ios::beg);
+		std::vector<unsigned char> buffer(static_cast<size_t>(size));
+		file.read(reinterpret_cast<char*>(buffer.data()), size);
+		return buffer;
 	}
 
-	bool Win32SoundEffect::LoadDataSourceSound()
+	bool Win32SoundEffect::LoadDataSource()
 	{
 		Win32AudioDevice* audioDevice = static_cast<Win32AudioDevice*>(Sound::GetAudioDevice());
 		SAMPO_ASSERT_MSG(audioDevice, "No valid Audio Device is active!");
 
-		const ma_result result = ma_resource_manager_data_source_init_ex(audioDevice->GetMAEngine()->pResourceManager, &m_maDataSourceConfig, &m_maDataSource);
-		if (result != MA_SUCCESS)
+		std::vector<unsigned char> readBytes = ReadFileBytes();
+
+		m_maDecoderConfig = ma_decoder_config_init(ma_format_unknown, 0, 0);
+
+		const ma_result decodeResult = ma_decode_memory(readBytes.data(), readBytes.size(), &m_maDecoderConfig, &m_maFrameCount, &m_PCMFrames);
+		if (decodeResult != MA_SUCCESS)
 		{
-			SAMPO_CORE_ERROR("ma_sound_init_from_file error ({0}) with flags {1} when loading path: {2}.", result, m_maSoundInstanceConfig.flags, m_maSoundInstanceConfig.pFilePath);
+			SAMPO_CORE_ERROR("Audio API init call 'ma_decode_memory' failed with result code {0}", decodeResult);
 			return false;
 		}
 
+		m_IsLoaded = true;
 		return true;
 	}
 
-	void Win32SoundEffect::SetupDataSourceSoundConfig()
+	uint32 Win32SoundEffect::GetLoadingFlags() const
 	{
-		Win32AudioDevice* audioDevice = static_cast<Win32AudioDevice*>(Sound::GetAudioDevice());
-		SAMPO_ASSERT_MSG(audioDevice, "No valid Audio Device is active!");
+		uint32 m_LoadingFlags{ MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH };
 
-		m_maDataSourceConfig = ma_resource_manager_data_source_config_init();
-		m_maDataSourceConfig.pFilePath = m_Filepath.c_str();
-		m_maDataSourceConfig.flags = GetLoadingFlags(MASoundType::DataSource);
+		//if (m_SoundEffectParams.m_AsyncLoad)
+		//	m_LoadingFlags += MA_SOUND_FLAG_ASYNC;
 
-		const auto soundLoadedCallback = [](ma_async_notification* pNotification) {
-			Sound::GetSoundLibrary()->OnSoundLoaded(pNotification);
-		};
+ 		if (m_SoundEffectParams.m_Looping)
+ 			m_LoadingFlags += MA_SOUND_FLAG_LOOPING;
 
-		m_loadFinished.m_Callbacks.onSignal = soundLoadedCallback;
-		m_loadFinished.m_CallbackUserData = static_cast<void*>(&m_SoundEffectID);
-
-		m_maNotifications = ma_resource_manager_pipeline_notifications_init();
-		m_maNotifications.done.pNotification = &m_loadFinished;
-
-		m_maDataSourceConfig.pNotifications = &m_maNotifications;
-	}
-
-	uint32 Win32SoundEffect::GetLoadingFlags(MASoundType aSoundType) const
-	{
-		if (aSoundType == MASoundType::Invalid)
-		{
-			SAMPO_CORE_ERROR("Unable to retrieve miniaudio loading flags as an incorrect sound type was provided: {0}.", static_cast<uint32>(aSoundType));
-			return 0u;
-		}
-
-		uint32 m_LoadingFlags{ 0u };
-
-		if (m_SoundEffectParams.m_DecodeSound)
-			m_LoadingFlags += aSoundType == MASoundType::Raw ? MA_SOUND_FLAG_DECODE : MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE;
-
-		if (m_SoundEffectParams.m_AsyncLoad)
-			m_LoadingFlags += aSoundType == MASoundType::Raw ? MA_SOUND_FLAG_ASYNC : MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC;
-
-// 		if (m_SoundEffectParams.m_Looping)
-// 			m_LoadingFlags += aSoundType == MASoundType::Raw ? MA_SOUND_FLAG_LOOPING : MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_LOOPING;
-
-// 		if (!m_SoundEffectParams.m_EnableSpatialization && aSoundType == MASoundType::Raw)
-// 			m_LoadingFlags += MA_SOUND_FLAG_NO_SPATIALIZATION;
-
-		if (m_SoundEffectParams.m_StreamFile /*&& audio size > 2 sec*/)
-			m_LoadingFlags += aSoundType == MASoundType::Raw ? MA_SOUND_FLAG_STREAM : MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM;
+		if (m_SoundEffectParams.m_StreamFile)
+			m_LoadingFlags += MA_SOUND_FLAG_STREAM ;
 
 		return m_LoadingFlags;
 	}

@@ -12,12 +12,12 @@ DemoLayer::DemoLayer()
 void DemoLayer::OnAttach()
 {
 	//Sampo::Sound::Configure()
-	m_TestSFX = Sampo::Sound::Create("../../../../../demo/data/assets/sounds/explosion.aif");
+	m_TestSFX = Sampo::Sound::Create("../../../../../demo/data/assets/sounds/explosion.wav");
 	//m_TestMusic = Sampo::Sound::CreateBGM("../../../../../demo/data/assets/sounds/freaky_grooves.mp3")
 	Sampo::SoundEffectParams soundEffectParams;
 	soundEffectParams.m_AdjustedVolume = 90;
-	m_TestMusic = Sampo::Sound::Create("../../../../../demo/data/assets/sounds/freaky_grooves.mp3", soundEffectParams);
-	m_TestMusic2 = Sampo::Sound::Create("../../../../../demo/data/assets/sounds/freaky_grooves.mp3", soundEffectParams);
+	m_TestMusic = Sampo::Sound::Create("../../../../../demo/data/assets/sounds/freaky_grooves.ogg", soundEffectParams);
+	m_TestMusic2 = Sampo::Sound::Create("../../../../../demo/data/assets/sounds/freaky_grooves.ogg", soundEffectParams);
 	// Sampo::Sound::Create(filepath, bool aPlayImmediately)
 	// Sampo::Sound::Play(asset)
 	// Sampo::Sound::Stop(asset, bool aDestroyInstance)
@@ -36,7 +36,8 @@ void DemoLayer::OnImGuiRender()
 		m_TestSFX->Play();
 
 	if (ImGui::Button("Play OneOff SFX"))
-		Sampo::Sound::PlayOnce("../../../../../demo/data/assets/sounds/bullet_spawn.wav");
+		Sampo::Sound::PlayOnce("../../../../../demo/data/assets/sounds/explosion.wav");
+		//Sampo::Sound::PlayOnce("../../../../../demo/data/assets/sounds/bullet_spawn.ogg");
 
 	if (!m_PlayMusic && ImGui::Button("Play Test Music"))
 	{

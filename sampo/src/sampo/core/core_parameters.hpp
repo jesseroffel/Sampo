@@ -19,8 +19,6 @@ namespace Sampo
 	struct AudioConfigParams
 	{
 		int m_SampleRate{48000};
-		int m_PlaybackFormat{0};
 		int m_Channels{2};
-		int m_AudioThreads{1};
 	};
 }

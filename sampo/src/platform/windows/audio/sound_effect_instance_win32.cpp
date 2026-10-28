@@ -15,36 +15,31 @@ namespace Sampo
 
 	Win32SoundEffectInstance::~Win32SoundEffectInstance()
 	{
-		Stop();
-
 		if (!m_IsInitialized)
 			return;
 
+		Stop();
 		ma_sound_uninit(&m_maSound);
+		//ma_audio_buffer_ref_uninit(&m_maAudioBufferRef);
 	}
 
 	bool Win32SoundEffectInstance::Init(AudioDevice& anAudioDevice)
 	{
-		Win32AudioDevice& audioDevice = static_cast<Win32AudioDevice&>(anAudioDevice);
+		if (m_IsInitialized)
+			return true;
+
 		Win32SoundEffect* soundEffect = static_cast<Win32SoundEffect*>(m_SoundEffect.get());
+		//if (!soundEffect->GetAudioBuffer(m_maAudioBufferRef))
+		//	return false;
 
-		const auto endCallback = [](void* aSoundUserData, ma_sound* aMASound) {
-			static_cast<Win32AudioDevice*>(Sound::GetAudioDevice())->OnSoundAtEnd(aSoundUserData, aMASound);
-		};
-
- 		ma_sound_config soundInstanceConfig = soundEffect->GetSoundInstanceConfig();
-		soundInstanceConfig.endCallback = endCallback;
-		soundInstanceConfig.pEndCallbackUserData = static_cast<void*>(&m_InstanceID);
-
-		ma_resource_manager_data_source_config dataResourceConfig = soundEffect->GetDataResourceConfig();
-
-		//const ma_result result = ma_sound_init_copy(audioDevice.GetMAEngine(), soundEffect->GetLoadedSound(), soundInstanceConfig.flags, nullptr, &m_maSound);
-		const ma_result result = ma_sound_init_ex(audioDevice.GetMAEngine(), &soundInstanceConfig, &m_maSound);
-		//const ma_result result = ma_sound_init_from_data_source(audioDevice.GetMAEngine(), soundEffect->GetSoundDataSource(), dataResourceConfig.flags, nullptr, &m_maSound);
+		Win32AudioDevice& audioDevice = static_cast<Win32AudioDevice&>(anAudioDevice);
+		const uint32 soundEffectFlags = soundEffect->GetLoadingFlags();
+		const ma_result result = ma_sound_init_from_file(audioDevice.GetMAEngine(), soundEffect->GetFilepath().c_str(), soundEffectFlags, nullptr, nullptr, &m_maSound);
+		//const ma_result result = ma_sound_init_from_data_source(audioDevice.GetMAEngine(), soundEffect->GetSoundDataSource(), soundEffectFlags, nullptr, &m_maSound);
+		//const ma_result result = ma_sound_init_from_data_source(audioDevice.GetMAEngine(), static_cast<ma_data_source*>(&m_maAudioBufferRef), soundEffectFlags, nullptr, &m_maSound);
 		if (result != MA_SUCCESS)
 		{
-			//SAMPO_CORE_ERROR("ma_sound_init_from_data_source error ({0}) with flags {1} when loading path: {2}.", result, soundInstanceConfig.flags, soundInstanceConfig.pFilePath);
-			SAMPO_CORE_ERROR("ma_sound_init_from_data_source error ({0}) with flags {1} when loading path: {2}.", result, dataResourceConfig.flags, soundEffect->GetFilepath().c_str());
+			SAMPO_CORE_ERROR("ma_sound_init_from_data_source error ({0}) with flags {1} when loading path: {2}.", result, soundEffectFlags, soundEffect->GetFilepath());
 			return false;
 		}
 
@@ -54,16 +49,30 @@ namespace Sampo
 			ma_sound_set_volume(&m_maSound, adjustedVolume);
 		}
 
+		ma_sound_set_end_callback(&m_maSound, [](void* aSoundUserData, ma_sound* aMASound) {
+			static_cast<Win32AudioDevice*>(Sound::GetAudioDevice())->OnSoundAtEnd(aSoundUserData, aMASound);
+		}, static_cast<void*>(&m_InstanceID));
+
 		m_IsInitialized = true;
 		return true;
 	}
 
 	bool Win32SoundEffectInstance::Play()
 	{
-		const ma_result result = ma_sound_start(&m_maSound);
-		if (result != MA_SUCCESS)
+		if (m_IsPlaying)
 		{
-			SAMPO_CORE_ERROR("ma_sound_start error ({0}): when playing {1}.", result, m_SoundEffect->GetFilepath().c_str());
+			const ma_result rewindresult = ma_sound_seek_to_pcm_frame(&m_maSound, 0);
+			if (rewindresult != MA_SUCCESS)
+			{
+				SAMPO_CORE_ERROR("ma_sound_start error ({0}): when playing {1}.", rewindresult, m_SoundEffect->GetFilepath().c_str());
+				return false;
+			}
+		}
+
+		const ma_result startResult = ma_sound_start(&m_maSound);
+		if (startResult != MA_SUCCESS)
+		{
+			SAMPO_CORE_ERROR("ma_sound_start error ({0}): when playing {1}.", startResult, m_SoundEffect->GetFilepath().c_str());
 			return false;
 		}
 
@@ -73,13 +82,10 @@ namespace Sampo
 
 	bool Win32SoundEffectInstance::Stop()
 	{
-		const ma_result result = ma_sound_stop(&m_maSound);
-		if (result != MA_SUCCESS)
-		{
-			SAMPO_CORE_ERROR("ma_sound_stop error ({0}): when playing {1}.", result, m_SoundEffect->GetFilepath().c_str());
-			return false;
-		}
+		if (!m_IsPlaying)
+			return true;
 
+		ma_sound_stop(&m_maSound);
 		m_IsPlaying = false;
 		return true;
 	}

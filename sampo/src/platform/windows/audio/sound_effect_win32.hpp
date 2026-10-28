@@ -5,13 +5,6 @@
 
 namespace Sampo
 {
-	enum class MASoundType
-	{
-		Invalid = 0,
-		Raw,
-		DataSource
-	};
-
 	struct MAAsyncLoadFinished
 	{
 		ma_async_notification_callbacks m_Callbacks;
@@ -27,27 +20,25 @@ namespace Sampo
 		virtual bool Load() override;
 		virtual bool Play() override;
 		virtual bool Stop() override;
+		virtual bool Unload() override;
 
-		virtual void SetIsLoaded() override;
 		virtual float GetSoundEffectLength() const override;
 
-		ma_resource_manager_data_source* GetSoundDataSource() { return &m_maDataSource;}
-		const ma_sound_config& GetSoundInstanceConfig() const { return m_maSoundInstanceConfig; }
-		const ma_resource_manager_data_source_config& GetDataResourceConfig() const { return m_maDataSourceConfig;}
+		bool GetAudioBuffer(ma_audio_buffer_ref& outAudioBufferRef);
+		uint32 GetLoadingFlags() const;
+
 	protected:
+		std::vector<unsigned char> ReadFileBytes();
+		bool LoadDataSource();
 
-		void SetupSoundInstanceConfig();
-		void SetupDataSourceSoundConfig();
-		bool LoadDataSourceSound();
+		void* m_PCMFrames{nullptr};
+		ma_decoder_config m_maDecoderConfig{};
+		ma_uint64 m_maFrameCount{0};
+		ma_format m_maFormat{ma_format_unknown};
+		ma_uint32 m_maChannels{0};
 
-		uint32 GetLoadingFlags(MASoundType aSoundType) const;
-
-		ma_sound m_maSoundEffect;
-		ma_sound_config m_maSoundInstanceConfig{};
-		ma_resource_manager_data_source m_maDataSource{};
-		ma_resource_manager_data_source_config m_maDataSourceConfig{};
-
-		MAAsyncLoadFinished m_loadFinished{};
-		ma_resource_manager_pipeline_notifications m_maNotifications{};
+		//ma_data_source* m_maDataSource{nullptr};
+		//ma_sound m_maMasterSound;
+		//ma_audio_buffer_ref m_maAudioBufferRef;
 	};
 }

@@ -25,11 +25,4 @@ namespace Sampo
 	{
 		m_AudioDevice->Shutdown();
 	}
-
-	AudioConfigParams Win32AudioAPI::CreateAudioConfigParams()
-	{
-		AudioConfigParams configParams = AudioAPI::CreateAudioConfigParams();
-		configParams.m_PlaybackFormat = ma_format_f32;
-		return configParams;
-	}
 }

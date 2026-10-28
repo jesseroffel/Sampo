@@ -6,6 +6,9 @@ namespace Sampo
 	class SoundLibrary
 	{
 	public:
+		SoundLibrary() = default;
+		virtual ~SoundLibrary();
+
 		std::shared_ptr<SoundEffect> Create(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams, bool aPlayOnce);
 		std::shared_ptr<SoundEffect> Get(const std::string& aFilepath);
 		bool Exists(const std::string& aFilePath) const;

@@ -10,10 +10,8 @@ namespace Sampo
 		Win32AudioAPI();
 		virtual ~Win32AudioAPI() = default;
 
-		bool Init();
+		bool Init() override;
 		bool Play();
-		void Shutdown();
-	protected:
-		virtual AudioConfigParams CreateAudioConfigParams() override;
+		void Shutdown() override;
 	};
 }

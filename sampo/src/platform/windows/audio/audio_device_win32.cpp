@@ -3,48 +3,38 @@
 
 #include "sound_effect_win32.hpp"
 
+//#include <extras/decoders/libvorbis/miniaudio_libvorbis.h>
 #include <imgui.h>
 
 namespace Sampo
 {
-	bool Win32AudioDevice::Init(AudioConfigParams& anAudioConfigParams)
+	bool Win32AudioDevice::Init(const AudioConfigParams& /*anAudioConfigParams*/)
 	{
-		// Audio device config
-		const ma_device_type deviceType = ma_device_type_playback; // Only allow audio output, input disabled.
-		ma_device_config deviceConfig = ma_device_config_init(deviceType);
-		deviceConfig.playback.format = ma_format_f32;//static_cast<ma_format>(anAudioConfigParams.m_PlaybackFormat);
-		deviceConfig.playback.channels = 2;//anAudioConfigParams.m_Channels;
-		deviceConfig.sampleRate = 48000;//anAudioConfigParams.m_SampleRate;
+// 		ma_decoding_backend_vtable* pCustomBackendVTables[] = {
+// 			ma_decoding_backend_libvorbis
+// 		};
+// 
+// 		ma_resource_manager_config rmCfg = ma_resource_manager_config_init();
+// 		rmCfg.ppCustomDecodingBackendVTables = pCustomBackendVTables;
+// 		rmCfg.customDecodingBackendCount =  sizeof(pCustomBackendVTables) / sizeof(pCustomBackendVTables[0]);
+// 		rmCfg.pCustomDecodingBackendUserData = nullptr;
 
-		const ma_result deviceInitResult = ma_device_init(nullptr, &deviceConfig, &m_maDevice);
-		if (deviceInitResult != MA_SUCCESS)
-		{
-			SAMPO_CORE_ERROR("Failed to init audio API call ma_device_init: {0}", deviceInitResult);
-			return false;
-		}
-
-		ma_resource_manager_config resourceManagerConfig = ma_resource_manager_config_init();
-		// Set decoding format/channels/sample rate to be the same across all loaded files for now.
-		resourceManagerConfig.decodedFormat = ma_format_f32;//m_maDevice.playback.format;
-		resourceManagerConfig.decodedChannels = 2;//anAudioConfigParams.m_Channels
-		resourceManagerConfig.decodedSampleRate = 48000;//m_maDevice.sampleRate;
-		resourceManagerConfig.jobThreadCount = anAudioConfigParams.m_AudioThreads; // SAMPO_TODO: Integrate miniaudio job tasks into sampo jobs tasks.
-
-		const ma_result resourceManagerInitResult = ma_resource_manager_init(&resourceManagerConfig, &m_maResourceManager);
-		if (resourceManagerInitResult != MA_SUCCESS)
-		{
-			ma_device_uninit(&m_maDevice);
-			SAMPO_CORE_ERROR("Failed to init audio API call ma_resource_manager_init: {0}", deviceInitResult);
-			return false;
-		}
+// 		const ma_result resourceManagerInit = ma_resource_manager_init(&rmCfg, &m_maResourceManager);
+// 		if (resourceManagerInit != MA_SUCCESS)
+// 		{
+// 			SAMPO_CORE_ERROR("Audio API init call 'ma_resource_manager_init' failed with result code {0}", resourceManagerInit);
+// 			return false;
+//		}
 
 		ma_engine_config engineConfig = ma_engine_config_init();
-		engineConfig.pResourceManager = &m_maResourceManager;
-
-		const ma_result engineInitResult = ma_engine_init(&engineConfig, &m_maEngine);
-		if (engineInitResult != MA_SUCCESS)
+		//engineConfig.channels = anAudioConfigParams.m_Channels;
+		//engineConfig.sampleRate = anAudioConfigParams.m_SampleRate;
+//		engineConfig.pResourceManager = &m_maResourceManager;
+		const ma_result engineInit = ma_engine_init(&engineConfig, &m_maEngine);
+		if (engineInit != MA_SUCCESS)
 		{
-			SAMPO_CORE_ERROR("Failed to init audio API call ma_engine_init: {0}", engineInitResult);
+			SAMPO_CORE_ERROR("Audio API init call 'ma_engine_init' failed with result code {0}", engineInit);
+			//ma_resource_manager_uninit(&m_maResourceManager);
 			return false;
 		}
 
@@ -54,9 +44,6 @@ namespace Sampo
 
 	void Win32AudioDevice::Update()
 	{
-		if (m_QueuedSoundEffectInstances.empty())
-			return;
-
 		for (auto it = m_QueuedSoundEffectInstances.begin(); it != m_QueuedSoundEffectInstances.end();)
 		{
 			Win32SoundEffectInstance* soundEffectInstance = it->get();
@@ -69,6 +56,14 @@ namespace Sampo
 			AddActiveInstance(*it);
 			it = m_QueuedSoundEffectInstances.erase(it);
 		}
+		
+		for(int i = static_cast<int>(m_SoundEffectInstancesAtEnd.size()) - 1; i >= 0; --i)
+		{
+			if (const auto foundEffectIter = m_ActiveSoundEffectInstances.find(m_SoundEffectInstancesAtEnd[i]); foundEffectIter != m_ActiveSoundEffectInstances.end())
+				m_ActiveSoundEffectInstances.erase(foundEffectIter);
+
+			m_SoundEffectInstancesAtEnd.pop_back();
+		}
 	}
 
 	void Win32AudioDevice::Shutdown()
@@ -76,8 +71,8 @@ namespace Sampo
 		if (!m_Initialized)
 			return;
 
-		ma_device_stop(&m_maDevice);
-		ma_device_uninit(&m_maDevice);
+		ma_engine_uninit(&m_maEngine);
+		//ma_resource_manager_uninit(&m_maResourceManager);
 	}
 
 	bool Win32AudioDevice::Play(std::shared_ptr<SoundEffect> aSoundEffect)
@@ -112,17 +107,13 @@ namespace Sampo
 		if (!soundID || !aMASound)
 			return;
 
-		auto foundEffect = m_ActiveSoundEffectInstances.find(*soundID);
-		if (foundEffect == m_ActiveSoundEffectInstances.end())
-			return;
-
-		m_ActiveSoundEffectInstances.erase(foundEffect);
+		m_SoundEffectInstancesAtEnd.emplace_back(*soundID);
 	}
 
 	std::shared_ptr<Sampo::Win32SoundEffectInstance> Win32AudioDevice::CreateInstance(std::shared_ptr<SoundEffect> aSoundEffect)
 	{
 		std::shared_ptr<Win32SoundEffectInstance> instance = CreateShared<Win32SoundEffectInstance>(aSoundEffect);
-		instance->m_InstanceID = m_SoundInstanceCount++;;
+		instance->m_InstanceID = m_SoundInstanceCount++;
 		return instance;
 	}
 

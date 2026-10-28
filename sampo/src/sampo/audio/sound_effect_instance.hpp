@@ -29,6 +29,6 @@ namespace Sampo
 		bool m_IsPlaying{ false };
 	protected:
 		std::shared_ptr<SoundEffect> m_SoundEffect{ nullptr };
-		bool m_IsInitialized{ true };
+		bool m_IsInitialized{ false };
 	};
 }

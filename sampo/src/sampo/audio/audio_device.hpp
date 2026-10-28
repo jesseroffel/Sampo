@@ -10,7 +10,7 @@ namespace Sampo
 	public:
 		virtual ~AudioDevice() = default;
 
-		virtual bool Init(AudioConfigParams& anAudioConfigParams) = 0;
+		virtual bool Init(const AudioConfigParams& anAudioConfigParams) = 0;
 		virtual void Update() = 0;
 		virtual void Shutdown() = 0;
 
