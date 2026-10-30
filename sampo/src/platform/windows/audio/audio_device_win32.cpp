@@ -3,41 +3,40 @@
 
 #include "sound_effect_win32.hpp"
 
-//#include <extras/decoders/libvorbis/miniaudio_libvorbis.h>
+#include <extras/decoders/libvorbis/miniaudio_libvorbis.h>
 #include <imgui.h>
 
 namespace Sampo
 {
-	bool Win32AudioDevice::Init(const AudioConfigParams& /*anAudioConfigParams*/)
+	bool Win32AudioDevice::Init(const AudioConfigParams& anAudioConfigParams)
 	{
-// 		ma_decoding_backend_vtable* pCustomBackendVTables[] = {
-// 			ma_decoding_backend_libvorbis
-// 		};
-// 
-// 		ma_resource_manager_config rmCfg = ma_resource_manager_config_init();
-// 		rmCfg.ppCustomDecodingBackendVTables = pCustomBackendVTables;
-// 		rmCfg.customDecodingBackendCount =  sizeof(pCustomBackendVTables) / sizeof(pCustomBackendVTables[0]);
-// 		rmCfg.pCustomDecodingBackendUserData = nullptr;
+		ma_resource_manager_config resourceManagerConfig = ma_resource_manager_config_init();
 
-// 		const ma_result resourceManagerInit = ma_resource_manager_init(&rmCfg, &m_maResourceManager);
-// 		if (resourceManagerInit != MA_SUCCESS)
-// 		{
-// 			SAMPO_CORE_ERROR("Audio API init call 'ma_resource_manager_init' failed with result code {0}", resourceManagerInit);
-// 			return false;
-//		}
+		ma_decoding_backend_vtable* pCustomBackendVTables[] = { ma_decoding_backend_libvorbis };
+		resourceManagerConfig.ppCustomDecodingBackendVTables = pCustomBackendVTables;
+		resourceManagerConfig.customDecodingBackendCount =  sizeof(pCustomBackendVTables) / sizeof(pCustomBackendVTables[0]);
+		resourceManagerConfig.pCustomDecodingBackendUserData = nullptr;
+
+		const ma_result resourceManagerInit = ma_resource_manager_init(&resourceManagerConfig, &m_maResourceManager);
+		if (resourceManagerInit != MA_SUCCESS)
+		{
+			SAMPO_CORE_ERROR("Audio API init call 'ma_resource_manager_init' failed with result code {0}", resourceManagerInit);
+			return false;
+		}
 
 		ma_engine_config engineConfig = ma_engine_config_init();
-		//engineConfig.channels = anAudioConfigParams.m_Channels;
-		//engineConfig.sampleRate = anAudioConfigParams.m_SampleRate;
-//		engineConfig.pResourceManager = &m_maResourceManager;
+		engineConfig.channels = anAudioConfigParams.m_Channels;
+		engineConfig.sampleRate = anAudioConfigParams.m_SampleRate;
+		engineConfig.pResourceManager = &m_maResourceManager;
 		const ma_result engineInit = ma_engine_init(&engineConfig, &m_maEngine);
 		if (engineInit != MA_SUCCESS)
 		{
 			SAMPO_CORE_ERROR("Audio API init call 'ma_engine_init' failed with result code {0}", engineInit);
-			//ma_resource_manager_uninit(&m_maResourceManager);
+			ma_resource_manager_uninit(&m_maResourceManager);
 			return false;
 		}
 
+		m_AudioChannels = anAudioConfigParams.m_Channels;
 		m_Initialized = true;
 		return true;
 	}
@@ -72,7 +71,7 @@ namespace Sampo
 			return;
 
 		ma_engine_uninit(&m_maEngine);
-		//ma_resource_manager_uninit(&m_maResourceManager);
+		ma_resource_manager_uninit(&m_maResourceManager);
 	}
 
 	bool Win32AudioDevice::Play(std::shared_ptr<SoundEffect> aSoundEffect)
@@ -81,7 +80,7 @@ namespace Sampo
 
 		if (!aSoundEffect->IsLoaded())
 		{
-			aSoundEffect->Load();
+			aSoundEffect->Load(true);
 			m_QueuedSoundEffectInstances.emplace_back(soundEffectInstance);
 			return true;
 		}
@@ -98,7 +97,18 @@ namespace Sampo
 				continue;
 
 			instance->Stop();
+			m_SoundEffectInstancesAtEnd.emplace_back(instance->m_InstanceID);
 		}
+	}
+
+	void Win32AudioDevice::InitDecoderConfig(ma_decoder_config& outMaDecoderConfig)
+	{
+		outMaDecoderConfig = ma_decoder_config_init(ma_format_unknown, m_AudioChannels, m_maEngine.sampleRate);
+
+		const ma_resource_manager_config& resourceManagerConfig = m_maResourceManager.config;
+		outMaDecoderConfig.ppCustomBackendVTables = resourceManagerConfig.ppCustomDecodingBackendVTables;
+		outMaDecoderConfig.customBackendCount = resourceManagerConfig.customDecodingBackendCount;
+		outMaDecoderConfig.pCustomBackendUserData = resourceManagerConfig.pCustomDecodingBackendUserData;
 	}
 
 	void Win32AudioDevice::OnSoundAtEnd(void* aSoundEffectData, ma_sound* aMASound)

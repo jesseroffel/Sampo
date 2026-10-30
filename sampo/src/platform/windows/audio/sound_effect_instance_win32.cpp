@@ -20,7 +20,7 @@ namespace Sampo
 
 		Stop();
 		ma_sound_uninit(&m_maSound);
-		//ma_audio_buffer_ref_uninit(&m_maAudioBufferRef);
+		ma_audio_buffer_ref_uninit(&m_maAudioBufferRef);
 	}
 
 	bool Win32SoundEffectInstance::Init(AudioDevice& anAudioDevice)
@@ -29,17 +29,15 @@ namespace Sampo
 			return true;
 
 		Win32SoundEffect* soundEffect = static_cast<Win32SoundEffect*>(m_SoundEffect.get());
-		//if (!soundEffect->GetAudioBuffer(m_maAudioBufferRef))
-		//	return false;
+		if (!soundEffect->GetAudioBuffer(m_maAudioBufferRef))
+			return false;
 
 		Win32AudioDevice& audioDevice = static_cast<Win32AudioDevice&>(anAudioDevice);
 		const uint32 soundEffectFlags = soundEffect->GetLoadingFlags();
-		const ma_result result = ma_sound_init_from_file(audioDevice.GetMAEngine(), soundEffect->GetFilepath().c_str(), soundEffectFlags, nullptr, nullptr, &m_maSound);
-		//const ma_result result = ma_sound_init_from_data_source(audioDevice.GetMAEngine(), soundEffect->GetSoundDataSource(), soundEffectFlags, nullptr, &m_maSound);
-		//const ma_result result = ma_sound_init_from_data_source(audioDevice.GetMAEngine(), static_cast<ma_data_source*>(&m_maAudioBufferRef), soundEffectFlags, nullptr, &m_maSound);
-		if (result != MA_SUCCESS)
+		const ma_result initResult = ma_sound_init_from_data_source(audioDevice.GetMAEngine(), static_cast<ma_data_source*>(&m_maAudioBufferRef), soundEffectFlags, nullptr, &m_maSound);
+		if (initResult != MA_SUCCESS)
 		{
-			SAMPO_CORE_ERROR("ma_sound_init_from_data_source error ({0}) with flags {1} when loading path: {2}.", result, soundEffectFlags, soundEffect->GetFilepath());
+			SAMPO_CORE_ERROR("ma_sound_init_from_data_source error ({0}) with flags {1} when loading path: {2}.", initResult, soundEffectFlags, soundEffect->GetFilepath());
 			return false;
 		}
 

@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include <miniaudio.h>
+#include <extras/decoders/libvorbis/miniaudio_libvorbis.h>
 
 namespace Sampo
 {
@@ -29,16 +30,14 @@ namespace Sampo
 		return Sound::Play(this);
 	}
 
-	bool Win32SoundEffect::Stop()
+	void Win32SoundEffect::Stop()
 	{
-		return Sound::Stop(this);
+		Sound::Stop(m_SoundEffectID);
 	}
 
 	bool Win32SoundEffect::Unload()
 	{
-		//ma_sound_uninit(&m_maMasterSound);
-		//ma_audio_buffer_ref_uninit(&m_maAudioBufferRef);
-		//ma_free(m_PCMFrames, nullptr);
+		ma_free(m_PCMFrames, nullptr);
 		return true;
 	}
 
@@ -59,25 +58,18 @@ namespace Sampo
 		return true;
 	}
 
-	bool Win32SoundEffect::Load()
+	bool Win32SoundEffect::Load(bool aPlayImmediately)
 	{
 		if (m_IsLoaded)
 			return true;
 
-		//LoadDataSource();
-		m_IsLoaded = true;
-		return true;
-	}
+		if (!LoadDataSource())
+			return false;
 
-	std::vector<unsigned char> Win32SoundEffect::ReadFileBytes()
-	{
-		std::ifstream file(m_Filepath, std::ios::binary | std::ios::ate);
-		if (!file) return {};
-		std::streamsize size = file.tellg();
-		file.seekg(0, std::ios::beg);
-		std::vector<unsigned char> buffer(static_cast<size_t>(size));
-		file.read(reinterpret_cast<char*>(buffer.data()), size);
-		return buffer;
+		if (aPlayImmediately)
+			Play();
+
+		return true;
 	}
 
 	bool Win32SoundEffect::LoadDataSource()
@@ -85,11 +77,9 @@ namespace Sampo
 		Win32AudioDevice* audioDevice = static_cast<Win32AudioDevice*>(Sound::GetAudioDevice());
 		SAMPO_ASSERT_MSG(audioDevice, "No valid Audio Device is active!");
 
-		std::vector<unsigned char> readBytes = ReadFileBytes();
+		audioDevice->InitDecoderConfig(m_maDecoderConfig);
 
-		m_maDecoderConfig = ma_decoder_config_init(ma_format_unknown, 0, 0);
-
-		const ma_result decodeResult = ma_decode_memory(readBytes.data(), readBytes.size(), &m_maDecoderConfig, &m_maFrameCount, &m_PCMFrames);
+		const ma_result decodeResult = ma_decode_file(m_Filepath.c_str(), &m_maDecoderConfig, &m_maFrameCount, &m_PCMFrames);
 		if (decodeResult != MA_SUCCESS)
 		{
 			SAMPO_CORE_ERROR("Audio API init call 'ma_decode_memory' failed with result code {0}", decodeResult);
@@ -104,8 +94,8 @@ namespace Sampo
 	{
 		uint32 m_LoadingFlags{ MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH };
 
-		//if (m_SoundEffectParams.m_AsyncLoad)
-		//	m_LoadingFlags += MA_SOUND_FLAG_ASYNC;
+		if (m_SoundEffectParams.m_AsyncLoad)
+			m_LoadingFlags += MA_SOUND_FLAG_ASYNC;
 
  		if (m_SoundEffectParams.m_Looping)
  			m_LoadingFlags += MA_SOUND_FLAG_LOOPING;

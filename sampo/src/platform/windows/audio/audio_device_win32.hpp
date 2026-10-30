@@ -17,6 +17,8 @@ namespace Sampo
 		virtual bool Play(std::shared_ptr<SoundEffect> aSoundEffect) override;
 		virtual void Stop(std::shared_ptr<SoundEffect> aSoundEffect) override;
 
+		void InitDecoderConfig(ma_decoder_config& outMaDecoderConfig);
+
 		virtual void OnSoundAtEnd(void* aSoundEffectData, ma_sound* aMASound);
 
 		ma_engine* GetMAEngine() { return &m_maEngine; }
@@ -33,7 +35,9 @@ namespace Sampo
 		std::vector<std::shared_ptr<Win32SoundEffectInstance>> m_QueuedSoundEffectInstances;
 		std::vector<uint32> m_SoundEffectInstancesAtEnd;
 		
-		//ma_resource_manager m_maResourceManager{};
+		ma_resource_manager m_maResourceManager{};
+		ma_decoder_config m_maDecoderConfig{};
 		ma_engine m_maEngine{};
+		uint32 m_AudioChannels{0};
 	};
 }

@@ -28,9 +28,14 @@ namespace Sampo
 		return AudioAPI::GetInstance().PlayOnce(aFilepath, aSoundEffectParams);
 	}
 
-	bool Sound::Stop(const SoundEffect* aSoundEffect)
+	void Sound::Stop(const std::shared_ptr<SoundEffect>& aSoundEffect)
 	{
-		return AudioAPI::GetInstance().Stop(aSoundEffect);
+		AudioAPI::GetInstance().Stop(aSoundEffect);
+	}
+
+	void Sound::Stop(const uint32 aSoundEffectID)
+	{
+		AudioAPI::GetInstance().Stop(aSoundEffectID);
 	}
 
 	AudioDevice* Sound::GetAudioDevice()
@@ -163,14 +168,14 @@ namespace Sampo
 		return m_AudioDevice->Play(soundEffect);
 	}
 
-	bool AudioAPI::Stop(const SoundEffect* aSoundEffect)
+	void AudioAPI::Stop(const std::shared_ptr<SoundEffect>& aSoundEffect)
 	{
-		if (!m_SoundLibrary->Exists(aSoundEffect))
-			return false;
+		m_AudioDevice->Stop(aSoundEffect);
+	}
 
-		if (std::shared_ptr<SoundEffect> soundEffect = m_SoundLibrary->Get(aSoundEffect->GetFilepath()))
+	void AudioAPI::Stop(const uint32 aSoundEffectID)
+	{
+		if (std::shared_ptr<SoundEffect> soundEffect = m_SoundLibrary->Get(aSoundEffectID))
 			m_AudioDevice->Stop(soundEffect);
-
-		return true;
 	}
 }

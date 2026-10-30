@@ -17,9 +17,9 @@ namespace Sampo
 		Win32SoundEffect(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams);
 		virtual ~Win32SoundEffect();
 
-		virtual bool Load() override;
+		virtual bool Load(bool aPlayImmediately = false) override;
 		virtual bool Play() override;
-		virtual bool Stop() override;
+		virtual void Stop() override;
 		virtual bool Unload() override;
 
 		virtual float GetSoundEffectLength() const override;
@@ -28,17 +28,10 @@ namespace Sampo
 		uint32 GetLoadingFlags() const;
 
 	protected:
-		std::vector<unsigned char> ReadFileBytes();
 		bool LoadDataSource();
 
 		void* m_PCMFrames{nullptr};
-		ma_decoder_config m_maDecoderConfig{};
 		ma_uint64 m_maFrameCount{0};
-		ma_format m_maFormat{ma_format_unknown};
-		ma_uint32 m_maChannels{0};
-
-		//ma_data_source* m_maDataSource{nullptr};
-		//ma_sound m_maMasterSound;
-		//ma_audio_buffer_ref m_maAudioBufferRef;
+		ma_decoder_config m_maDecoderConfig{};
 	};
 }

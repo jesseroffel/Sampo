@@ -20,9 +20,9 @@ namespace Sampo
 
 		virtual ~SoundEffect() = default;
 
-		virtual bool Load() = 0;
+		virtual bool Load(bool aPlayImmediately = false) = 0;
 		virtual bool Play() = 0;
-		virtual bool Stop() = 0;
+		virtual void Stop() = 0;
 		virtual bool Unload() = 0;
 
 		virtual bool IsLoaded() const { return m_IsLoaded; }

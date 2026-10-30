@@ -13,10 +13,12 @@ namespace Sampo
 		virtual ~Sound() = default;
 
 		static std::shared_ptr<SoundEffect> Create(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams = {});
-		// Load
+
 		static bool Play(const SoundEffect* aSoundEffect);
 		static bool PlayOnce(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams = {});
-		static bool Stop(const SoundEffect* aSoundEffect);
+
+		static void Stop(const std::shared_ptr<SoundEffect>& aSoundEffect);
+		static void Stop(const uint32 aSoundEffectID);
 
 		static AudioDevice* GetAudioDevice();
 		static SoundLibrary* GetSoundLibrary();
@@ -53,7 +55,8 @@ namespace Sampo
 
 		virtual bool Play(const SoundEffect* aSoundEffect);
 		virtual bool PlayOnce(const std::string& aFilepath, const SoundEffectParams& aSoundEffectParams);
-		virtual bool Stop(const SoundEffect* aSoundEffect);
+		virtual void Stop(const std::shared_ptr<SoundEffect>& aSoundEffect);
+		virtual void Stop(const uint32 aSoundEffectID);
 
 		AudioDevice* m_AudioDevice{ nullptr };
 		SoundLibrary* m_SoundLibrary{ nullptr };

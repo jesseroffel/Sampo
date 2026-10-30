@@ -20,7 +20,6 @@ public:
 private:
 	std::shared_ptr<Sampo::SoundEffect> m_TestSFX;
 	std::shared_ptr<Sampo::SoundEffect> m_TestMusic;
-	std::shared_ptr<Sampo::SoundEffect> m_TestMusic2;
 
 	bool m_PlayMusic{ false };
 };

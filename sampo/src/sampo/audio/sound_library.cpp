@@ -31,6 +31,7 @@ namespace Sampo
 
 		std::shared_ptr<SoundEffect> newSoundEffect = CreateSoundEffect(aFilepath, aSoundEffectParams);
 		m_SoundEffects.emplace(aFilepath, newSoundEffect);
+		m_SoundEffectsByID.emplace(newSoundEffect->GetSoundEffectID(), newSoundEffect);
 		
 		if (aSoundEffectParams.m_LoadImmediately)
 			newSoundEffect->Load();
@@ -44,6 +45,14 @@ namespace Sampo
 	std::shared_ptr<SoundEffect> SoundLibrary::Get(const std::string& aFilepath)
 	{
 		if (const auto foundEffectIter = m_SoundEffects.find(aFilepath); foundEffectIter != m_SoundEffects.end())
+			return foundEffectIter->second;
+
+		return nullptr;
+	}
+
+	std::shared_ptr<Sampo::SoundEffect> SoundLibrary::Get(const uint32 aSoundEffectID)
+	{
+		if (const auto foundEffectIter = m_SoundEffectsByID.find(aSoundEffectID); foundEffectIter != m_SoundEffectsByID.end())
 			return foundEffectIter->second;
 
 		return nullptr;

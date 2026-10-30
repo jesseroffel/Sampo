@@ -88,6 +88,8 @@ if (WIN32)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/glad)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/spdlog)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/glm)
+	add_subdirectory(${VENDOR_INCLUDE_DIR}/ogg)
+	add_subdirectory(${VENDOR_INCLUDE_DIR}/vorbis)
 	add_subdirectory(${VENDOR_INCLUDE_DIR}/miniaudio)
 
 	target_sources(sampo PUBLIC 
@@ -143,7 +145,8 @@ if (WIN32)
 	target_link_libraries(sampo PUBLIC opengl32.lib)
 	target_link_libraries(sampo PUBLIC spdlog::spdlog)
 	target_link_libraries(sampo PUBLIC glm::glm-header-only)
-	target_link_libraries(sampo PUBLIC miniaudio)
+	target_link_libraries(sampo PUBLIC vorbisfile vorbis ogg)
+	target_link_libraries(sampo PUBLIC miniaudio miniaudio_libvorbis)
 
 	add_compile_definitions(sampo PUBLIC SAMPO_PLATFORM_WINDOWS)
 	add_compile_definitions(sampo PUBLIC GLFW_INCLUDE_NONE)
