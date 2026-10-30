@@ -19,3 +19,6 @@
 [submodule "sampo/vendor/vorbis"]
 	path = sampo/vendor/vorbis
 	url = https://github.com/xiph/vorbis.git
+[submodule "sampo/vendor/ogg"]
+	path = sampo/vendor/ogg
+	url = https://github.com/xiph/ogg.git
